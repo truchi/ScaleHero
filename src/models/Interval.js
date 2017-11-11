@@ -1,54 +1,52 @@
-const N     = 12
-const M     = 7
-const FLAT  = '♭'
-const SHARP = '♯'
+import BaseItem from './BaseItem'
+
+const N     = BaseItem.N
+const M     = BaseItem.M
+const FLAT  = BaseItem.FLAT
+const SHARP = BaseItem.SHARP
 const N2H   = { '1': 0, '2': 2, '3': 4, '4': 5, '5': 7, '6': 9, '7': 11 }
+const H2N   = [
+         `1`
+, `${FLAT}2`
+,        `2`
+, `${FLAT}3`
+,        `3`
+,        `4`
+, `${FLAT}5`
+,        `5`
+, `${FLAT}6`
+,        `6`
+, `${FLAT}7`
+,        `7`
+]
 
-class Interval {
+class Interval extends BaseItem {
   constructor(name = '1') {
-    this.name  = '' + name
-    this.halfs = Interval.toHalfs(this.name)
+    super(name, Interval)
   }
 
-  inverse() {
-    return Interval.fromHalfs(Interval._mod(N - this.halfs, N))
-  }
-
-  add(interval) {
-    return Interval.fromHalfs(this.halfs + interval.halfs)
-  }
-
-  static dist(interval1, interval2) {
-    return Interval.fromHalfs(Math.abs(interval2.halfs - interval1.halfs))
+  clone() {
+    return super.clone(Interval)
   }
 
   static fromHalfs(halfs) {
-    let interval   = new Interval
-    interval.halfs = Interval._mod(halfs, N)
-
-    return interval
+    return super.fromHalfs(halfs, Interval)
   }
 
-  static toHalfs(name) {
-    var [name, accidentals, i] = new RegExp(
-      `([${FLAT}|${SHARP}]*)(\\d*)`
-    ).exec(name)
-    i = '' + (Interval._mod(+i - 1, M) + 1)
+  static _parse(full) {
+    var [full, accidentals, short] = new RegExp(
+      `^([${FLAT}|${SHARP}]*)(\\d*)$`
+    ).exec('' + full)
+    short = '' + (Interval._mod(+short - 1, M) + 1)
 
-    let flats  = (accidentals.match(new RegExp(`${FLAT}`, 'g')) || []).length;
-    let sharps = accidentals.length - flats
-    let halfs  = N2H[i] + sharps - flats
-
-    return Interval._mod(halfs, N)
-  }
-
-  static _mod(i, j) {
-    return ((i % j) + j) % j
+    return super._parse({ full, short, accidentals })
   }
 
   static fromNamesString(string) {
-    return string.split(' ').map(i => new Interval(i))
+    return super.fromNamesString(string, Interval)
   }
 }
 
+Interval.N2H = N2H
+Interval.H2N = H2N
 export default Interval

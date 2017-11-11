@@ -13,6 +13,8 @@ class Mujsic {
   static init(chords, scales) {
     Mujsic._initScales(chords, scales)
     Mujsic._matchInclusions()
+
+    return Mujsic
   }
 
   static chordsScales()   { return CHORDS_SCALES    }
