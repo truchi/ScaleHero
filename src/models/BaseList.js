@@ -1,4 +1,5 @@
-;(function() {
+import Interval from './Interval'
+
 class BaseList {
   constructor(intervals = [new Interval], type = '') {
     this.intervals = intervals
@@ -20,5 +21,4 @@ class BaseList {
   }
 }
 
-window.BaseList = BaseList
-})()
+export default BaseList

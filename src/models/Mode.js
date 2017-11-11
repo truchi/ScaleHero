@@ -1,4 +1,7 @@
-;(function() {
+import BaseList from './BaseList'
+import Interval from './Interval'
+import Scale    from './Scale'
+
 class Mode extends BaseList {
   constructor(intervals) {
     super(intervals, 'mode')
@@ -47,5 +50,4 @@ class Mode extends BaseList {
   }
 }
 
-window.Mode = Mode
-})()
+export default Mode

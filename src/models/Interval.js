@@ -1,4 +1,3 @@
-;(function() {
 const N     = 12
 const M     = 7
 const FLAT  = '♭'
@@ -52,5 +51,4 @@ class Interval {
   }
 }
 
-window.Interval = Interval
-})()
+export default Interval

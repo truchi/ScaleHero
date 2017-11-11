@@ -1,4 +1,4 @@
-window.CHORDS = [
+export default [
   // 3 notes
   {
     'name'     : 'Suspended'

@@ -1,60 +1,33 @@
-;(function() {
+import Interval from './Interval'
+import Scale    from './Scale'
+import Mode     from './Mode'
+
 let    CHORDS_SCALES = []
 let     MODES_SCALES = []
 let       ALL_SCALES = []
 let            MODES = []
 let           CHORDS = []
 let CHORDS_AND_MODES = []
-let _INIT            = true
 
 class Mujsic {
-  static chordsScales() {
-    if (_INIT) Mujsic._init()
-
-    return CHORDS_SCALES
-  }
-
-  static modesScales() {
-    if (_INIT) Mujsic._init()
-
-    return MODES_SCALES
-  }
-
-  static allScales() {
-    if (_INIT) Mujsic._init()
-
-    return ALL_SCALES
-  }
-
-  static modes() {
-    if (_INIT) Mujsic._init()
-
-    return MODES
-  }
-
-  static chords() {
-    if (_INIT) Mujsic._init()
-
-    return CHORDS
-  }
-
-  static chordsAndModes() {
-    if (_INIT) Mujsic._init()
-
-    return CHORDS_AND_MODES
-  }
-
-  static _init() {
-    Mujsic._initScales()
+  static init(chords, scales) {
+    Mujsic._initScales(chords, scales)
     Mujsic._matchInclusions()
   }
 
-  static _initScales() {
+  static chordsScales()   { return CHORDS_SCALES    }
+  static modesScales()    { return MODES_SCALES     }
+  static allScales()      { return ALL_SCALES       }
+  static modes()          { return MODES            }
+  static chords()         { return CHORDS           }
+  static chordsAndModes() { return CHORDS_AND_MODES }
+
+  static _initScales(chords, scales) {
     ALL_SCALES =
-      window.CHORDS
+      chords
         .map(chord => Object.assign({}, chord, { type: 'chord' }))
       .concat(
-        window.SCALES
+        scales
           .map(scale => Object.assign({}, scale, { type: 'mode' }))
       )
       .map(scale => {
@@ -110,5 +83,4 @@ class Mujsic {
   }
 }
 
-window.Mujsic = Mujsic
-})()
+export default Mujsic

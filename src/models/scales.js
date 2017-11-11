@@ -1,4 +1,4 @@
-window.SCALES = [
+export default [
   // 5 notes
   {
     'name'     : 'Pentatonic (Diatonic)'
