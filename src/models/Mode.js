@@ -48,6 +48,14 @@ class Mode extends BaseList {
   isIncludedIn(mode) {
     return mode.doIncludes(this)
   }
+
+  getDegree(note) {
+    for(let interval of this.intervals) {
+      if (interval.halfs === note.halfs) return interval.clone()
+    }
+
+    return null
+  }
 }
 
 export default Mode
