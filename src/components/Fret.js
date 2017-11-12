@@ -1,5 +1,20 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
+import Note from '../models/Note'
+
+const Tag = styled.div.attrs({
+  color: props => props.theme.colors[props.short][props.accidentals]
+})`
+  display: inline-block;
+  margin: ${props => props.theme.margin};
+  border-color: ${props => ['1', '3', '5', '7'].includes(props.short) ? props.theme.highlight : props.theme.background};
+  border-width: ${props => props.theme.borderWidth};
+  border-style: ${props => props.theme.borderStyle};
+  border-radius: ${props => props.theme.radius};
+  background-color: ${props => props.color};
+  width : ${props => props.theme.width};
+  height: ${props => props.theme.height};
+`
 
 class Fret extends Component {
   constructor(props) {
@@ -7,16 +22,19 @@ class Fret extends Component {
   }
 
   render() {
-    let interval = this.props.mode.getDegree(this.props.note)
+    let interval= this.props.scale.mode.getDegree(
+      Note.fromHalfs(this.props.note.halfs - this.props.scale.root.halfs)
+    )
+    let short       = '0'
+    let accidentals = '0'
 
     if (interval) {
-      interval = interval.name.full
-    } else {
-      interval = ''
+      short       = interval.name.short
+      accidentals = interval.name.accidentals
     }
 
     return (
-      <div>{interval}</div>
+      <Tag short={short} accidentals={accidentals}></Tag>
     )
   }
 }
