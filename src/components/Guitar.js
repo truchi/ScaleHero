@@ -35,7 +35,7 @@ class Guitar extends Component {
   render() {
     return (
       <GuitarEl>
-        {this.props.guitar.tuning.reverse().map((note, i) => {
+        {this.props.guitar.tuning.map((note, i) => {
           const notes = [note].concat(
             Array(this.props.guitar.frets).fill(0)
               .map((e, i) => note.add(Note.fromHalfs(i + 1)))

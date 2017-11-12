@@ -14,13 +14,17 @@ class App extends Component {
     this.state = {
       guitar: {
         frets : 15
-      , tuning: Note.fromNamesString('E A D G B E')
+      , tuning: Note.fromNamesString('E A D G B E').reverse()
       }
     , scale: {
         root: new Note('C')
       , mode: window.SCALES[15].modes[0]
       }
     }
+  }
+
+  onScaleChange(scale) {
+    this.setState({ scale })
   }
 
   render() {
@@ -31,7 +35,7 @@ class App extends Component {
             <Guitar guitar={this.state.guitar} scale={this.state.scale} />
           </ThemeProvider>
           <ThemeProvider theme={selectorTheme}>
-            <Selector scale={this.state.scale} />
+            <Selector scale={this.state.scale} onChange={this.onScaleChange.bind(this)} />
           </ThemeProvider>
         </div>
       </ThemeProvider>

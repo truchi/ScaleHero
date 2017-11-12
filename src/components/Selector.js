@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 import Interval from '../models/Interval'
 import Note from './../models/Note'
+import Mode from './../models/Mode'
 
 const   FLAT = Interval.FLAT
 const DBFLAT = FLAT + FLAT
@@ -65,7 +66,7 @@ class Selector extends Component {
         return note
       })
 
-    let columns = [
+    let intervals = [
       [       null,        null,         null]
     , [       null,  `${FLAT}2`,         null]
     , [       null,         `2`, `${DBFLAT}3`]
@@ -91,7 +92,7 @@ class Selector extends Component {
 
     this.state = {
       notes
-    , intervals: { columns }
+    , intervals
     }
   }
 
@@ -101,19 +102,33 @@ class Selector extends Component {
     notes.forEach(note => note._selected = false)
     notes[i]._selected = true
 
-    this.setState({ notes })
+    this.changeScale({ notes, intervals: this.state.intervals })
   }
 
-  onClick(interval, i, j) {
+  onClickInterval(interval, i, j) {
     if (!interval) return
 
-    let columns = this.state.intervals.columns
-    let prev    = columns[i][j]._selected
+    let intervals = this.state.intervals
+    let prev      = intervals[i][j]._selected
 
-    columns[i].forEach(interval => interval && (interval._selected = false))
-    columns[i][j]._selected = !prev
+    intervals[i].forEach(interval => interval && (interval._selected = false))
+    intervals[i][j]._selected = !prev
 
-    this.setState({ columns })
+    this.changeScale({ notes: this.state.notes, intervals })
+  }
+
+  changeScale({ notes, intervals }) {
+    this.props.onChange({
+      root: new Note(notes.filter(note => note._selected)[0].name.full)
+    , mode: new Mode(
+        Array.prototype.concat.apply([new Interval(1)],
+          intervals
+            .map(column => column
+                .filter(interval => interval && interval._selected))
+            .filter(arr => arr.length)
+        )
+      )
+    })
   }
 
   render() {
@@ -131,8 +146,8 @@ class Selector extends Component {
           )}
         </div>
         <div>
-          {this.state.intervals.columns.map((column, i) =>
-            <ColumnEl key={i}>
+          {this.state.intervals.map((column, i) =>
+          <ColumnEl key={i}>
               {column.map((interval, j) =>
                 <IntervalEl
                   key={j}
@@ -141,7 +156,7 @@ class Selector extends Component {
                   short={interval ? interval.name.short : null}
                   accidentals={interval ? interval.name.accidentals : null}
                   selected={interval ? interval._selected : false}
-                  onClick={this.onClick.bind(this, interval, i, j)}
+                  onClick={this.onClickInterval.bind(this, interval, i, j)}
                 >{interval ? interval.name.full : ''}</IntervalEl>
               )}
             </ColumnEl>
