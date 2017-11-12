@@ -5,7 +5,6 @@ export default {
   , margin     : '4px 2px'
   , padding    : '4px 4px'
   , radius     : '3px'
-  , color      : 'white'
   , borderWidth: '1px'
   , borderStyle: 'solid'
   , highlight  : 'white'
