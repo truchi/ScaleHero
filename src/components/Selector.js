@@ -12,7 +12,6 @@ const SelectorEl = styled.div.attrs({})`
   background: ${props => props.theme.background};
   user-select: none;
 `
-
 const NoteEl = styled.div.attrs({
   color: props => props.theme.colors[props.short][props.accidentals]
 })`
@@ -36,7 +35,7 @@ const ColumnEl = styled.div.attrs({})`
   display: inline-block;
   vertical-align: top;
 `
-const IntervalEl = styled.div.attrs({
+const IntervalEl = NoteEl.extend.attrs({
   height: props => props.i === 6 && props.j === 0
     ? parseInt(props.theme.selector.height) / 4 + 'px'
     : props.theme.selector.height
@@ -45,18 +44,7 @@ const IntervalEl = styled.div.attrs({
     : props.theme.background
 })`
   display: block;
-  width: ${props => props.theme.selector.width};
   height: ${props => props.height};
-  line-height: ${props => props.theme.selector.height};
-  background: ${props => props.color};
-  margin: ${props => props.theme.selector.margin};
-  padding: ${props => props.theme.selector.padding};
-  border-radius: ${props => props.theme.selector.radius};
-  border-color: ${props => props.selected
-    ? props.theme.selector.highlight
-    : props.theme.background};
-  border-width: ${props => props.theme.selector.borderWidth};
-  border-style: ${props => props.theme.selector.borderStyle};
   cursor: ${props => props.short ? 'pointer' : 'initial'};
   text-align: right;
 `
@@ -77,32 +65,26 @@ class Selector extends Component {
         return note
       })
 
-    let [ flat2, nat2, sharp2, dbflat3, flat3, nat3, sharp3
-    , flat4, nat4, sharp4, flat5, nat5, sharp5, dbflat6
-    , flat6, nat6, sharp6, dbflat7, flat7, nat7 ] =
-      [ `${FLAT}2`, `2`, `${SHARP}2`, `${DBFLAT}3`, `${FLAT}3`
-      , `3`, `${SHARP}3`, `${FLAT}4`, `4`, `${SHARP}4`, `${FLAT}5`
-      , `5`, `${SHARP}5`, `${DBFLAT}6`, `${FLAT}6`, `6`
-      , `${SHARP}6`, `${DBFLAT}7`, `${FLAT}7`, `7` ].map(i => new Interval(i))
-
     let columns = [
-      [  null,   null, null   ]
-    , [  null,  flat2, null   ]
-    , [  null,   nat2, dbflat3]
-    , [sharp2,  flat3, null   ]
-    , [  null,   nat3, flat4  ]
-    , [sharp3,   nat4, null   ]
-    , [  null, sharp4, flat5  ]
-    , [  null,   nat5, dbflat6]
-    , [sharp5,  flat6, null   ]
-    , [  null,   nat6, dbflat7]
-    , [sharp6,  flat7, null   ]
-    , [  null,   nat7, null   ]
+      [       null,        null,         null]
+    , [       null,  `${FLAT}2`,         null]
+    , [       null,         `2`, `${DBFLAT}3`]
+    , [`${SHARP}2`,  `${FLAT}3`,         null]
+    , [       null,         `3`,   `${FLAT}4`]
+    , [`${SHARP}3`,         `4`,         null]
+    , [       null, `${SHARP}4`,   `${FLAT}5`]
+    , [       null,         `5`, `${DBFLAT}6`]
+    , [`${SHARP}5`,  `${FLAT}6`,         null]
+    , [       null,         `6`, `${DBFLAT}7`]
+    , [`${SHARP}6`,  `${FLAT}7`,         null]
+    , [       null,         `7`,         null]
   ].map(column => column.map(interval => {
       if (interval === null) return null
 
+      interval           = new Interval(interval)
       interval._selected = false
-      if (selected.includes(interval.name.full)) interval._selected = true
+      if (selected.includes(interval.name.full))
+        interval._selected = true
 
       return interval
     }))
