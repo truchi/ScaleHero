@@ -46,7 +46,7 @@ class Mode extends BaseList {
   }
 
   isIncludedIn(mode) {
-    return mode.includes(this)
+    return mode.doIncludes(this)
   }
 }
 
