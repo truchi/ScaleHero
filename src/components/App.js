@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
+import MuJS from 'mujs'
 import Guitar from './Guitar'
-import Selector from './Selector'
-import Note from '../models/Note'
+// import Selector from './Selector'
 
 class App extends Component {
   constructor(props) {
@@ -10,24 +10,21 @@ class App extends Component {
     this.state = {
       guitar: {
         frets : 15
-      , tuning: Note.fromNamesString('E A D G B E').reverse()
+      , tuning: MuJS.utils.str2items(MuJS.Note, 'E A D B G E').reverse()
       }
-    , scale: {
-        root: new Note('C')
-      , mode: window.SCALES[15].modes[0]
-      }
+    , mode: window.DICT[15].modes[0]
     }
   }
 
-  onScaleChange(scale) {
-    this.setState({ scale })
+  onScaleChange(mode) {
+    this.setState({ mode })
   }
 
   render() {
     return (
       <div>
-        <Guitar guitar={this.state.guitar} scale={this.state.scale} />
-        <Selector scale={this.state.scale} onChange={this.onScaleChange.bind(this)} />
+        <Guitar guitar={this.state.guitar} mode={this.state.mode} />
+        {/* <Selector mode={this.state.mode} onChange={this.onScaleChange.bind(this)} /> */}
       </div>
     )
   }
