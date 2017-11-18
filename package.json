@@ -6,7 +6,6 @@
     "node-sass-chokidar": "0.0.3",
     "npm-run-all": "^4.1.2",
     "react": "^16.1.0",
-    "react-css-vars": "github:truchi/react-css-vars",
     "react-dom": "^16.1.0",
     "react-scripts": "1.0.17",
     "styled-components": "^2.2.3"
