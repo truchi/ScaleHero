@@ -119,7 +119,6 @@ class Selector extends Component {
   }
 
   onClickNote(i) {
-    console.log('onClickNote');
     let notes = this.state.notes
 
     notes.forEach(note => note._selected = false)
@@ -129,7 +128,6 @@ class Selector extends Component {
   }
 
   onClickInterval(interval, i, j) {
-    console.log('onClickInterval');
     if (!interval) return
 
     let intervals = this.state.intervals
