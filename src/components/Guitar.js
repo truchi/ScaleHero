@@ -40,7 +40,6 @@ const FretEl = css({
     } else {
       $.classes.remove('highlight')
     }
-
   }
 })
 
