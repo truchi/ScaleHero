@@ -17,6 +17,10 @@
       border-style : solid;
       border-color : var(--general-background, $general-background);
 
+      &:first-child {
+        width: var(--Fret-width , $Fret-width / 3);
+      }
+
       &.highlight {
         border-color: var(--Fret-highlight, $Fret-highlight);
       }
