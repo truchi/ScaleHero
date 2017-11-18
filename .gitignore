@@ -3,6 +3,9 @@
 # dependencies
 /node_modules
 
+# Precompiled
+src/styles/**/*.css
+
 # testing
 /coverage
 

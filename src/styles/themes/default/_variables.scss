@@ -1,0 +1,13 @@
+$foreground: white;
+$background: black;
+$color0    : #222;
+$colors    : (
+  white
+  hsl(  0, 50%, 50%)
+  hsl( 60, 50%, 50%)
+  hsl(120, 50%, 50%)
+  hsl(180, 50%, 50%)
+  hsl(240, 50%, 50%)
+  hsl(300, 50%, 50%)
+);
+$modifiers: (-2: 50%, -1: 75%, 1: 125%);

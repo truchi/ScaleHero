@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import styled from 'styled-components'
+import css from 'react-css-vars'
 import Interval from '../models/Interval'
 import Note from './../models/Note'
 import Mode from './../models/Mode'
@@ -8,47 +8,69 @@ const   FLAT = Interval.FLAT
 const DBFLAT = FLAT + FLAT
 const  SHARP = Interval.SHARP
 
-const SelectorEl = styled.div.attrs({})`
-  display: inline-block;
-  background: ${props => props.theme.background};
-  user-select: none;
-`
-const NoteEl = styled.div.attrs({
-  color: props => props.theme.colors[props.short][props.accidentals]
-})`
-  display: inline-block;
-  width: ${props => props.theme.selector.width};
-  height: ${props => props.theme.selector.height};
-  line-height: ${props => props.theme.selector.height};
-  background: ${props => props.color};
-  margin: ${props => props.theme.selector.margin};
-  padding: ${props => props.theme.selector.padding};
-  border-radius: ${props => props.theme.selector.radius};
-  border-color: ${props => props.selected
-    ? props.theme.selector.highlight
-    : props.theme.background};
-  border-width: ${props => props.theme.selector.borderWidth};
-  border-style: ${props => props.theme.selector.borderStyle};
-  cursor: pointer;
-  text-align: center;
-`
-const ColumnEl = styled.div.attrs({})`
-  display: inline-block;
-  vertical-align: top;
-`
-const IntervalEl = NoteEl.extend.attrs({
-  height: props => props.i === 6 && props.j === 0
-    ? parseInt(props.theme.selector.height) / 4 + 'px'
-    : props.theme.selector.height
-, color: props => props.short
-    ? props.theme.colors[props.short][props.accidentals]
-    : props.theme.background
-})`
-  display: block;
-  height: ${props => props.height};
-  cursor: ${props => props.short ? 'pointer' : 'initial'};
-  text-align: right;
-`
+const SelectorEl = css({
+  tag        : 'div'
+, className  : 'Selector'
+, displayName: 'Selector'
+}, {
+  $: (props, $) => {}
+})
+
+const NoteEl = css({
+  tag        : 'div'
+, className  : 'Note'
+, displayName: 'Note'
+}, {
+  $: (props, $) => {
+    const short = props.note.name.short
+    const accs  = props.note.name.accidentals
+
+    $.attrs.set('base', short)
+    $.attrs.set('accs', accs )
+
+    if (props.note._selected) {
+      $.classes.add('selected')
+    } else {
+      $.classes.remove('selected')
+    }
+  }
+})
+
+const ColumnEl = css({
+  tag        : 'div'
+, className  : 'Column'
+, displayName: 'Column'
+}, {
+  $: (props, $) => {}
+})
+
+const IntervalEl = css({
+  tag        : 'div'
+, className  : 'Interval'
+, displayName: 'Interval'
+}, {
+  $: (props, $) => {
+    if (props.i === 6 && props.j === 0) {
+      $.classes.add('shift')
+    } else {
+      $.classes.remove('shift')
+    }
+
+    if (!props.interval) return
+
+    const short = props.interval.name.short
+    const accs  = props.interval.name.accidentals
+
+    $.attrs.set('base', short)
+    $.attrs.set('accs', accs )
+
+    if (props.interval._selected) {
+      $.classes.add('selected')
+    } else {
+      $.classes.remove('selected')
+    }
+  }
+})
 
 class Selector extends Component {
   constructor(props) {
@@ -97,6 +119,7 @@ class Selector extends Component {
   }
 
   onClickNote(i) {
+    console.log('onClickNote');
     let notes = this.state.notes
 
     notes.forEach(note => note._selected = false)
@@ -106,6 +129,7 @@ class Selector extends Component {
   }
 
   onClickInterval(interval, i, j) {
+    console.log('onClickInterval');
     if (!interval) return
 
     let intervals = this.state.intervals
@@ -138,9 +162,7 @@ class Selector extends Component {
           {this.state.notes.map((note, i) =>
             <NoteEl
               key={i}
-              selected={note._selected}
-              short={note.name.short}
-              accidentals={note.name.accidentals}
+              note={note}
               onClick={this.onClickNote.bind(this, i)}
             >{note.name.full}</NoteEl>
           )}
@@ -153,9 +175,7 @@ class Selector extends Component {
                   key={j}
                   i={i}
                   j={j}
-                  short={interval ? interval.name.short : null}
-                  accidentals={interval ? interval.name.accidentals : null}
-                  selected={interval ? interval._selected : false}
+                  interval={interval}
                   onClick={this.onClickInterval.bind(this, interval, i, j)}
                 >{interval ? interval.name.full : ''}</IntervalEl>
               )}

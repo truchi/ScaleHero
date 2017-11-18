@@ -1,0 +1,6 @@
+body {
+  margin     : 0;
+  background : var(--general-background, $general-background);
+  color      : var(--general-color, $general-color);
+  user-select: none;
+}

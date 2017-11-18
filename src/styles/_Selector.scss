@@ -1,0 +1,51 @@
+.Selector {
+  display         : inline-block;
+  background-color: var(--Selector-background, $Selector-background);
+  color           : var(--Selector-foreground, $Selector-foreground);
+
+  %Note-Interval {
+    @include colors;
+
+    width        : var(--Box-width, $Box-width);
+    height       : var(--Box-height, $Box-height);
+    line-height  : var(--Box-height, $Box-height);
+    margin       : var(--Box-margin, $Box-margin);
+    padding      : var(--Box-padding, $Box-padding);
+    border-radius: var(--Box-radius, $Box-radius);
+    border-width : var(--Box-border, $Box-border);
+    border-style : solid;
+    border-color : var(--general-background, $general-background);
+    cursor       : pointer;
+    text-align   : center;
+
+    &.selected {
+      border-color: var(--Box-highlight, $Box-highlight);
+    }
+  }
+
+  .Note {
+    @extend %Note-Interval;
+
+    display: inline-block;
+  }
+
+  .Column {
+    display       : inline-block;
+    vertical-align: top;
+
+    .Interval {
+      @extend %Note-Interval;
+
+      display: block;
+
+      &:not([base]) {
+        cursor    : initial;
+        text-align: right;
+      }
+
+      &.shift {
+        height: var(--Box-height, $Box-height / 4);
+      }
+    }
+  }
+}

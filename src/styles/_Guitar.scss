@@ -1,0 +1,25 @@
+.Guitar {
+  display         : inline-block;
+  background-color: var(--Guitar-background, $Guitar-background);
+
+  .String {
+    display: flex;
+
+    .Fret {
+      @include colors;
+
+      display      : inline-block;
+      margin       : var(--Fret-margin, $Fret-margin);
+      width        : var(--Fret-width , $Fret-width);
+      height       : var(--Fret-height, $Fret-height);
+      border-radius: var(--Fret-radius, $Fret-radius);
+      border-width : var(--Fret-border, $Fret-border);
+      border-style : solid;
+      border-color : var(--general-background, $general-background);
+
+      &.highlight {
+        border-color: var(--Fret-highlight, $Fret-highlight);
+      }
+    }
+  }
+}

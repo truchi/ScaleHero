@@ -1,31 +1,48 @@
 import React, { Component } from 'react'
-import styled from 'styled-components'
+import css from 'react-css-vars'
 import Note from './../models/Note'
 
-const GuitarEl = styled.div.attrs({
-})`
-  display: inline-block;
-  background-color: ${props => props.theme.background};
-`
-const StringEl = styled.div.attrs({
-})`
-  display: flex;
-`
-const FretEl = styled.div.attrs({
-  color: props => props.theme.colors[props.short][props.accidentals]
-})`
-  display: inline-block;
-  margin: ${props => props.theme.guitar.margin};
-  border-color: ${props => ['1', '3', '5', '7'].includes(props.short)
-    ? props.theme.guitar.highlight
-    : props.theme.background};
-  border-width: ${props => props.theme.guitar.borderWidth};
-  border-style: ${props => props.theme.guitar.borderStyle};
-  border-radius: ${props => props.theme.guitar.radius};
-  background-color: ${props => props.color};
-  width : ${props => props.theme.guitar.width};
-  height: ${props => props.theme.guitar.height};
-`
+const GuitarEl = css({
+  tag        : 'div'
+, className  : 'Guitar'
+, displayName: 'Guitar'
+}, {
+  $: (props, $) => {}
+})
+
+const StringEl = css({
+  tag        : 'div'
+, className  : 'String'
+, displayName: 'String'
+}, {
+  $: (props, $) => {}
+})
+
+const FretEl = css({
+  tag        : 'div'
+, className  : 'Fret'
+, displayName: 'Fret'
+}, {
+  $: (props, $) => {
+    let short = '0'
+    let accs  = '0'
+
+    if (props.interval) {
+      short = props.interval.name.short
+      accs  = props.interval.name.accidentals
+    }
+
+    $.attrs.set('base', short)
+    $.attrs.set('accs', accs )
+
+    if (['1', '3', '5', '7'].includes(short)) {
+      $.classes.add('highlight')
+    } else {
+      $.classes.remove('highlight')
+    }
+
+  }
+})
 
 class Guitar extends Component {
   constructor(props) {
@@ -46,15 +63,8 @@ class Guitar extends Component {
               let interval= this.props.scale.mode.getDegree(
                 Note.fromHalfs(note.halfs - this.props.scale.root.halfs)
               )
-              let short       = '0'
-              let accidentals = '0'
 
-              if (interval) {
-                short       = interval.name.short
-                accidentals = interval.name.accidentals
-              }
-
-              return <FretEl key={i} short={short} accidentals={accidentals} />
+              return <FretEl key={i} interval={interval} />
             })}
           </StringEl>
         })}
