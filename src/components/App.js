@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import MuJS from 'mujs'
 import Guitar from './Guitar'
-// import Selector from './Selector'
+import Selector from './Selector'
 
 class App extends Component {
   constructor(props) {
@@ -16,7 +16,7 @@ class App extends Component {
     }
   }
 
-  onScaleChange(mode) {
+  onModeChange(mode) {
     this.setState({ mode })
   }
 
@@ -24,7 +24,7 @@ class App extends Component {
     return (
       <div>
         <Guitar guitar={this.state.guitar} mode={this.state.mode} />
-        {/* <Selector mode={this.state.mode} onChange={this.onScaleChange.bind(this)} /> */}
+        <Selector mode={this.state.mode} onChange={this.onModeChange.bind(this)} />
       </div>
     )
   }

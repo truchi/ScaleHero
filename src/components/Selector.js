@@ -1,38 +1,32 @@
 import React, { Component } from 'react'
+import MuJS from 'mujs'
 import css from 'react-css-vars'
-import Interval from '../models/Interval'
-import Note from './../models/Note'
-import Mode from './../models/Mode'
 
-const   FLAT = Interval.FLAT
+const   FLAT = MuJS.symbols.ACCS.flat
 const DBFLAT = FLAT + FLAT
-const  SHARP = Interval.SHARP
+const  SHARP = MuJS.symbols.ACCS.sharp
 
 const SelectorEl = css({
   tag        : 'div'
 , className  : 'Selector'
 , displayName: 'Selector'
-}, {
-  $: (props, $) => {}
 })
 
 const NoteEl = css({
   tag        : 'div'
 , className  : 'Note'
 , displayName: 'Note'
-}, {
-  $: (props, $) => {
-    const short = props.note.name.short
-    const accs  = props.note.name.accidentals
+}, (props, $) => {
+  const base = props.note.base
+  const accs = props.note.accs
 
-    $.attrs.set('base', short)
-    $.attrs.set('accs', accs )
+  $.attrs.set('base', base)
+  $.attrs.set('accs', accs)
 
-    if (props.note._selected) {
-      $.classes.add('selected')
-    } else {
-      $.classes.remove('selected')
-    }
+  if (props.note._selected) {
+    $.classes.add('selected')
+  } else {
+    $.classes.remove('selected')
   }
 })
 
@@ -40,35 +34,31 @@ const ColumnEl = css({
   tag        : 'div'
 , className  : 'Column'
 , displayName: 'Column'
-}, {
-  $: (props, $) => {}
 })
 
 const IntervalEl = css({
   tag        : 'div'
 , className  : 'Interval'
 , displayName: 'Interval'
-}, {
-  $: (props, $) => {
-    if (props.i === 6 && props.j === 0) {
-      $.classes.add('shift')
-    } else {
-      $.classes.remove('shift')
-    }
+}, (props, $) => {
+  if (props.i === 6 && props.j === 0) {
+    $.classes.add('shift')
+  } else {
+    $.classes.remove('shift')
+  }
 
-    if (!props.interval) return
+  if (!props.intv) return
 
-    const short = props.interval.name.short
-    const accs  = props.interval.name.accidentals
+  const base = props.intv.base
+  const accs = props.intv.accs
 
-    $.attrs.set('base', short)
-    $.attrs.set('accs', accs )
+  $.attrs.set('base', base)
+  $.attrs.set('accs', accs)
 
-    if (props.interval._selected) {
-      $.classes.add('selected')
-    } else {
-      $.classes.remove('selected')
-    }
+  if (props.intv._selected) {
+    $.classes.add('selected')
+  } else {
+    $.classes.remove('selected')
   }
 })
 
@@ -76,19 +66,19 @@ class Selector extends Component {
   constructor(props) {
     super(props)
 
-    let selected = this.props.scale.mode.intervals
-      .map(interval => interval.name.full)
+    let selected = this.props.mode.intvs
+      .map(intv => intv.name)
 
     let notes =
       [ `C`, `D${FLAT}`, `D`, `E${FLAT}`, `E`, `F`, `G${FLAT}`
       , `G`, `A${FLAT}`, `A`, `B${FLAT}`, `B` ].map(note => {
-        note = new Note(note)
-        note._selected = this.props.scale.root.halfs === note.halfs
+        note = new MuJS.Note(note)
+        note._selected = this.props.mode.root.semi === note.semi
 
         return note
       })
 
-    let intervals = [
+    let intvs = [
       [       null,        null,         null]
     , [       null,  `${FLAT}2`,         null]
     , [       null,         `2`, `${DBFLAT}3`]
@@ -101,20 +91,20 @@ class Selector extends Component {
     , [       null,         `6`, `${DBFLAT}7`]
     , [`${SHARP}6`,  `${FLAT}7`,         null]
     , [       null,         `7`,         null]
-  ].map(column => column.map(interval => {
-      if (interval === null) return null
+  ].map(column => column.map(intv => {
+      if (intv === null) return null
 
-      interval           = new Interval(interval)
-      interval._selected = false
-      if (selected.includes(interval.name.full))
-        interval._selected = true
+      intv           = new MuJS.Interval(intv)
+      intv._selected = false
+      if (selected.includes(intv.name))
+        intv._selected = true
 
-      return interval
+      return intv
     }))
 
     this.state = {
       notes
-    , intervals
+    , intvs
     }
   }
 
@@ -124,33 +114,33 @@ class Selector extends Component {
     notes.forEach(note => note._selected = false)
     notes[i]._selected = true
 
-    this.changeScale({ notes, intervals: this.state.intervals })
+    this.changeMode({ notes, intvs: this.state.intvs })
   }
 
-  onClickInterval(interval, i, j) {
-    if (!interval) return
+  onClickInterval(intv, i, j) {
+    if (!intv) return
 
-    let intervals = this.state.intervals
-    let prev      = intervals[i][j]._selected
+    let intvs = this.state.intvs
+    let prev  = intvs[i][j]._selected
 
-    intervals[i].forEach(interval => interval && (interval._selected = false))
-    intervals[i][j]._selected = !prev
+    intvs[i].forEach(intv => intv && (intv._selected = false))
+    intvs[i][j]._selected = !prev
 
-    this.changeScale({ notes: this.state.notes, intervals })
+    this.changeMode({ notes: this.state.notes, intvs })
   }
 
-  changeScale({ notes, intervals }) {
-    this.props.onChange({
-      root: new Note(notes.filter(note => note._selected)[0].name.full)
-    , mode: new Mode(
-        Array.prototype.concat.apply([new Interval(1)],
-          intervals
-            .map(column => column
-                .filter(interval => interval && interval._selected))
+  changeMode({ notes, intvs }) {
+    this.props.onChange(
+      new MuJS.Mode(
+        new MuJS.Note(notes.filter(note => note._selected)[0].name)
+      , Array.prototype.concat.apply(
+          [new MuJS.Interval(MuJS.symbols.INTVS[0])]
+        , intvs
+            .map(column => column.filter(intv => intv && intv._selected))
             .filter(arr => arr.length)
         )
       )
-    })
+    )
   }
 
   render() {
@@ -162,20 +152,20 @@ class Selector extends Component {
               key={i}
               note={note}
               onClick={this.onClickNote.bind(this, i)}
-            >{note.name.full}</NoteEl>
+            >{note.name}</NoteEl>
           )}
         </div>
         <div>
-          {this.state.intervals.map((column, i) =>
+          {this.state.intvs.map((column, i) =>
           <ColumnEl key={i}>
-              {column.map((interval, j) =>
+              {column.map((intv, j) =>
                 <IntervalEl
                   key={j}
                   i={i}
                   j={j}
-                  interval={interval}
-                  onClick={this.onClickInterval.bind(this, interval, i, j)}
-                >{interval ? interval.name.full : ''}</IntervalEl>
+                  intv={intv}
+                  onClick={this.onClickInterval.bind(this, intv, i, j)}
+                >{intv ? intv.name : ''}</IntervalEl>
               )}
             </ColumnEl>
           )}
