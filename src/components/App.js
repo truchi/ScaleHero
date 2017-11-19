@@ -10,7 +10,7 @@ class App extends Component {
     this.state = {
       guitar: {
         frets : 15
-      , tuning: MuJS.utils.str2items(MuJS.Note, 'E A D B G E').reverse()
+      , tuning: MuJS.utils.str2items(MuJS.Note, 'E A D G B E').reverse()
       }
     , mode: window.DICT[15].modes[0]
     }
