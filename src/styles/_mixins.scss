@@ -1,16 +1,6 @@
-@mixin _accidentals {
-  $accs: map-keys($modifiers);
-
-  @each $acc in $accs {
-    &[accs="#{ $acc }"] {
-      filter: saturate(map-get($modifiers, $acc));
-      filter: brightness(map-get($modifiers, $acc));
-    }
-  }
-}
-
 @mixin colors {
   $bases: 'C' 'D' 'E' 'F' 'G' 'A' 'B' '1' '2' '3' '4' '5' '6' '7';
+  $accs : -2 -1 0 1;
 
   $i: 0;
   @each $base in $bases {
@@ -20,10 +10,15 @@
       $i: 1;
     }
 
-    &[base="#{ $base }"] {
-      @include _accidentals;
+    $j: 0;
+    @each $acc in $accs {
+      $j: $j + 1;
 
-      background-color: var(--color#{ $i }, nth($colors, $i));
+      &[base="#{ $base }"][accs="#{ $acc }"] {
+        $var  : --color#{ $i }-#{ $acc };
+        $value: nth(nth($colors, $i), $j);
+        background-color: var($var, $value);
+      }
     }
   }
 
