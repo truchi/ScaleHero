@@ -45,7 +45,7 @@ class Guitar extends Component {
           const notes = [note].concat(
             Array(this.props.guitar.frets).fill(0)
               .map((e, i) =>
-                note.add(new MuJS.Interval(MuJS.utils.semi2intv(i)))
+                note.add(new MuJS.Interval(MuJS.utils.semi2intv(i + 1)))
               )
           )
 
