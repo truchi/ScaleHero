@@ -15,14 +15,13 @@
       $j: $j + 1;
 
       &[base="#{ $base }"][accs="#{ $acc }"] {
-        $var  : --color#{ $i }-#{ $acc };
         $value: nth(nth($colors, $i), $j);
-        background-color: var($var, $value);
+        background-color: $value;
       }
     }
   }
 
   &[base="0"] {
-    background-color: var(--color0, $color0);
+    background-color: $color0;
   }
 }
