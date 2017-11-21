@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import MuJS from 'mujs'
 import css from 'react-css-vars'
+import Box from './Box'
 
 const   FLAT = MuJS.symbols.ACCS.flat
 const DBFLAT = FLAT + FLAT
@@ -12,54 +13,10 @@ const SelectorEl = css({
 , displayName: 'Selector'
 })
 
-const NoteEl = css({
-  tag        : 'div'
-, className  : 'Note'
-, displayName: 'Note'
-}, (props, $) => {
-  const base = props.note.base
-  const accs = props.note.accs
-
-  $.attrs.set('base', base)
-  $.attrs.set('accs', accs)
-
-  if (props.note._selected) {
-    $.classes.add('selected')
-  } else {
-    $.classes.remove('selected')
-  }
-})
-
 const ColumnEl = css({
   tag        : 'div'
 , className  : 'Column'
 , displayName: 'Column'
-})
-
-const IntervalEl = css({
-  tag        : 'div'
-, className  : 'Interval'
-, displayName: 'Interval'
-}, (props, $) => {
-  if (props.i === 6 && props.j === 0) {
-    $.classes.add('shift')
-  } else {
-    $.classes.remove('shift')
-  }
-
-  if (!props.intv) return
-
-  const base = props.intv.base
-  const accs = props.intv.accs
-
-  $.attrs.set('base', base)
-  $.attrs.set('accs', accs)
-
-  if (props.intv._selected) {
-    $.classes.add('selected')
-  } else {
-    $.classes.remove('selected')
-  }
 })
 
 class Selector extends Component {
@@ -79,21 +36,18 @@ class Selector extends Component {
       })
 
     let intvs = [
-      [       null,        null,         null]
-    , [       null,  `${FLAT}2`,         null]
-    , [       null,         `2`, `${DBFLAT}3`]
-    , [`${SHARP}2`,  `${FLAT}3`,         null]
-    , [       null,         `3`,   `${FLAT}4`]
-    , [`${SHARP}3`,         `4`,         null]
-    , [       null, `${SHARP}4`,   `${FLAT}5`]
-    , [       null,         `5`, `${DBFLAT}6`]
-    , [`${SHARP}5`,  `${FLAT}6`,         null]
-    , [       null,         `6`, `${DBFLAT}7`]
-    , [`${SHARP}6`,  `${FLAT}7`,         null]
-    , [       null,         `7`,         null]
+      [ `${FLAT}2`              ]
+    , [        `2`, `${DBFLAT}3`]
+    , [`${SHARP}2`,   `${FLAT}3`]
+    , [        `3`,   `${FLAT}4`]
+    , [`${SHARP}3`,          `4`]
+    , [`${SHARP}4`,   `${FLAT}5`]
+    , [        `5`, `${DBFLAT}6`]
+    , [`${SHARP}5`,   `${FLAT}6`]
+    , [        `6`, `${DBFLAT}7`]
+    , [`${SHARP}6`,   `${FLAT}7`]
+    , [        `7`              ]
   ].map(column => column.map(intv => {
-      if (intv === null) return null
-
       intv           = new MuJS.Interval(intv)
       intv._selected = false
       if (selected.includes(intv.name))
@@ -148,24 +102,22 @@ class Selector extends Component {
       <SelectorEl>
         <div>
           {this.state.notes.map((note, i) =>
-            <NoteEl
+            <Box
               key={i}
-              note={note}
+              item={note}
               onClick={this.onClickNote.bind(this, i)}
-            >{note.name}</NoteEl>
+            />
           )}
         </div>
         <div>
           {this.state.intvs.map((column, i) =>
           <ColumnEl key={i}>
               {column.map((intv, j) =>
-                <IntervalEl
+                <Box
                   key={j}
-                  i={i}
-                  j={j}
-                  intv={intv}
+                  item={intv}
                   onClick={this.onClickInterval.bind(this, intv, i, j)}
-                >{intv ? intv.name : ''}</IntervalEl>
+                />
               )}
             </ColumnEl>
           )}

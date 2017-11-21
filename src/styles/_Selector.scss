@@ -1,50 +1,53 @@
 .Selector {
   display         : inline-block;
-  background-color: var(--Selector-background, $Selector-background);
-  color           : var(--Selector-foreground, $Selector-foreground);
+  background-color: $Selector-background;
+  color           : $Selector-foreground;
 
-  %Note-Interval {
+  $Box-margin: $Box-size / 18;
+  $Box-radius: $Box-size / 4;
+
+  .Box {
     @include colors;
 
-    width        : var(--Box-width, $Box-width);
-    height       : var(--Box-height, $Box-height);
-    line-height  : var(--Box-height, $Box-height);
-    margin       : var(--Box-margin, $Box-margin);
-    padding      : var(--Box-padding, $Box-padding);
-    border-radius: var(--Box-radius, $Box-radius);
-    border-width : var(--Box-border, $Box-border);
+    display      : inline-block;
+    box-sizing   : border-box;
+    width        : $Box-size;
+    height       : $Box-size;
+    line-height  : $Box-size - 4 * $Box-margin;
+    margin       : $Box-margin;
+    padding      : $Box-margin;
+    border-radius: $Box-radius;
+    border-width : $Box-margin;
     border-style : solid;
-    border-color : var(--general-background, $general-background);
+    border-color : $general-background;
     cursor       : pointer;
     text-align   : center;
 
     &.selected {
-      border-color: var(--Box-highlight, $Box-highlight);
+      border-color: $Box-highlight;
     }
-  }
-
-  .Note {
-    @extend %Note-Interval;
-
-    display: inline-block;
   }
 
   .Column {
     display       : inline-block;
     vertical-align: top;
 
-    .Interval {
-      @extend %Note-Interval;
+    .Box {
+      @extend .Box;
 
       display: block;
+    }
 
-      &:not([base]) {
-        cursor    : initial;
-        text-align: right;
-      }
+    $Box-outer: $Box-size + 2 * $Box-margin;
+    $offsets: (1 (1 2 4 7 9 11)) (1/2 (6));
 
-      &.shift {
-        height: var(--Box-height, $Box-height / 4);
+    @each $offset in $offsets {
+      $factor: nth($offset, 1);
+
+      @each $n in nth($offset, 2) {
+        &:nth-child(#{$n}) {
+          padding-top: $factor * $Box-outer - $factor * $Box-margin;
+        }
       }
     }
   }
