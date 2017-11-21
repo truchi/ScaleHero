@@ -1,45 +1,15 @@
 .Selector {
-  display         : inline-block;
-  background-color: $Selector-background;
-  color           : $Selector-foreground;
-
-  $Box-margin: $Box-size / 18;
-  $Box-radius: $Box-size / 4;
-
-  .Box {
-    @include colors;
-
-    display      : inline-block;
-    box-sizing   : border-box;
-    width        : $Box-size;
-    height       : $Box-size;
-    line-height  : $Box-size - 4 * $Box-margin;
-    margin       : $Box-margin;
-    padding      : $Box-margin;
-    border-radius: $Box-radius;
-    border-width : $Box-margin;
-    border-style : solid;
-    border-color : $general-background;
-    cursor       : pointer;
-    text-align   : center;
-
-    &.selected {
-      border-color: $Box-highlight;
-    }
-  }
-
   .Column {
     display       : inline-block;
     vertical-align: top;
 
     .Box {
-      @extend .Box;
-
       display: block;
     }
 
-    $Box-outer: $Box-size + 2 * $Box-margin;
-    $offsets: (1 (1 2 4 7 9 11)) (1/2 (6));
+    $Box-margin: $Box-size * $Box-size2margin;
+    $Box-outer : $Box-size + 2 * $Box-margin;
+    $offsets   : (1 (1 2 4 7 9 11)) (1/2 (6));
 
     @each $offset in $offsets {
       $factor: nth($offset, 1);

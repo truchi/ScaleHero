@@ -1,28 +1,15 @@
 .Guitar {
-  display         : inline-block;
-  background-color: $Guitar-background;
-
   .String {
     display: flex;
 
-    .Fret {
-      @include colors;
+    .Box {
+      @include box($Guitar-size, $Guitar-size2margin, $Guitar-size2border, $Guitar-size2radius, $Guitar-color, $Guitar-highlight);
 
-      display      : inline-block;
-      margin       : $Fret-margin;
-      width        : $Fret-width;
-      height       : $Fret-height;
-      border-radius: $Fret-radius;
-      border-width : $Fret-border;
-      border-style : solid;
-      border-color : $general-background;
+      cursor: initial;
 
       &:first-child {
-        width: $Fret-width / 3;
-      }
-
-      &.highlight {
-        border-color: $Fret-highlight;
+        width: $Guitar-size / 2;
+        font-size: $Guitar-size / 4;
       }
     }
   }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import MuJS from 'mujs'
 import css from 'react-css-vars'
+import Box from './Box'
 
 const GuitarEl = css({
   tag        : 'div'
@@ -14,28 +15,10 @@ const StringEl = css({
 , displayName: 'String'
 })
 
-const FretEl = css({
-  tag        : 'div'
-, className  : 'Fret'
-, displayName: 'Fret'
-}, (props, $) => {
-  let base = '0'
-  let accs = '0'
-
-  if (props.interval) {
-    base = props.interval.base
-    accs = props.interval.accs
-  }
-
-  $.attrs.set('base', base)
-  $.attrs.set('accs', accs)
-
-  if (['1', '3', '5', '7'].includes(base)) {
-    $.classes.add('highlight')
-  } else {
-    $.classes.remove('highlight')
-  }
-})
+let NOFRET  = new MuJS.Interval()
+NOFRET.name = ''
+NOFRET.base = '0'
+NOFRET.accs = 0
 
 class Guitar extends Component {
   render() {
@@ -53,11 +36,15 @@ class Guitar extends Component {
             {notes.map((note, i) => {
               let diff = note.semi - this.props.mode.root.semi
 
-              let interval= this.props.mode.getDegree(
+              let interval = this.props.mode.getDegree(
                 new MuJS.Note(MuJS.utils.semi2note(diff))
-              )
+              ) || NOFRET
 
-              return <FretEl key={i} interval={interval} />
+              if (['1', '3', '5', '7'].includes(interval.base)) {
+                interval._selected = true
+              }
+
+              return <Box key={i} item={interval} />
             })}
           </StringEl>
         })}

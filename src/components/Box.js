@@ -16,7 +16,7 @@ const BoxEl = css({
 class Box extends Component {
   render() {
     this.attrs = {
-      selected: this.props.item._selected
+        selected: this.props.item._selected
       , base    : this.props.item.base
       , accs    : this.props.item.accs
     }
