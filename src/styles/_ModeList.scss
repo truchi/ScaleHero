@@ -1,0 +1,10 @@
+.ModeList {
+  > .wrap {
+    display   : inline-block;
+    text-align: center;
+
+    > .name {
+      font-weight: bold;
+    }
+  }
+}
