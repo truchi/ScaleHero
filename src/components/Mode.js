@@ -10,18 +10,19 @@ const ModeEl = css({
 
 class Mode extends Component {
   render() {
+    const scaleName =
+      (this.props.showScaleName && this.props.mode.scale().name) || ''
+    const modeName =
+      (this.props.showModeName === false || this.props.mode.name) || ''
+
     return (
       <ModeEl>
         <div className="wrap">
-          {this.props.showScaleName &&
-            <div className="name">
-              {this.props.mode.scale().name}
-            </div>
+          {scaleName &&
+            <div className="name">{scaleName}</div>
           }
-          {this.props.showModeName === false ||
-            <div className="name">
-              {this.props.mode.name}
-            </div>
+          {modeName &&
+            <div className="name">{modeName}</div>
           }
           <div className="intervals">
             {this.props.mode.intvs.map((intv, i) => {
