@@ -1,4 +1,12 @@
 .Selector {
+  $Box-margin: $Box-size * $Box-size2margin;
+  $Box-outer : $Box-size + 2 * $Box-margin;
+  $offsets   : (1 (1 2 4 7 9 11)) (1/2 (6));
+
+  .intervals {
+    padding-left: $Box-outer; 
+  }
+
   .Column {
     display       : inline-block;
     vertical-align: top;
@@ -6,10 +14,6 @@
     .Box {
       display: block;
     }
-
-    $Box-margin: $Box-size * $Box-size2margin;
-    $Box-outer : $Box-size + 2 * $Box-margin;
-    $offsets   : (1 (1 2 4 7 9 11)) (1/2 (6));
 
     @each $offset in $offsets {
       $factor: nth($offset, 1);

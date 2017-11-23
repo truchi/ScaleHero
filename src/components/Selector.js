@@ -104,7 +104,7 @@ class Selector extends Component {
 
     return (
       <SelectorEl>
-        <div>
+        <div className="notes">
           {this.state.notes.map((note, i) =>
             <Box
               key={i}
@@ -113,7 +113,7 @@ class Selector extends Component {
             />
           )}
         </div>
-        <div>
+        <div className="intervals">
           {intvs.map((column, i) =>
             <ColumnEl key={i}>
               {column.map((intv, j) =>
