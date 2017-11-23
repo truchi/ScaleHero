@@ -19,7 +19,9 @@ class App extends Component {
   }
 
   onModeChange(mode) {
-    mode = MuJS.Dict.get(mode)
+    const root = mode.root
+    mode       = MuJS.Dict.get(mode)
+    mode.root  = root
 
     this.setState({ mode })
   }
