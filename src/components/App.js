@@ -37,11 +37,13 @@ class App extends Component {
           name="Includes"
           modes={mode.includes}
           showScalesName={false}
+          onChange={this.onModeChange.bind(this)}
         />
         <ModeList
           name="Included"
           modes={mode.included}
           showScalesName={false}
+          onChange={this.onModeChange.bind(this)}
         />
         <Guitar
           guitar={this.state.guitar}

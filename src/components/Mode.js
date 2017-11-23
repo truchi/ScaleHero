@@ -9,6 +9,12 @@ const ModeEl = css({
 })
 
 class Mode extends Component {
+  onClick() {
+    if (this.props.onChange) {
+      this.props.onChange(this.props.mode)
+    }
+  }
+
   render() {
     const scaleName =
       (this.props.showScaleName && this.props.mode.scale().name) || ''
@@ -17,7 +23,7 @@ class Mode extends Component {
 
     return (
       <ModeEl>
-        <div className="wrap">
+        <div className="wrap" onClick={this.onClick.bind(this)}>
           {scaleName &&
             <div className="name">{scaleName}</div>
           }
