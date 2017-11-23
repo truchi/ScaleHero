@@ -23,9 +23,6 @@ class Selector extends Component {
   constructor(props) {
     super(props)
 
-    let selected = this.props.mode.intvs
-      .map(intv => intv.name)
-
     let notes =
       [ `C`, `D${FLAT}`, `D`, `E${FLAT}`, `E`, `F`, `G${FLAT}`
       , `G`, `A${FLAT}`, `A`, `B${FLAT}`, `B` ].map(note => {
@@ -47,14 +44,7 @@ class Selector extends Component {
     , [        `6`, `${DBFLAT}7`]
     , [`${SHARP}6`,   `${FLAT}7`]
     , [        `7`              ]
-  ].map(column => column.map(intv => {
-      intv           = new MuJS.Interval(intv)
-      intv._selected = false
-      if (selected.includes(intv.name))
-        intv._selected = true
-
-      return intv
-    }))
+    ].map(column => column.map(intv => new MuJS.Interval(intv)))
 
     this.state = {
       notes
@@ -98,6 +88,20 @@ class Selector extends Component {
   }
 
   render() {
+    const selected = this.props.mode.intvs
+      .map(intv => intv.name)
+
+    const intvs = this.state.intvs
+      .map(column => column.map(intv => {
+        intv._selected = false
+        if (selected.includes(intv.name)) {
+          intv._selected = true
+        }
+
+        return intv
+      })
+    )
+
     return (
       <SelectorEl>
         <div>
@@ -110,8 +114,8 @@ class Selector extends Component {
           )}
         </div>
         <div>
-          {this.state.intvs.map((column, i) =>
-          <ColumnEl key={i}>
+          {intvs.map((column, i) =>
+            <ColumnEl key={i}>
               {column.map((intv, j) =>
                 <Box
                   key={j}
