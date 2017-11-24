@@ -7,4 +7,9 @@
   border-style : solid;
   cursor       : pointer;
   text-align   : center;
+
+  [flat],
+  [sharp] {
+    font-family: Metdemo;
+  }
 }
