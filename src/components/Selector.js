@@ -113,6 +113,7 @@ class Selector extends Component {
             />
           )}
         </div>
+        <br />
         <div className="intervals">
           {intvs.map((column, i) =>
             <ColumnEl key={i}>

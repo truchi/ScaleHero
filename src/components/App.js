@@ -22,6 +22,7 @@ class App extends Component {
     const root = mode.root
     mode       = MuJS.Dict.get(mode)
     mode.root  = root
+    mode.name  = mode.name || '?'
 
     this.setState({ mode })
   }
@@ -32,9 +33,11 @@ class App extends Component {
 
     return (
       <div>
-        <Mode
-          mode={mode}
-        />
+        <div className="title">
+          <Mode
+            mode={mode}
+          />
+        </div>
         <Guitar
           guitar={this.state.guitar}
           mode={mode}

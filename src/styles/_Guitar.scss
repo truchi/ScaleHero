@@ -1,4 +1,8 @@
 .Guitar {
+  > .wrap {
+    display: inline-block;
+  }
+
   .String {
     display: flex;
 

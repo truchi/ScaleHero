@@ -32,21 +32,25 @@ class Guitar extends Component {
               )
           )
 
-          return <StringEl key={i}>
-            {notes.map((note, i) => {
-              let diff = note.semi - this.props.mode.root.semi
+          return (
+            <div className='wrap'>
+              <StringEl key={i}>
+                {notes.map((note, i) => {
+                  let diff = note.semi - this.props.mode.root.semi
 
-              let interval = this.props.mode.getDegree(
-                new MuJS.Note(MuJS.utils.semi2note(diff))
-              ) || NOFRET
+                  let interval = this.props.mode.getDegree(
+                    new MuJS.Note(MuJS.utils.semi2note(diff))
+                  ) || NOFRET
 
-              if (['1', '3', '5', '7'].includes(interval.base)) {
-                interval._selected = true
-              }
+                  if (['1', '3', '5', '7'].includes(interval.base)) {
+                    interval._selected = true
+                  }
 
-              return <Box key={i} item={interval} />
-            })}
-          </StringEl>
+                  return <Box key={i} item={interval} />
+                })}
+              </StringEl>
+            </div>
+          )
         })}
       </GuitarEl>
     )
