@@ -35,6 +35,14 @@ class App extends Component {
         <Mode
           mode={mode}
         />
+        <Guitar
+          guitar={this.state.guitar}
+          mode={mode}
+        />
+        <Selector
+          mode={mode}
+          onChange={this.onModeChange.bind(this)}
+        />
         <ModeList
           name="Includes"
           modes={mode.includes}
@@ -45,14 +53,6 @@ class App extends Component {
           name="Included"
           modes={mode.included}
           showScalesName={false}
-          onChange={this.onModeChange.bind(this)}
-        />
-        <Guitar
-          guitar={this.state.guitar}
-          mode={mode}
-        />
-        <Selector
-          mode={mode}
           onChange={this.onModeChange.bind(this)}
         />
       </div>
