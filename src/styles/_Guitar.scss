@@ -1,3 +1,16 @@
+$Inlay-size: $Guitar-size / 4;
+
+%circle {
+  content      : '';
+  position     : absolute;
+  top          : calc(50% - #{$Inlay-size} / 2);
+  display      : block;
+  background   : $general-color;
+  width        : $Inlay-size;
+  height       : $Inlay-size;
+  border-radius: $Inlay-size;
+}
+
 .Guitar {
   > .wrap {
     display: inline-block;
@@ -12,8 +25,43 @@
       cursor: initial;
 
       &:first-child {
-        width: $Guitar-size / 2;
+        width    : $Guitar-size / 2;
         font-size: $Guitar-size / 4;
+      }
+    }
+  }
+
+  .inlay {
+    @include box($Guitar-size, $Guitar-size2margin, $Guitar-size2border, $Guitar-size2radius, $Guitar-color, $Guitar-highlight);
+
+    position  : relative;
+    display   : inline-block;
+    box-sizing: border-box;
+    height    : $Inlay-size;
+
+    &:first-child {
+      width: $Guitar-size / 2;
+    }
+
+    &.single {
+      &:before {
+        @extend %circle;
+
+        left: calc(50% - #{$Inlay-size} / 2);
+      }
+    }
+
+    &.double {
+      &:before {
+        @extend %circle;
+
+        left: calc((100% - #{$Inlay-size}) / 4);
+      }
+
+      &:after {
+        @extend %circle;
+
+        left: calc(3 * (100% - #{$Inlay-size}) / 4);
       }
     }
   }

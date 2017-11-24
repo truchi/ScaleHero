@@ -22,8 +22,27 @@ NOFRET.accs = 0
 
 class Guitar extends Component {
   render() {
+    let Inlays = Array(this.props.guitar.frets + 1).fill(0).map((x, i) => {
+      let Inlay = <div className='inlay' key={i}></div>
+      let num   = i % 12
+
+      Inlay = [3, 5, 7, 9].includes(num)
+        ? <div className='inlay single' key={i}></div>
+        : Inlay
+      Inlay = i !== 0 && num === 0
+        ? <div className='inlay double' key={i}></div>
+        : Inlay
+
+      return Inlay
+    })
+
     return (
       <GuitarEl>
+        <div className='wrap' key='-1'>
+          <StringEl>
+            {Inlays}
+          </StringEl>
+        </div>
         {this.props.guitar.tuning.map((note, i) => {
           const notes = [note].concat(
             Array(this.props.guitar.frets).fill(0)
@@ -33,8 +52,8 @@ class Guitar extends Component {
           )
 
           return (
-            <div className='wrap'>
-              <StringEl key={i}>
+            <div className='wrap' key={i}>
+              <StringEl>
                 {notes.map((note, i) => {
                   let diff = note.semi - this.props.mode.root.semi
 
@@ -52,6 +71,11 @@ class Guitar extends Component {
             </div>
           )
         })}
+        <div className='wrap' key={this.props.guitar.tuning.length}>
+          <StringEl>
+            {Inlays}
+          </StringEl>
+        </div>
       </GuitarEl>
     )
   }
