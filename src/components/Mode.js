@@ -18,7 +18,7 @@ class Mode extends Component {
   render() {
     return (
       <ModeEl>
-        <div className="wrap" onClick={this.onClick.bind(this)}>
+        <div onClick={this.onClick.bind(this)}>
           <div className="name">{this.props.mode.name}</div>
           <div className="intervals">
             {this.props.mode.intvs.map((intv, i) => {

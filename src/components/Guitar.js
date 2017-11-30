@@ -38,11 +38,9 @@ class Guitar extends Component {
 
     return (
       <GuitarEl>
-        <div className='wrap' key='-1'>
-          <StringEl>
-            {Inlays}
-          </StringEl>
-        </div>
+        <StringEl key='-1'>
+          {Inlays}
+        </StringEl>
         {this.props.guitar.tuning.map((note, i) => {
           const notes = [note].concat(
             Array(this.props.guitar.frets).fill(0)
@@ -52,30 +50,26 @@ class Guitar extends Component {
           )
 
           return (
-            <div className='wrap' key={i}>
-              <StringEl>
-                {notes.map((note, i) => {
-                  let diff = note.semi - this.props.mode.root.semi
+            <StringEl key={i}>
+              {notes.map((note, i) => {
+                let diff = note.semi - this.props.mode.root.semi
 
-                  let interval = this.props.mode.getDegree(
-                    new MuJS.Note(MuJS.utils.semi2note(diff))
-                  ) || NOFRET
+                let interval = this.props.mode.getDegree(
+                  new MuJS.Note(MuJS.utils.semi2note(diff))
+                ) || NOFRET
 
-                  if (['1', '3', '5', '7'].includes(interval.base)) {
-                    interval._selected = true
-                  }
+                if (['1', '3', '5', '7'].includes(interval.base)) {
+                  interval._selected = true
+                }
 
-                  return <Box key={i} item={interval} />
-                })}
-              </StringEl>
-            </div>
+                return <Box key={i} item={interval} />
+              })}
+            </StringEl>
           )
         })}
-        <div className='wrap' key={this.props.guitar.tuning.length}>
-          <StringEl>
-            {Inlays}
-          </StringEl>
-        </div>
+        <StringEl key={this.props.guitar.tuning.length}>
+          {Inlays}
+        </StringEl>
       </GuitarEl>
     )
   }

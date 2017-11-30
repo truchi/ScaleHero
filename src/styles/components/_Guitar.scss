@@ -12,10 +12,6 @@ $Inlay-size: $Guitar-size / 4;
 }
 
 .Guitar {
-  > .wrap {
-    display: inline-block;
-  }
-
   .String {
     display: flex;
 

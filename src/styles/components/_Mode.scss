@@ -5,10 +5,6 @@
   width     : 13 * $Mode-outer;
   text-align: center;
 
-  .wrap {
-    display: inline-block;
-  }
-
   .Box {
     @include box($Mode-size, $Mode-size2margin, $Mode-size2border, $Mode-size2radius, $Mode-color, $Mode-highlight);
 
