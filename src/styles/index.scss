@@ -1,7 +1,10 @@
-@import 'theme';
+@import "./themes/default/main";
+
 @import 'mixins';
 @import 'general';
+
 @import 'views/App';
+
 @import 'components/ModeList';
 @import 'components/Mode';
 @import 'components/Guitar';
