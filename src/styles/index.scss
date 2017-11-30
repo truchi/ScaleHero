@@ -1,9 +1,9 @@
 @import 'theme';
 @import 'mixins';
 @import 'general';
-@import 'App';
-@import 'ModeList';
-@import 'Mode';
-@import 'Guitar';
-@import 'Selector';
-@import 'Box';
+@import 'views/App';
+@import 'components/ModeList';
+@import 'components/Mode';
+@import 'components/Guitar';
+@import 'components/Selector';
+@import 'components/Box';
