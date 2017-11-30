@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import css from 'react-css-vars'
 import Mode from './Mode'
 
 class ModeList extends Component {
