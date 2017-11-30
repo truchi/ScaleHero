@@ -2,7 +2,7 @@ import './styles/index.css'
 import registerServiceWorker from './registerServiceWorker'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App      from './components/App'
+import App      from './views/App'
 
 import MuJS from 'mujs'
 window.DICT = MuJS.Dict.scales()
