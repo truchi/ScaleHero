@@ -49,13 +49,11 @@ class App extends Component {
         <ModeList
           name="Includes"
           modes={mode.includes}
-          showScalesName={false}
           onChange={this.onModeChange.bind(this)}
         />
         <ModeList
           name="Included"
           modes={mode.included}
-          showScalesName={false}
           onChange={this.onModeChange.bind(this)}
         />
       </div>

@@ -16,8 +16,6 @@ class ModeList extends Component {
             <Mode
               key={i}
               mode={mode}
-              showScaleName={this.props.showScalesName}
-              showModeName={this.props.showModesName}
               onChange={this.props.onChange}
             />
           )}
