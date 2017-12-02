@@ -1,10 +1,7 @@
 .ModeList {
-  > .wrap {
-    display   : inline-block;
-    text-align: center;
+  text-align: center;
 
-    > .name {
-      font-weight: bold;
-    }
+  > .name {
+    font-weight: bold;
   }
 }
