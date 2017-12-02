@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import MuJS from 'mujs'
 import BoardView from './BoardView'
+import ModesView from './ModesView'
 
 class App extends Component {
   constructor(props) {
@@ -31,11 +32,14 @@ class App extends Component {
 
     return (
       <div>
-        <BoardView
+        <ModesView
+          dict={window.DICT}
+        />
+        {/* <BoardView
           guitar={guitar}
           mode={mode}
           onChange={onChange}
-        />
+        /> */}
       </div>
     )
   }
