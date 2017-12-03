@@ -85,7 +85,14 @@ class App extends Component {
     this.setState({ details, show: 'details' })
   }
 
+  show(show) {
+    this.setState({ show })
+  }
+
   render() {
+    let Button
+    let View
+
     const show          = this.state.show
     const guitar        = this.state.guitar
     const data          = this.state.data
@@ -93,28 +100,49 @@ class App extends Component {
     const details       = this.state.details
     const onChange      = this.onModeChange.bind(this)
     const onShowDetails = this.onShowDetails.bind(this)
+    const buttonClick   = this.show.bind(this)
 
     switch (show) {
       case 'modes':
-        return <ModesView
+        Button = <div />
+        View   = <ModesView
           current={Object.keys(data)[0]}
           groups={data}
           onChange={onChange}
         />
+        break;
       case 'board':
-        return <BoardView
+        Button = <div
+          className='button'
+          onClick={buttonClick.bind(this, 'modes')}
+        />
+        View = <BoardView
           guitar={guitar}
           mode={mode}
           onChange={onChange}
           onShowDetails={onShowDetails}
         />
+        break;
       case 'details':
-        return <ModesView
+      default:
+        Button = <div
+          className='button'
+          onClick={buttonClick.bind(this, 'board')}
+        />
+        View = <ModesView
           current={Object.keys(details)[0]}
           groups={details}
           onChange={onChange}
         />
-    }
+        break;
+      }
+
+      return (
+        <div className="App">
+          {Button}
+          {View}
+        </div>
+      )
   }
 }
 
