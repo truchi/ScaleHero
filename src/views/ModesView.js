@@ -6,8 +6,7 @@ class ModesView extends Component {
     super(props)
 
     this.state = {
-      groups: this.props.data
-    , key   : Object.keys(this.props.data)[0]
+      key: Object.keys(this.props.groups)[0]
     }
   }
 
@@ -16,7 +15,7 @@ class ModesView extends Component {
   }
 
   render() {
-    const groups = Object.entries(this.state.groups)
+    const groups = Object.entries(this.props.groups)
     const titles = groups.map(([key, group]) => {
       return {
         title: group.title
