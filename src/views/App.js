@@ -29,6 +29,47 @@ class App extends Component {
 
       this.modesViewsData[length].lists.push(scale)
     })
+
+    this.modeViewsData = this.getModeViewData(this.state.mode)
+  }
+
+  getModeViewData(mode) {
+    const data     = {}
+    const scale    = mode.scale()
+    const modes    = scale.modes
+    const includes = mode.includes
+    const included = mode.included
+    const similars = mode.similars
+
+    if (modes.length > 1) {
+      data.modes = {
+        title: 'Modes'
+      , lists: [{ name: scale.name, modes: modes }]
+      }
+    }
+
+    if (includes.length) {
+      data.includes = {
+        title: 'Includes'
+      , lists: [{ name: '', modes: includes }]
+      }
+    }
+
+    if (included.length) {
+      data.included = {
+        title: 'Included'
+      , lists: [{ name: '', modes: included }]
+      }
+    }
+
+    if (similars.length) {
+      data.similars = {
+        title: 'Similars'
+      , lists: [{ name: '', modes: similars }]
+      }
+    }
+
+    return data
   }
 
   onModeChange(mode) {
@@ -48,7 +89,7 @@ class App extends Component {
     return (
       <div>
         <ModesView
-          data={this.modesViewsData}
+          data={this.modeViewsData}
         />
         {/* <BoardView
           guitar={guitar}
