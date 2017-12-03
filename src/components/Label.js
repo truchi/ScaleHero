@@ -8,13 +8,17 @@ const Accs = {}
 Accs[FLAT ] = <span acc=''>H</span>
 Accs[NAT  ] = <span acc=''>J</span>
 Accs[SHARP] = <span acc=''>G</span>
+let cache = {}
 
 class Label extends Component {
-  slice(txt) {
-    let slices  = []
-    let indexes = []
+  indexes(txt) {
+    if (cache[txt]) {
+      return cache[txt]
+    }
 
-    const l = txt.length
+    let indexes = []
+    const l     = txt.length
+
     for(let acc of [ FLAT, NAT, SHARP ]) {
       for (let i = 0; i < l; ++i) {
         i = txt.indexOf(acc, i)
@@ -25,10 +29,18 @@ class Label extends Component {
     }
 
     indexes.sort((i1, i2) => i1.i - i2.i)
+    cache[txt] = indexes
 
-    const iL = indexes.length
+    return indexes
+  }
+
+  slice(txt) {
+    let   slices  = []
+    const indexes = this.indexes(txt)
+    const l       = indexes.length
+
     let prev = 0
-    for (let i = 0; i < iL; ++i) {
+    for (let i = 0; i < l; ++i) {
       let ind = indexes[i].i
 
       slices.push(txt.slice(prev, ind))
