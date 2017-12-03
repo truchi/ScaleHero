@@ -74,7 +74,6 @@ class App extends Component {
     const root = mode.root
     mode       = MuJS.Dict.get(mode)
     mode.root  = root
-    mode.name  = mode.name || '?'
 
     this.setState({ mode, show: 'board' })
   }

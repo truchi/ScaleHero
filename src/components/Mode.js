@@ -19,7 +19,7 @@ class Mode extends Component {
     return (
       <ModeEl>
         <div onClick={this.onClick.bind(this)}>
-          <div className="name">{this.props.mode.name}</div>
+          <div className="name">{this.props.mode.name || '?'}</div>
           <div className="intervals">
             {this.props.mode.intvs.map((intv, i) => {
               if (['1', '3', '5', '7'].includes(intv.base)) {
