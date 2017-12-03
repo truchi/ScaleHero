@@ -40,7 +40,6 @@ class App extends Component {
 
     if (!scale.name) {
       scale.name = mode.toString()
-      mode.name = ''
       modes.splice(0, 1, mode)
     }
 
