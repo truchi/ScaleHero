@@ -14,6 +14,21 @@ class App extends Component {
       }
     , mode: window.DICT[15].modes[0]
     }
+
+    this.modesViewsData = {}
+    window.DICT.forEach(scale => {
+      const length = scale.intvs.length
+
+      this.modesViewsData[length] = !this.modesViewsData[length]
+        ?
+          {
+            title: `${length} notes`
+          , lists: []
+          }
+        : this.modesViewsData[length]
+
+      this.modesViewsData[length].lists.push(scale)
+    })
   }
 
   onModeChange(mode) {
@@ -33,7 +48,7 @@ class App extends Component {
     return (
       <div>
         <ModesView
-          dict={window.DICT}
+          data={this.modesViewsData}
         />
         {/* <BoardView
           guitar={guitar}

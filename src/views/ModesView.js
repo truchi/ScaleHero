@@ -5,47 +5,48 @@ class ModesView extends Component {
   constructor(props) {
     super(props)
 
-    const scales = {}
-    this.props.dict.forEach(scale => {
-      const length = scale.intvs.length
-
-      scales[length] = !scales[length] ? [] : scales[length]
-      scales[length].push(scale)
-    })
-
     this.state = {
-      scales
-    , show: Object.keys(scales)[0]
+      groups: this.props.data
+    , key   : Object.keys(this.props.data)[0]
     }
   }
 
-  show(length) {
-    this.setState({ show: length })
+  show(key) {
+    this.setState({ key })
   }
 
   render() {
-    const allScales   = Object.entries(this.state.scales)
-    const shownScales = this.state.scales[this.state.show]
+    const groups = Object.entries(this.state.groups)
+    const titles = groups.map(([key, group]) => {
+      return {
+        title: group.title
+      , shown: key === this.state.key ? ' shown' : ''
+      , key  : key
+      }
+    })
+    const shownScales = groups.filter(([key, group]) => {
+      return key === this.state.key
+    })[0][1].lists
 
     return (
       <div className="ModesView">
         <div className="titles">
-          {allScales.map(([length, scales], i) =>
+          {titles.map(title =>
             <div
-              className={'title' + (length === this.state.show ? ' shown' : '')}
-              key={i}
-              onClick={this.show.bind(this, length)}
+              className={'title' + title.shown}
+              key={title.key}
+              onClick={this.show.bind(this, title.key)}
             >
-              {length} notes
+              {title.title}
             </div>
           )}
         </div>
         <div className="lists">
-          {shownScales.map((scale, i) =>
+          {shownScales.map(list =>
             <ModeList
-              key={scale.name}
-              name={scale.name}
-              modes={scale.modes}
+              key={list.name}
+              name={list.name}
+              modes={list.modes}
             />
           )}
         </div>
