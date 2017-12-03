@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Mode from './Mode'
+import Label from './Label'
 
 class ModeList extends Component {
   render() {
@@ -7,7 +8,7 @@ class ModeList extends Component {
       <div className="ModeList">
         {this.props.name &&
           <div className="name">
-            {this.props.name}
+            <Label txt={this.props.name} />
           </div>
         }
         {this.props.modes.map((mode, i) =>

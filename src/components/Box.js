@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import css from 'react-css-vars'
-
-const Flat  = <span flat=''>H</span>
-const Sharp = <span sharp=''>G</span>
+import Label from './Label'
 
 const BoxEl = css({
   tag        : 'div'
@@ -26,17 +24,12 @@ class Box extends Component {
       , accs    : item.accs
     }
 
-    let base = item.base === '0' ? '' :  item.base
-    let Accs = Array(Math.abs(item.accs)).fill(item.accs > 0 ? Sharp : Flat)
-
     return (
       <BoxEl
         onClick={this.props.onClick}
         {...this.attrs}
       >
-        {item.constructor.name === 'Note'     && base}
-        {Accs.map((Acc, key) => React.cloneElement(Acc, { key }))}
-        {item.constructor.name === 'Interval' && base}
+        <Label txt={item.name} />
       </BoxEl>
     )
   }
