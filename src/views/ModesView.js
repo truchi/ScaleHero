@@ -5,27 +5,40 @@ class ModesView extends Component {
   constructor(props) {
     super(props)
 
-    this.state = {
-      key: Object.keys(this.props.groups)[0]
-    }
+    this._internal = false
   }
 
-  show(key) {
-    this.setState({ key })
+  show(current) {
+    this._internal = true
+    this.setState({ current })
+  }
+
+  getCurrent() {
+    let current
+
+    if (this._internal) {
+      current = this.state.current
+      this._internal = false
+    } else {
+      current = this.props.current
+    }
+
+    return current
   }
 
   render() {
-    const groups = Object.entries(this.props.groups)
-    const titles = groups.map(([key, group]) => {
+    const current = this.getCurrent()
+    const groups  = Object.entries(this.props.groups)
+    const titles  = groups.map(([key, group]) => {
       return {
         title: group.title
-      , shown: key === this.state.key ? ' shown' : ''
+      , shown: key === current ? ' shown' : ''
       , key  : key
       }
     })
     let shownScales = groups.length
       ? groups.filter(([key, group]) => {
-        return key === this.state.key
+        return key === current
       })[0][1].lists
       : []
 
@@ -48,6 +61,7 @@ class ModesView extends Component {
               key={list.name}
               name={list.name}
               modes={list.modes}
+              onChange={this.props.onChange}
             />
           )}
         </div>
