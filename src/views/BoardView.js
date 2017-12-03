@@ -8,11 +8,13 @@ class BoardView extends Component {
     const mode     = this.props.mode
     const guitar   = this.props.guitar
     const onChange = this.props.onChange
+    const onClick  = this.props.onShowDetails
 
     return (
       <div className="BoardView">
         <Mode
           mode={mode}
+          onChange={onClick}
         />
         <Guitar
           guitar={guitar}

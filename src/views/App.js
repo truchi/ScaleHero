@@ -23,9 +23,11 @@ class App extends Component {
     })
 
     this.state = {
-      guitar: this.props.guitar
-    , mode  : this.props.mode
-    , data  : data
+      guitar : this.props.guitar
+    , data   : data
+    , mode   : null
+    , details: null
+    , show   : 'modes'
     }
   }
 
@@ -74,35 +76,45 @@ class App extends Component {
     mode.root  = root
     mode.name  = mode.name || '?'
 
-    this.setState({ mode })
+    this.setState({ mode, show: 'board' })
+  }
+
+  onShowDetails(mode) {
+    const details = this.getModeDetails(mode)
+
+    this.setState({ details, show: 'details' })
   }
 
   render() {
-    const data     = this.state.data
-    const mode     = this.state.mode
-    const details  = this.getModeDetails(mode)
-    const guitar   = this.state.guitar
-    const onChange = this.onModeChange.bind(this)
+    const show          = this.state.show
+    const guitar        = this.state.guitar
+    const data          = this.state.data
+    const mode          = this.state.mode
+    const details       = this.state.details
+    const onChange      = this.onModeChange.bind(this)
+    const onShowDetails = this.onShowDetails.bind(this)
 
-    return (
-      <div>
-        <ModesView
+    switch (show) {
+      case 'modes':
+        return <ModesView
           current={Object.keys(data)[0]}
           groups={data}
           onChange={onChange}
         />
-        <BoardView
+      case 'board':
+        return <BoardView
           guitar={guitar}
           mode={mode}
           onChange={onChange}
+          onShowDetails={onShowDetails}
         />
-        <ModesView
+      case 'details':
+        return <ModesView
           current={Object.keys(details)[0]}
           groups={details}
           onChange={onChange}
         />
-      </div>
-    )
+    }
   }
 }
 
