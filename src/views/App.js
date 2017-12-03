@@ -7,33 +7,29 @@ class App extends Component {
   constructor(props) {
     super(props)
 
-    this.state = {
-      guitar: {
-        frets : 15
-      , tuning: MuJS.utils.str2items(MuJS.Note, 'E A D G B E').reverse()
-      }
-    , mode: window.DICT[15].modes[0]
-    }
-
-    this.modesViewsData = {}
-    window.DICT.forEach(scale => {
+    let data = {}
+    this.props.dict.forEach(scale => {
       const length = scale.intvs.length
 
-      this.modesViewsData[length] = !this.modesViewsData[length]
+      data[length] = !data[length]
         ?
           {
             title: `${length} notes`
           , lists: []
           }
-        : this.modesViewsData[length]
+        : data[length]
 
-      this.modesViewsData[length].lists.push(scale)
+      data[length].lists.push(scale)
     })
 
-    this.modeViewsData = this.getModeViewData(this.state.mode)
+    this.state = {
+      guitar: this.props.guitar
+    , mode  : this.props.mode
+    , data  : data
+    }
   }
 
-  getModeViewData(mode) {
+  getModeDetails(mode) {
     const data     = {}
     const scale    = mode.scale()
     const modes    = scale.modes
@@ -82,20 +78,29 @@ class App extends Component {
   }
 
   render() {
+    const data     = this.state.data
     const mode     = this.state.mode
+    const details  = this.getModeDetails(mode)
     const guitar   = this.state.guitar
     const onChange = this.onModeChange.bind(this)
 
     return (
       <div>
         <ModesView
-          data={this.modeViewsData}
+          current={Object.keys(data)[0]}
+          groups={data}
+          onChange={onChange}
         />
-        {/* <BoardView
+        <BoardView
           guitar={guitar}
           mode={mode}
           onChange={onChange}
-        /> */}
+        />
+        <ModesView
+          current={Object.keys(details)[0]}
+          groups={details}
+          onChange={onChange}
+        />
       </div>
     )
   }
