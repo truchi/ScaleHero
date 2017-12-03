@@ -24,9 +24,11 @@ class ModesView extends Component {
       , key  : key
       }
     })
-    const shownScales = groups.filter(([key, group]) => {
-      return key === this.state.key
-    })[0][1].lists
+    let shownScales = groups.length
+      ? groups.filter(([key, group]) => {
+        return key === this.state.key
+      })[0][1].lists
+      : []
 
     return (
       <div className="ModesView">
