@@ -39,6 +39,12 @@ class App extends Component {
     const included = mode.included
     const similars = mode.similars
 
+    if (!scale.name) {
+      scale.name = mode.toString()
+      mode.name = ''
+      modes.splice(0, 1, mode)
+    }
+
     if (modes.length > 1) {
       data.modes = {
         title: 'Modes'
