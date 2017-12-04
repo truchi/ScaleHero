@@ -1,50 +1,20 @@
 import React, { Component } from 'react'
 import MuJS from 'mujs'
-import css from 'react-css-vars'
-import Box from './Box'
-
-const   FLAT = MuJS.symbols.ACCS.flat
-const DBFLAT = FLAT + FLAT
-const  SHARP = MuJS.symbols.ACCS.sharp
-
-const SelectorEl = css({
-  tag        : 'div'
-, className  : 'Selector'
-, displayName: 'Selector'
-})
-
-const ColumnEl = css({
-  tag        : 'div'
-, className  : 'Column'
-, displayName: 'Column'
-})
+import NoteList, { NOTES } from './NoteList'
+import IntervalList, { INTVS } from './IntervalList'
 
 class Selector extends Component {
   constructor(props) {
     super(props)
 
-    let notes =
-      [ `C`, `D${FLAT}`, `D`, `E${FLAT}`, `E`, `F`, `G${FLAT}`
-      , `G`, `A${FLAT}`, `A`, `B${FLAT}`, `B` ].map(note => {
-        note = new MuJS.Note(note)
+    let notes = NOTES
+      .map(note => {
         note._selected = this.props.mode.root.semi === note.semi
 
         return note
       })
 
-    let intvs = [
-      [ `${FLAT}2`              ]
-    , [        `2`, `${DBFLAT}3`]
-    , [`${SHARP}2`,   `${FLAT}3`]
-    , [        `3`,   `${FLAT}4`]
-    , [`${SHARP}3`,          `4`]
-    , [`${SHARP}4`,   `${FLAT}5`]
-    , [        `5`, `${DBFLAT}6`]
-    , [`${SHARP}5`,   `${FLAT}6`]
-    , [        `6`, `${DBFLAT}7`]
-    , [`${SHARP}6`,   `${FLAT}7`]
-    , [        `7`              ]
-    ].map(column => column.map(intv => new MuJS.Interval(intv)))
+    let intvs = INTVS
 
     this.state = {
       notes
@@ -52,25 +22,40 @@ class Selector extends Component {
     }
   }
 
-  onClickNote(i) {
-    let notes = this.state.notes
+  onClickNote(note) {
+    this.changeMode({
+      intvs: this.state.intvs
+    , notes: this.state.notes.map(_note => {
+        if (note === _note) {
+          _note._selected = true
+        } else {
+          _note._selected = false
+        }
 
-    notes.forEach(note => note._selected = false)
-    notes[i]._selected = true
-
-    this.changeMode({ notes, intvs: this.state.intvs })
+        return _note
+      })
+    })
   }
 
-  onClickInterval(intv, i, j) {
-    if (!intv) return
+  onClickInterval(intv) {
+    this.changeMode({
+      notes: this.state.notes
+    , intvs: this.state.intvs.map(column => {
+        if (column.indexOf(intv) !== -1) {
+          return column.map(_intv => {
+            if (intv === _intv) {
+              _intv._selected = true
+            } else {
+              _intv._selected = false
+            }
 
-    let intvs = this.state.intvs
-    let prev  = intvs[i][j]._selected
+            return _intv
+          })
+        }
 
-    intvs[i].forEach(intv => intv && (intv._selected = false))
-    intvs[i][j]._selected = !prev
-
-    this.changeMode({ notes: this.state.notes, intvs })
+        return column
+      })
+    })
   }
 
   changeMode({ notes, intvs }) {
@@ -88,9 +73,9 @@ class Selector extends Component {
   }
 
   render() {
+    const notes    = this.state.notes
     const selected = this.props.mode.intvs
       .map(intv => intv.name)
-
     const intvs = this.state.intvs
       .map(column => column.map(intv => {
         intv._selected = false
@@ -103,31 +88,17 @@ class Selector extends Component {
     )
 
     return (
-      <SelectorEl>
-        <div className="notes">
-          {this.state.notes.map((note, i) =>
-            <Box
-              key={i}
-              item={note}
-              onClick={this.onClickNote.bind(this, i)}
-            />
-          )}
-        </div>
+      <div className="Selector">
+        <NoteList
+          notes={notes}
+          onClick={this.onClickNote.bind(this)}
+        />
         <br />
-        <div className="intervals">
-          {intvs.map((column, i) =>
-            <ColumnEl key={i}>
-              {column.map((intv, j) =>
-                <Box
-                  key={j}
-                  item={intv}
-                  onClick={this.onClickInterval.bind(this, intv, i, j)}
-                />
-              )}
-            </ColumnEl>
-          )}
-        </div>
-      </SelectorEl>
+        <IntervalList
+          intvs={intvs}
+          onClick={this.onClickInterval.bind(this)}
+        />
+      </div>
     )
   }
 }
