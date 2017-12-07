@@ -2,13 +2,17 @@
   $Keyboard-margin: $Keyboard-size * $Keyboard-size2margin;
   $Keyboard-outer : $Keyboard-size + 2 * $Keyboard-margin;
 
-  width: 7 * $Keyboard-outer;
+  width: 8 * $Keyboard-outer;
 
   > .row {
     > .Box {
       @include box($Keyboard-size, $Keyboard-size2margin, $Keyboard-size2border, $Keyboard-size2radius, $Keyboard-color, $Keyboard-highlight);
 
       vertical-align: top;
+
+      &[base="0"] {
+        cursor: default;
+      }
     }
 
     &.top {

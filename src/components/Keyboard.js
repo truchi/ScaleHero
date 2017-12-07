@@ -11,6 +11,7 @@ class Keyboard extends Component {
   render() {
     const mode = this.props.mode
     let   rows = [[1, 3, 6, 8, 10], [2, 4, 5, 7, 9, 11, 0]]
+    rows[1].unshift(-1)
 
     mode.intvs.forEach(intv => {
       let i = rows[0].indexOf(intv.semi)
@@ -23,11 +24,9 @@ class Keyboard extends Component {
     const mapNotes = intv => {
       const nobox   = Number.isInteger(intv)
       const item    = nobox ? NOBOX : intv
-      const onClick =
-        ((onClick, item) => () => onClick(item))(
-          this.props.onClick
-        , nobox ? null : intv
-        )
+      const onClick = nobox
+        ? null
+        : ((onClick, item) => () => onClick(item))(this.props.onClick, intv)
 
       return <Box
         key={nobox ? intv : intv.semi}
