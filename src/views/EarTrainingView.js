@@ -15,12 +15,34 @@ class EarTrainingView extends Component {
     , type : 'both'
     }
 
-    this.player   = new IntervalPlayer(this.state)
-    this.answered = this.answered.bind(this)
-    this.asked    = null
+    this.asked       = null
+    this.player      = new IntervalPlayer(this.state)
+    this.answered    = this.answered.bind(this)
+    this.onClickRoot = this.onClickRoot.bind(this)
   }
 
   render() {
+    const root = {
+      className: 'root' + (!this.state.root ? ' selected' : '')
+    , onClick  : this.onClickRoot
+    }
+    const harm = {
+      className: 'harm' + (this.state.type  === 'melo' ? '' : ' selected')
+    , onClick  : this.onClickType.bind(this, 'harm')
+    }
+    const melo = {
+      className: 'melo' + (this.state.type  === 'harm' ? '' : ' selected')
+    , onClick  : this.onClickType.bind(this, 'melo')
+    }
+    const slow = {
+      className: 'slow' + (this.state.speed  === 'slow' ? ' selected' : '')
+    , onClick  : this.onClickSpeed.bind(this, 'slow')
+    }
+    const fast = {
+      className: 'fast' + (this.state.speed  === 'fast' ? ' selected' : '')
+    , onClick  : this.onClickSpeed.bind(this, 'fast')
+    }
+
     this.ask()
 
     return (
@@ -29,6 +51,36 @@ class EarTrainingView extends Component {
           mode={this.props.mode}
           onClick={this.answered}
         />
+        <div className='controls'>
+          <div
+            className={root.className}
+            onClick={root.onClick}
+          />
+          <div className='type'>
+            <div
+              className={harm.className}
+              onClick={harm.onClick}
+            />
+            <div
+              className={melo.className}
+              onClick={melo.onClick}
+            />
+          </div>
+          <div className='speed' acc=''>
+            <div
+              className={slow.className}
+              onClick={slow.onClick}
+            >
+              Q
+            </div>
+            <div
+              className={fast.className}
+              onClick={fast.onClick}
+            >
+              E
+            </div>
+          </div>
+        </div>
       </div>
     )
   }
@@ -46,6 +98,28 @@ class EarTrainingView extends Component {
     if (!intv) return
 
     if (this.asked.semi === intv.semi) this.ask()
+  }
+
+  onClickRoot() {
+    this.setState({
+      root: this.state.root
+        ? null
+        : this.props.mode.root
+    })
+  }
+
+  onClickType(type) {
+    if (this.state.type === 'both') {
+      if (type === 'harm') return this.setState({ type: 'melo' })
+      else                 return this.setState({ type: 'harm' })
+    } else {
+      if (type !== this.state.type)
+        return this.setState({ type: 'both' })
+    }
+  }
+
+  onClickSpeed(speed) {
+    if (speed !== this.state.speed) this.setState({ speed })
   }
 
   _random(arr) {
