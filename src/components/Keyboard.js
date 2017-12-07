@@ -21,11 +21,18 @@ class Keyboard extends Component {
     })
 
     const mapNotes = intv => {
-      const nobox = Number.isInteger(intv)
+      const nobox   = Number.isInteger(intv)
+      const item    = nobox ? NOBOX : intv
+      const onClick =
+        ((onClick, item) => () => onClick(item))(
+          this.props.onClick
+        , nobox ? null : intv
+        )
 
       return <Box
         key={nobox ? intv : intv.semi}
-        item={nobox ? NOBOX : intv}
+        item={item}
+        onClick={onClick}
       />
     }
 
