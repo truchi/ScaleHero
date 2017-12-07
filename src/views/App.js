@@ -123,10 +123,12 @@ class App extends Component {
           className='button arrow left'
           onClick={show.bind(this, 'modes')}
         />
-        <div
-          className='button arrow right'
-          onClick={show.bind(this, 'ear')}
-        />
+        {mode.intvs.length > 1 &&
+          <div
+            className='button arrow right'
+            onClick={show.bind(this, 'ear')}
+          />
+        }
         <BoardView
           guitar={guitar}
           mode={mode}

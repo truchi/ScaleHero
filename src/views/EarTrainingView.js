@@ -17,6 +17,7 @@ class EarTrainingView extends Component {
 
     this.player   = new IntervalPlayer(this.state)
     this.answered = this.answered.bind(this)
+    this.asked    = null
   }
 
   render() {
@@ -34,7 +35,9 @@ class EarTrainingView extends Component {
 
   ask() {
     const root  = this.state.root || this._random(ROOTS)
-    this.asked  = this._random(this.props.mode.intvs)
+    this.asked  = this._random(
+      this.props.mode.intvs.filter(intv => intv !== this.asked)
+    )
 
     this.player.play(root, this.asked)
   }
