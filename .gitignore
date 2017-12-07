@@ -13,6 +13,7 @@ src/styles/**/*.css
 /build
 
 # misc
+public/assets/sounds/mp3.sh
 .DS_Store
 .env.local
 .env.development.local
