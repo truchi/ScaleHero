@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import MuJS from 'mujs'
 import BoardView from './BoardView'
 import ModesView from './ModesView'
+import EarTrainingView from './EarTrainingView'
 
 class App extends Component {
   constructor(props) {
@@ -97,6 +98,12 @@ class App extends Component {
     const onChange      = this.onModeChange.bind(this)
     const onShowDetails = this.onShowDetails.bind(this)
     const buttonClick   = this.show.bind(this)
+
+    return (
+      <EarTrainingView
+        mode={this.props.mode}
+      />
+    )
 
     switch (show) {
       case 'modes':

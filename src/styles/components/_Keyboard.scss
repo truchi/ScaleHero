@@ -1,0 +1,26 @@
+.Keyboard {
+  $Keyboard-margin: $Keyboard-size * $Keyboard-size2margin;
+  $Keyboard-outer : $Keyboard-size + 2 * $Keyboard-margin;
+
+  width: 7 * $Keyboard-outer;
+
+  > .row {
+    > .Box {
+      @include box($Keyboard-size, $Keyboard-size2margin, $Keyboard-size2border, $Keyboard-size2radius, $Keyboard-color, $Keyboard-highlight);
+
+      vertical-align: top;
+    }
+
+    &.top {
+      .Box {
+        &:nth-child(1) {
+          margin-left: $Keyboard-outer / 2;
+        }
+
+        &:nth-child(3) {
+          margin-left: $Keyboard-outer;
+        }
+      }
+    }
+  }
+}
