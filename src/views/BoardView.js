@@ -10,6 +10,10 @@ class BoardView extends Component {
     const onChange = this.props.onChange
     const onClick  = this.props.onShowDetails
 
+    if (mode.intvs.length === 1) {
+      mode.name = mode.root.name
+    }
+
     return (
       <div className="BoardView">
         <Mode
