@@ -93,7 +93,6 @@ class Selector extends Component {
           notes={notes}
           onClick={this.onClickNote.bind(this)}
         />
-        <br />
         <IntervalList
           intvs={intvs}
           onClick={this.onClickInterval.bind(this)}

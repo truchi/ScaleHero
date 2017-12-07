@@ -3,12 +3,7 @@
   $Box-outer : $Box-size + 2 * $Box-margin;
   $offsets   : (1 (1 2 4 7 9 11)) (1/2 (6));
 
-  .notes,
-  .intervals {
-    display: inline-block;
-  }
-
-  .intervals {
+  .IntervalList {
     padding-left: $Box-outer;
   }
 
