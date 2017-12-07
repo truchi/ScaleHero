@@ -87,65 +87,91 @@ class App extends Component {
   }
 
   render() {
-    let Button
-    let View
+    switch (this.state.show) {
+      case 'modes'  : return this.renderModes()
+      case 'board'  : return this.renderBoard()
+      case 'details': return this.renderDetails()
+      case 'ear'    : return this.renderEar()
+    }
+  }
 
-    const show          = this.state.show
-    const guitar        = this.state.guitar
-    const data          = this.state.data
-    const mode          = this.state.mode
-    const details       = this.state.details
-    const onChange      = this.onModeChange.bind(this)
-    const onShowDetails = this.onShowDetails.bind(this)
-    const buttonClick   = this.show.bind(this)
+  renderModes() {
+    const data     = this.state.data
+    const onChange = this.onModeChange.bind(this)
 
     return (
-      <EarTrainingView
-        mode={this.props.mode}
-      />
-    )
-
-    switch (show) {
-      case 'modes':
-        Button = <div />
-        View   = <ModesView
+      <div className="App">
+        <ModesView
           current={Object.keys(data)[0]}
           groups={data}
           onChange={onChange}
         />
-        break;
-      case 'board':
-        Button = <div
-          className='button'
-          onClick={buttonClick.bind(this, 'modes')}
+      </div>
+    )
+  }
+
+  renderBoard() {
+    const guitar        = this.state.guitar
+    const mode          = this.state.mode
+    const onChange      = this.onModeChange.bind(this)
+    const onShowDetails = this.onShowDetails.bind(this)
+    const show          = this.show
+
+    return (
+      <div className="App">
+        <div
+          className='button arrow left'
+          onClick={show.bind(this, 'modes')}
         />
-        View = <BoardView
+        <div
+          className='button arrow right'
+          onClick={show.bind(this, 'ear')}
+        />
+        <BoardView
           guitar={guitar}
           mode={mode}
           onChange={onChange}
           onShowDetails={onShowDetails}
         />
-        break;
-      case 'details':
-      default:
-        Button = <div
-          className='button'
-          onClick={buttonClick.bind(this, 'board')}
+      </div>
+    )
+  }
+
+  renderDetails() {
+    const details     = this.state.details
+    const onChange    = this.onModeChange.bind(this)
+    const show        = this.show.bind(this, 'board')
+
+    return (
+      <div className="App">
+        <div
+          className='button arrow left'
+          onClick={show}
         />
-        View = <ModesView
+        <ModesView
           current={Object.keys(details)[0]}
           groups={details}
           onChange={onChange}
         />
-        break;
-      }
+      </div>
+    )
+  }
 
-      return (
-        <div className="App">
-          {Button}
-          {View}
-        </div>
-      )
+  renderEar() {
+    const mode = this.state.mode
+    const show = this.show.bind(this, 'board')
+
+    return (
+      <div className="App">
+        <div
+          className='button arrow left'
+          onClick={show}
+        />
+        <EarTrainingView
+          mode={mode}
+        />
+      </div>
+    )
   }
 }
 
