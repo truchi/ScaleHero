@@ -43,13 +43,13 @@ class Label extends Component {
     for (let i = 0; i < l; ++i) {
       let ind = indexes[i].i
 
-      slices.push(txt.slice(prev, ind))
+      slices.push(<span>{txt.slice(prev, ind)}</span>)
       slices.push(Accs[indexes[i].acc])
 
       prev = ind + 1
     }
 
-    slices.push(txt.slice(prev))
+    slices.push(<span>{txt.slice(prev)}</span>)
     return slices
   }
 
@@ -59,7 +59,9 @@ class Label extends Component {
 
     return (
       <div>
-        {slices}
+        {slices.map((slice, i) =>
+          React.cloneElement(slice, { key: i })
+        )}
       </div>
     )
   }
