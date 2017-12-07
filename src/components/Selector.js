@@ -44,7 +44,7 @@ class Selector extends Component {
         if (column.indexOf(intv) !== -1) {
           return column.map(_intv => {
             if (intv === _intv) {
-              _intv._selected = true
+              _intv._selected = !_intv._selected
             } else {
               _intv._selected = false
             }
