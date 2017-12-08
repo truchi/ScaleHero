@@ -15,10 +15,12 @@ class EarTrainingView extends Component {
     , type : 'harm'
     }
 
+    this.root        = null
     this.asked       = null
     this.player      = new IntervalPlayer(this.state)
     this.answered    = this.answered.bind(this)
     this.onClickRoot = this.onClickRoot.bind(this)
+    this.onClickPlay = this.onClickPlay.bind(this)
   }
 
   render() {
@@ -44,6 +46,10 @@ class EarTrainingView extends Component {
     const whole = {
       className: 'whole' + (this.state.speed === 'whole' ? ' selected' : '')
     , onClick  : this.onClickSpeed.bind(this, 'whole')
+    }
+    const play = {
+      className: 'play'
+    , onClick  : this.onClickPlay.bind(this)
     }
     const message = ($message) => {
       this.$yep  = $message && $message.querySelector('.yep')
@@ -94,20 +100,24 @@ class EarTrainingView extends Component {
               Q
             </div>
           </div>
+          <div
+            className={play.className}
+            onClick={play.onClick}
+          />
         </div>
       </div>
     )
   }
 
   ask() {
-    const root  = this.state.root || this._random(ROOTS)
-    this.asked  = this._random(
+    this.root  = this.state.root || this._random(ROOTS)
+    this.asked = this._random(
       this.props.mode.intvs.filter(intv => intv !== this.asked)
     )
 
     this.player
       .opts(this.state)
-      .play(root, this.asked)
+      .play(this.root, this.asked)
   }
 
   answered(intv) {
@@ -151,6 +161,10 @@ class EarTrainingView extends Component {
 
   onClickSpeed(speed) {
     if (speed !== this.state.speed) this.setState({ speed })
+  }
+
+  onClickPlay() {
+    this.player.play(this.root, this.asked)
   }
 
   _random(arr) {

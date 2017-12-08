@@ -126,4 +126,14 @@
       text-align: center;
     }
   }
+
+  .play {
+    background-image   : url('../assets/imgs/play.svg');
+    background-repeat  : no-repeat;
+    background-position: center;
+    background-size    : 80px;
+
+    width : 80px;
+    height: 80px;
+  }
 }
