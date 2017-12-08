@@ -6,20 +6,47 @@
 
 .EarTrainingView {
   display        : flex;
-  justify-content: center;
+  flex-direction : column;
+  justify-content: space-around;
   align-items    : center;
 
   width : 100vw;
-  height: calc(100vh - 100px);
+  height: 100vh;
+
+  .message {
+    font-size: 40px;
+    width    : 200px;
+
+    .yep,
+    .nope {
+      position: absolute;
+      width   : 200px;
+
+      text-align: center;
+
+      opacity   : 0;
+      transition: opacity .3s ease;
+
+      &.show {
+        opacity   : 1;
+        transition: opacity 0s;
+      }
+    }
+
+    .yep {
+      color: nth(nth($colors, 4), 3);
+    }
+
+    .nope {
+      color: nth(nth($colors, 2), 3);
+    }
+  }
 
   .controls {
     display        : flex;
     justify-content: space-evenly;
 
-    position: absolute;
-    bottom  : 0;
-    width   : 100%;
-    height  : 100px;
+    width: 100%;
   }
 
   .root,
@@ -30,12 +57,14 @@
     width : 80px;
     height: 80px;
 
-    border        : 3px solid transparent;
+    border        : 2px solid transparent;
+    border-radius : 15px;
     vertical-align: top;
 
+    transition: border-color .3s ease;
+
     &.selected {
-      border-color : $general-color;
-      border-radius: 15px;
+      border-color: $general-color;
     }
   }
 
@@ -84,7 +113,12 @@
     transition: opacity .3s ease;
 
     &.hide {
-      opacity: 0;
+      opacity       : .2;
+      pointer-events: none;
+
+      > div {
+        border-color: transparent!important;
+      }
     }
 
     > div {

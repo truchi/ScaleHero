@@ -45,11 +45,22 @@ class EarTrainingView extends Component {
       className: 'whole' + (this.state.speed === 'whole' ? ' selected' : '')
     , onClick  : this.onClickSpeed.bind(this, 'whole')
     }
+    const message = ($message) => {
+      this.$yep  = $message && $message.querySelector('.yep')
+      this.$nope = $message && $message.querySelector('.nope')
+    }
 
     if (!this.asked) this.ask()
 
     return (
       <div className='EarTrainingView'>
+        <div
+          className='message'
+          ref={message}
+        >
+          <div className='yep'>Yep!</div>
+          <div className='nope'>Nope...</div>
+        </div>
         <Keyboard
           mode={this.props.mode}
           onClick={this.answered}
@@ -102,7 +113,28 @@ class EarTrainingView extends Component {
   answered(intv) {
     if (!intv) return
 
-    if (this.asked.semi === intv.semi) this.ask()
+    if (this.asked.semi === intv.semi) {
+      this.yep()
+      this.ask()
+    } else {
+      this.nope()
+    }
+  }
+
+  yep() {
+    this.$nope.classList.remove('show')
+    this.$yep .classList.add   ('show')
+
+    clearTimeout(this.id)
+    this.id = setTimeout(() => this.$yep.classList.remove('show'), 300)
+  }
+
+  nope() {
+    this.$yep .classList.remove('show')
+    this.$nope.classList.add   ('show')
+
+    clearTimeout(this.id)
+    this.id = setTimeout(() => this.$nope.classList.remove('show'), 300)
   }
 
   onClickRoot() {
