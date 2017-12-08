@@ -42,7 +42,7 @@ class IntervalPlayer {
         this.sound2.play()
 
       } else {
-        this.id = setTimeout(() => {
+        this.id1 = setTimeout(() => {
           if (this.speed === 'half') {
             this.stop(this.sound1)
 
