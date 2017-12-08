@@ -47,7 +47,7 @@ class App extends Component {
 
     if (similars.length) {
       data.similars = {
-        title: 'Similars'
+        title: 'Similar to'
       , lists: [{ name: '', modes: similars }]
       }
     }
@@ -68,7 +68,7 @@ class App extends Component {
 
     if (included.length) {
       data.included = {
-        title: 'Included'
+        title: 'Included in'
       , lists: [{ name: '', modes: included }]
       }
     }
