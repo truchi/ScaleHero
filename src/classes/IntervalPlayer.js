@@ -17,7 +17,7 @@ class IntervalPlayer {
 
   opts(opts) {
     this.speed = opts.speed || 'eighth'
-    this.type  = opts.type  || 'harm'
+    this.type  = opts.type  || 'melo'
 
     return this
   }

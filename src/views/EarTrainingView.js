@@ -12,7 +12,7 @@ class EarTrainingView extends Component {
 
     this.state  = {
       root : this.props.mode.root
-    , type : 'harm'
+    , type : 'melo'
     , speed: 'eighth'
     }
 
