@@ -1,3 +1,5 @@
+import { randomInt } from './utils'
+
 const DURATION = 2000
 const SOUNDS   = Array.from(
   document.getElementById('sounds').querySelectorAll('audio')
@@ -20,11 +22,18 @@ class IntervalPlayer {
     return this
   }
 
-  play(root, intv) {
+  play(root, intv, prevOffset = false) {
     this.stopAll()
 
-    this.sound1 = SOUNDS[root.semi]
-    this.sound2 = SOUNDS[root.semi + (intv.semi || 12)]
+    const bottom = root.semi
+    const top    = root.semi + (intv.semi || 12)
+
+    this.prevOffset = prevOffset
+      ? this.prevOffset
+      : this._randomOffset(top)
+
+    this.sound1 = SOUNDS[this.prevOffset + bottom]
+    this.sound2 = SOUNDS[this.prevOffset + top   ]
 
     setTimeout(() => {
       this.sound1.play()
@@ -65,6 +74,16 @@ class IntervalPlayer {
 
     clearTimeout(this.id1)
     clearTimeout(this.id2)
+  }
+
+  _randomOffset(top) {
+    let offset
+
+    offset = SOUNDS.length - 1 - top
+    offset = Math.floor(offset / 12)
+    offset = randomInt(0, offset) * 12
+
+    return offset
   }
 }
 

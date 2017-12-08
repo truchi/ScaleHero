@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import MuJS from 'mujs'
+import { randomItem } from '../classes/utils'
 import Keyboard from '../components/Keyboard'
 import IntervalPlayer from '../classes/IntervalPlayer'
 
@@ -110,8 +111,8 @@ class EarTrainingView extends Component {
   }
 
   ask() {
-    this.root  = this.state.root || this._random(ROOTS)
-    this.asked = this._random(
+    this.root  = this.state.root || randomItem(ROOTS)
+    this.asked = randomItem(
       this.props.mode.intvs.filter(intv => intv !== this.asked)
     )
 
@@ -164,11 +165,7 @@ class EarTrainingView extends Component {
   }
 
   onClickPlay() {
-    this.player.play(this.root, this.asked)
-  }
-
-  _random(arr) {
-    return arr[Math.floor(Math.random() * arr.length - 1) + 1]
+    this.player.play(this.root, this.asked, true)
   }
 }
 
