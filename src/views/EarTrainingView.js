@@ -11,8 +11,8 @@ class EarTrainingView extends Component {
 
     this.state  = {
       root : this.props.mode.root
-    , speed: 'slow'
-    , type : 'both'
+    , speed: 'half'
+    , type : 'harm'
     }
 
     this.asked       = null
@@ -27,23 +27,26 @@ class EarTrainingView extends Component {
     , onClick  : this.onClickRoot
     }
     const harm = {
-      className: 'harm' + (this.state.type  === 'melo' ? '' : ' selected')
+      className: 'harm' + (this.state.type === 'harm' ? ' selected' : '')
     , onClick  : this.onClickType.bind(this, 'harm')
     }
     const melo = {
-      className: 'melo' + (this.state.type  === 'harm' ? '' : ' selected')
+      className: 'melo' + (this.state.type === 'melo' ? ' selected' : '')
     , onClick  : this.onClickType.bind(this, 'melo')
     }
-    const slow = {
-      className: 'slow' + (this.state.speed  === 'slow' ? ' selected' : '')
-    , onClick  : this.onClickSpeed.bind(this, 'slow')
+    const speed = {
+      className: 'speed' + (this.state.type === 'harm' ? ' hide' : '')
     }
-    const fast = {
-      className: 'fast' + (this.state.speed  === 'fast' ? ' selected' : '')
-    , onClick  : this.onClickSpeed.bind(this, 'fast')
+    const half = {
+      className: 'half' + (this.state.speed === 'half' ? ' selected' : '')
+    , onClick  : this.onClickSpeed.bind(this, 'half')
+    }
+    const whole = {
+      className: 'whole' + (this.state.speed === 'whole' ? ' selected' : '')
+    , onClick  : this.onClickSpeed.bind(this, 'whole')
     }
 
-    this.ask()
+    if (!this.asked) this.ask()
 
     return (
       <div className='EarTrainingView'>
@@ -66,18 +69,18 @@ class EarTrainingView extends Component {
               onClick={melo.onClick}
             />
           </div>
-          <div className='speed' acc=''>
+          <div className={speed.className} acc=''>
             <div
-              className={slow.className}
-              onClick={slow.onClick}
-            >
-              Q
-            </div>
-            <div
-              className={fast.className}
-              onClick={fast.onClick}
+              className={half.className}
+              onClick={half.onClick}
             >
               E
+            </div>
+            <div
+              className={whole.className}
+              onClick={whole.onClick}
+            >
+              Q
             </div>
           </div>
         </div>
@@ -91,7 +94,9 @@ class EarTrainingView extends Component {
       this.props.mode.intvs.filter(intv => intv !== this.asked)
     )
 
-    this.player.play(root, this.asked)
+    this.player
+      .opts(this.state)
+      .play(root, this.asked)
   }
 
   answered(intv) {
@@ -109,13 +114,7 @@ class EarTrainingView extends Component {
   }
 
   onClickType(type) {
-    if (this.state.type === 'both') {
-      if (type === 'harm') return this.setState({ type: 'melo' })
-      else                 return this.setState({ type: 'harm' })
-    } else {
-      if (type !== this.state.type)
-        return this.setState({ type: 'both' })
-    }
+    if (type !== this.state.type) this.setState({ type })
   }
 
   onClickSpeed(speed) {
