@@ -16,7 +16,7 @@ class IntervalPlayer {
   }
 
   opts(opts) {
-    this.speed = opts.speed || 'half'
+    this.speed = opts.speed || 'eighth'
     this.type  = opts.type  || 'harm'
 
     return this
@@ -50,20 +50,19 @@ class IntervalPlayer {
   }
 
   playMelo() {
+    const duration = this._duration()
+
     this.sound1.play()
 
     this.id1 = setTimeout(() => {
       this.sound2.play()
+      this.stop(this.sound1)
 
-      if (this.speed === 'half') {
-        this.stop(this.sound1)
-
-        this.id2 = setTimeout(
-          () => this.stop(this.sound2)
-          , DURATION / 2
-        )
-      }
-    }, DURATION  * (this.speed === 'half' ? 1/2 : 1))
+      this.id2 = setTimeout(
+        () => this.stop(this.sound2)
+      , duration
+      )
+    }, duration)
   }
 
   stop(sound) {
@@ -80,6 +79,14 @@ class IntervalPlayer {
 
     clearTimeout(this.id1)
     clearTimeout(this.id2)
+  }
+
+  _duration() {
+    let mul = 1
+    this.speed === 'quarter' && (mul = 1 / 2)
+    this.speed === 'eighth'  && (mul = 1 / 4)
+
+    return DURATION * mul
   }
 
   _randomOffset(top) {

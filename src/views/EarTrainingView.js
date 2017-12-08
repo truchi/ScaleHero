@@ -12,8 +12,8 @@ class EarTrainingView extends Component {
 
     this.state  = {
       root : this.props.mode.root
-    , speed: 'half'
     , type : 'harm'
+    , speed: 'eighth'
     }
 
     this.root        = null
@@ -40,13 +40,17 @@ class EarTrainingView extends Component {
     const speed = {
       className: 'speed' + (this.state.type === 'harm' ? ' hide' : '')
     }
+    const eighth = {
+      className: 'eighth' + (this.state.speed === 'eighth' ? ' selected' : '')
+    , onClick  : this.onClickSpeed.bind(this, 'eighth')
+    }
+    const quarter = {
+      className: 'quarter' + (this.state.speed === 'quarter' ? ' selected' : '')
+    , onClick  : this.onClickSpeed.bind(this, 'quarter')
+    }
     const half = {
       className: 'half' + (this.state.speed === 'half' ? ' selected' : '')
     , onClick  : this.onClickSpeed.bind(this, 'half')
-    }
-    const whole = {
-      className: 'whole' + (this.state.speed === 'whole' ? ' selected' : '')
-    , onClick  : this.onClickSpeed.bind(this, 'whole')
     }
     const play = {
       className: 'play'
@@ -89,16 +93,22 @@ class EarTrainingView extends Component {
           </div>
           <div className={speed.className} acc=''>
             <div
-              className={half.className}
-              onClick={half.onClick}
+              className={eighth.className}
+              onClick={eighth.onClick}
             >
               E
             </div>
             <div
-              className={whole.className}
-              onClick={whole.onClick}
+              className={quarter.className}
+              onClick={quarter.onClick}
             >
               Q
+            </div>
+            <div
+              className={half.className}
+              onClick={half.onClick}
+            >
+              W
             </div>
           </div>
           <div
@@ -157,11 +167,23 @@ class EarTrainingView extends Component {
   }
 
   onClickType(type) {
-    if (type !== this.state.type) this.setState({ type })
+    if (type !== this.state.type) {
+      this.setState({ type })
+
+      this.player
+        .opts({ type, speed: this.state.speed })
+        .play(this.root, this.asked, true)
+    }
   }
 
   onClickSpeed(speed) {
-    if (speed !== this.state.speed) this.setState({ speed })
+    if (speed !== this.state.speed) {
+      this.setState({ speed })
+
+      this.player
+        .opts({ type: this.state.type, speed })
+        .play(this.root, this.asked, true)
+    }
   }
 
   onClickPlay() {
