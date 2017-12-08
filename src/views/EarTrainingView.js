@@ -142,15 +142,15 @@ class EarTrainingView extends Component {
 
   yep() {
     this.$nope.classList.remove('show')
-    this.$yep .classList.add   ('show')
+    this.$yep.classList.add('show')
 
     clearTimeout(this.id)
     this.id = setTimeout(() => this.$yep.classList.remove('show'), 300)
   }
 
   nope() {
-    this.$yep .classList.remove('show')
-    this.$nope.classList.add   ('show')
+    this.$yep.classList.remove('show')
+    this.$nope.classList.add('show')
 
     clearTimeout(this.id)
     this.id = setTimeout(() => this.$nope.classList.remove('show'), 300)

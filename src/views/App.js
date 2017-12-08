@@ -36,7 +36,6 @@ class App extends Component {
     const data     = {}
     const scale    = mode.scale()
     const modes    = scale.modes
-    const similars = mode.similars
     const includes = mode.includes
     const included = mode.included
 
@@ -93,6 +92,7 @@ class App extends Component {
       case 'board'  : return this.renderBoard()
       case 'details': return this.renderDetails()
       case 'ear'    : return this.renderEar()
+      default       : return <div></div>
     }
   }
 
