@@ -15,7 +15,14 @@ class Keyboard extends Component {
 
     mode.intvs.forEach(intv => {
       let i = rows[0].indexOf(intv.semi)
-      if (i !== -1) rows[0][i] = intv
+      if (i !== -1) {
+        return rows[0][i] = intv
+      }
+
+      if (intv.semi === 0) {
+        intv = intv.clone()
+        intv.name = '8'
+      }
 
       i = rows[1].indexOf(intv.semi)
       if (i !== -1) rows[1][i] = intv
