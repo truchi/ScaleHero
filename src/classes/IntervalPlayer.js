@@ -35,29 +35,35 @@ class IntervalPlayer {
     this.sound1 = SOUNDS[this.prevOffset + bottom]
     this.sound2 = SOUNDS[this.prevOffset + top   ]
 
+    if (this.type === 'harm') {
+      this.playHarm()
+    } else {
+      this.playMelo()
+    }
+  }
+
+  playHarm() {
     setTimeout(() => {
       this.sound1.play()
+      this.sound2.play()
+    }, 10)
+  }
 
-      if (this.type === 'harm') {
-        this.sound2.play()
+  playMelo() {
+    this.sound1.play()
 
-      } else {
-        this.id1 = setTimeout(() => {
-          if (this.speed === 'half') {
-            this.stop(this.sound1)
+    this.id1 = setTimeout(() => {
+      this.sound2.play()
 
-            this.id2 = setTimeout(
-              () => this.stop(this.sound2)
-            , DURATION / 2
-            )
-          }
+      if (this.speed === 'half') {
+        this.stop(this.sound1)
 
-          this.sound2.play()
-
-        }, DURATION  * (this.speed === 'half' ? 1/2 : 1))
+        this.id2 = setTimeout(
+          () => this.stop(this.sound2)
+          , DURATION / 2
+        )
       }
-
-    })
+    }, DURATION  * (this.speed === 'half' ? 1/2 : 1))
   }
 
   stop(sound) {
