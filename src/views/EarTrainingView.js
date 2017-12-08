@@ -122,9 +122,7 @@ class EarTrainingView extends Component {
 
   ask() {
     this.root  = this.state.root || randomItem(ROOTS)
-    this.asked = randomItem(
-      this.props.mode.intvs.filter(intv => intv !== this.asked)
-    )
+    this.asked = randomItem(this.props.mode.intvs)
 
     this.player
       .opts(this.state)
