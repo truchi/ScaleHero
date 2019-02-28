@@ -6,13 +6,16 @@ const B = rcv(<box></box>)
 
 class Box extends Component {
     render() {
-        const rcv = {
-            color: this.props.color,
+        const clip      = this.props.clip
+        const className = [styles.box, clip ? styles.clip : null].join(' ').trim()
+        const rcv       = {
+            color : this.props.color,
             radius: this.props.radius / 2 + '%',
+            clip  : clip ? clip : null
         }
 
         return (
-            <B className={ styles.box } { ...{ rcv } }></B>
+            <B { ...{ className, rcv } }></B>
         )
     }
 }

@@ -10,3 +10,5 @@
 
     background-color: var(--color);
 }
+
+.clip { clip-path: polygon(var(--clip)) }
