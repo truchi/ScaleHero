@@ -11,6 +11,7 @@ class Box extends Component {
         const rcv       = {
             color : this.props.color,
             radius: this.props.radius / 2 + '%',
+            border: this.props.border,
             clip  : clip ? clip : null
         }
 

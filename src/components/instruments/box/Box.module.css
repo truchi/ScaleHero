@@ -5,7 +5,9 @@
     width: _box-width;
     height: _box-height;
     margin: 0 _box-gap;
+    box-sizing: border-box;
 
+    border: var(--border);
     border-radius: var(--radius);
 
     background-color: var(--color);
