@@ -1,21 +1,44 @@
-import './styles/index.css'
-import registerServiceWorker from './registerServiceWorker'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './views/App'
-import MuJS from 'mujs'
+import './styles/index.css'
+import registerServiceWorker from './registerServiceWorker'
+import Guitar from './components/instruments/guitar/Guitar'
 
-const dict   = MuJS.Dict.scales()
-const guitar = {
-  frets : 15
-, tuning: MuJS.utils.str2items(MuJS.Note, 'E A D G B E').reverse()
+const makeArray = (length = 0, fn = null) => {
+    return new Array(length)
+        .fill()
+        .map((undef, index) => index)
+        .map(fn ? fn : i => i)
 }
+
+const guitar = {
+    layers: makeArray(2, layer => ({
+        strings: makeArray(6, string => ({
+            boxes: makeArray(12, i => ({
+                'color': i % 2 === 0 ? 'red' : 'blue',
+                'radius': 50,
+            }))
+        }))
+    }))
+}
+
+/* const guitar = {
+ *     layers: [
+ *         {
+ *             strings: [
+ *                 {
+ *                     boxes: [
+ *                         { '--bg': 'blue' },
+ *                         { '--bg': 'red' }
+ *                     ]
+ *                 }
+ *             ]
+ *         }
+ *     ]
+ * } */
 
 console.log('----- HERE WE GO -----')
 ReactDOM.render(
-  <App
-    dict={dict}
-    guitar={guitar}
-  />
-, document.getElementById('root'))
+    <Guitar { ...guitar }/>,
+    document.getElementById('root'))
 registerServiceWorker()

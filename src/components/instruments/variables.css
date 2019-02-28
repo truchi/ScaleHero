@@ -1,0 +1,8 @@
+/* String */
+@value _string-width: 10px;
+@value _string-gap: 3px;
+
+/* Box */
+@value _box-width: 30px;
+@value _box-height: 30px;
+@value _box-gap: 3px;

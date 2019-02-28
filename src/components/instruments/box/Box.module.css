@@ -1,0 +1,12 @@
+@value _box-width, _box-height, _box-gap from "../variables.css";
+
+.box {
+    display: inline-block;
+    width: _box-width;
+    height: _box-height;
+    margin: 0 _box-gap;
+
+    border-radius: var(--radius);
+
+    background-color: var(--color);
+}
