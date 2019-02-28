@@ -29,14 +29,12 @@ const polys = {
 }
 const clips =
     flatMapArray(
-        ['top', 'bottom', 'left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right'],
-        clip => [clip + '-1-4', clip + '-1-3', clip + '-1-2', clip + '-2-3', clip + '-3-4']
+        Object.keys(polys),
+        clip => ['1-4', '1-3', '1-2', '2-3', '3-4'].map(s => clip + '-' + s)
     )
-        .concat(['vertical-1-3', 'vertical-1-2', 'horizontal-1-3', 'horizontal-1-2', 'diamond-1-4', 'diamond-1-3'])
         .map(clip => {
-            console.log(clip)
             const [ xxx, type, dividend, divisor ] =
-                /(top|bottom|left|right|top-left|top-right|bottom-left|bottom-right|vertical|horizontal|diamond)-(\d)-(\d)/
+                new RegExp(`(${ Object.keys(polys).join('|') })-(\\d)-(\\d)`)
                     .exec(clip)
 
             return polys[type](dividend / divisor * 100)
@@ -55,11 +53,11 @@ const guitar = {
                 },
                 clip: randArray(clips),
                 /* clip: [
-                 *     polys['top-left']    (1 / 3 * 100),
-                 *     polys['top-right']   (1 / 3 * 100),
-                 *     polys['bottom-left'] (1 / 3 * 100),
-                 *     polys['bottom-right'](1 / 3 * 100),
-                 *     polys['diamond']     (1 / 3 * 100),
+                 *     polys['top-left']    (1 / 5 * 100),
+                 *     polys['top-right']   (1 / 5 * 100),
+                 *     polys['bottom-left'] (1 / 5 * 100),
+                 *     polys['bottom-right'](1 / 5 * 100),
+                 *     polys['diamond']     (1 / 5 * 100),
                  * ][l], */
             }))
         }))
