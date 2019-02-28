@@ -1,7 +1,19 @@
 import React, { Component } from 'react'
 import { findDOMNode } from 'react-dom'
 
-export default (element) =>
+const capitalize = s => s.charAt(0).toUpperCase() + s.slice(1)
+const flatObject = (o, prefix = '') =>
+    Object.entries(o)
+        .reduce((o, [key, value]) => {
+            if (value === null || value === undefined) return o
+
+            prefix && (key = prefix + capitalize(key))
+            return typeof value === 'object'
+                ? { ...o, ...flatObject(value, key) }
+                : { ...o, [key]: value }
+        }, {})
+
+export default element =>
     class extends Component {
         static displayName = `RCV(${ element.type })`
 
@@ -18,7 +30,8 @@ export default (element) =>
             const rcv = this.props.rcv
             if (!$ || !rcv) return
 
-            Object.entries(rcv)
+            Object
+                .entries(flatObject(rcv))
                 .forEach(([key, value]) => $.style.setProperty(`--${ key }`, value))
         }
 

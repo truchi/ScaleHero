@@ -47,8 +47,12 @@ const guitar = {
         strings: makeArray(6, string => ({
             boxes: makeArray(12, i => ({
                 color: ['red', 'green', 'blue', 'darkorange', 'purple'][l],
-                radius: 50,
-                border: '2px solid gold',
+                border: {
+                    width: '2px',
+                    style: 'solid',
+                    color: 'gold',
+                    radius: 50,
+                },
                 clip: randArray(clips),
                 /* clip: [
                  *     polys['top-left']    (1 / 3 * 100),

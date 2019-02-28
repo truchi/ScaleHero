@@ -8,12 +8,8 @@ class Box extends Component {
     render() {
         const clip      = this.props.clip
         const className = [styles.box, clip ? styles.clip : null].join(' ').trim()
-        const rcv       = {
-            color : this.props.color,
-            radius: this.props.radius / 2 + '%',
-            border: this.props.border,
-            clip  : clip ? clip : null
-        }
+        let rcv         = { ...this.props }
+        rcv.border.radius = rcv.border.radius /  2 + '%'
 
         return (
             <B { ...{ className, rcv } }></B>

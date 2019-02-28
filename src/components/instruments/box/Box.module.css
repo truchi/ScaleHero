@@ -7,8 +7,10 @@
     margin: 0 _box-gap;
     box-sizing: border-box;
 
-    border: var(--border);
-    border-radius: var(--radius);
+    border-width: var(--borderWidth);
+    border-style: var(--borderStyle);
+    border-color: var(--borderColor);
+    border-radius: var(--borderRadius);
 
     background-color: var(--color);
 }
