@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { get } from './polygons.js'
 import rcv from '../../../lib/rcv/rcv.js'
 import styles from './BoxUnit.module.css'
 
@@ -8,7 +9,7 @@ const ENTERED  = 'entered'
 const LEAVE    = 'leave'
 const LEAVING  = 'leaving'
 const LEFT     = 'left'
-const B = rcv(<boxunit></boxunit>)
+const B        = rcv(<boxunit></boxunit>)
 
 class BoxUnit extends Component {
     componentDidMount() {
@@ -51,13 +52,13 @@ class BoxUnit extends Component {
         let rcv = this.props.rcv
         rcv     = {
             ...rcv,
+            clip: get(rcv.clip),
             border: {
                 ...rcv.border,
                 radius: rcv.border.radius /  2 + '%'
             }
         }
-        const clip      = rcv.clip
-        const className = [styles.boxUnit, clip ? styles.clip : null].join(' ').trim()
+        const className = [styles.boxUnit, rcv.clip? styles.clip : null].join(' ').trim()
 
         return (
             <B { ...{ className, rcv } }></B>
