@@ -6,8 +6,8 @@ class Layer extends Component {
     render() {
         return (
             <layer className={ styles.layer }>
-                { this.props.strings.map((string, key) => (
-                    <String { ...{ key } } { ...string } />
+                { this.props.strings.map(string => (
+                    <String { ...string } />
                 )) }
             </layer>
         )

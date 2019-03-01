@@ -1,0 +1,18 @@
+@value _box-width, _box-height from "../variables.css";
+
+.boxUnit {
+    position: absolute;
+    display: block;
+    width: _box-width;
+    height: _box-height;
+    box-sizing: border-box;
+
+    border-width: var(--borderWidth);
+    border-style: var(--borderStyle);
+    border-color: var(--borderColor);
+    border-radius: var(--borderRadius);
+
+    background-color: var(--color);
+}
+
+.clip { clip-path: polygon(var(--clip)) }

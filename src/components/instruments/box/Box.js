@@ -1,18 +1,27 @@
 import React, { Component } from 'react'
+import BoxUnit, { ENTER, LEAVE } from '../boxunit/BoxUnit.js'
 import rcv from '../../../lib/rcv/rcv.js'
 import styles from './Box.module.css'
 
 const B = rcv(<box></box>)
 
 class Box extends Component {
+    remove = (key) => {
+        delete this.units[key]
+    }
+
     render() {
-        const clip      = this.props.clip
-        const className = [styles.box, clip ? styles.clip : null].join(' ').trim()
-        let rcv         = { ...this.props }
-        rcv.border.radius = rcv.border.radius /  2 + '%'
+        const key       = Math.random().toString(36).substr(2, 9)
+        this.units      = this.units || {}
+        this.units[key] =
+            <BoxUnit id={ key } key={ key } rcv={ this.props } onLeft={ this.remove }></BoxUnit>
 
         return (
-            <B { ...{ className, rcv } }></B>
+            <B className={ styles.box }>
+                { Object.values(this.units).map(unit =>
+                    React.cloneElement(unit, { animate: unit.key === key ? ENTER : LEAVE })
+                )}
+            </B>
         )
     }
 }

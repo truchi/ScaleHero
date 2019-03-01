@@ -5,14 +5,4 @@
     width: _box-width;
     height: _box-height;
     margin: 0 _box-gap;
-    box-sizing: border-box;
-
-    border-width: var(--borderWidth);
-    border-style: var(--borderStyle);
-    border-color: var(--borderColor);
-    border-radius: var(--borderRadius);
-
-    background-color: var(--color);
 }
-
-.clip { clip-path: polygon(var(--clip)) }
