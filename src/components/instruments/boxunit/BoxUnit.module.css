@@ -1,7 +1,22 @@
 @value _box-width, _box-height from "../variables.css";
 
-.boxUnit {
+.clipped {
+    clip-path: var(--clip);
+}
+
+.leave {
+    composes: clipped;
+
     position: absolute;
+}
+
+.enter {
+    composes: clipped;
+}
+
+.boxUnit {
+    composes: clipped;
+
     display: block;
     width: _box-width;
     height: _box-height;
@@ -14,5 +29,3 @@
 
     background-color: var(--color);
 }
-
-.clip { clip-path: polygon(var(--clip)) }

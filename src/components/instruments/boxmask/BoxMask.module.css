@@ -1,0 +1,12 @@
+.animation {
+    animation-name: animate;
+    animation-timing-function: cubic-bezier(0.55, 0.085, 0.68, 0.53);
+    animation-fill-mode: forwards;
+    animation-duration: var(--duration);
+    animation-play-state: var(--state, paused);
+}
+
+@keyframes animate {
+    from { transform: translateX(0) }
+    to   { transform: translateX(1px) }
+}

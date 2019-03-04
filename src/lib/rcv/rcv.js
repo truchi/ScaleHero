@@ -16,6 +16,20 @@ const flatObject = (o, prefix = '') =>
 export default element =>
     class extends Component {
         static displayName = `RCV(${ element.type })`
+        rcv = {}
+
+        constructor(props) {
+            super(props)
+
+            const rcv = this.props.rcv
+            if (Array.isArray(rcv)) {
+                this.rcv = rcv[0] || this.rcv
+
+                if (typeof rcv[1] === 'function') rcv[1](this.css)
+            } else {
+                this.rcv = rcv || {}
+            }
+        }
 
         componentDidMount() {
             this.css()
@@ -25,11 +39,13 @@ export default element =>
             this.css()
         }
 
-        css() {
+        css = (styles) => {
             const $   = findDOMNode(this)
-            const rcv = this.props.rcv
-            if (!$ || !rcv) return
+            const rcv = styles || this.rcv
 
+            if (!$) return
+
+            this.css.$ = $
             Object
                 .entries(flatObject(rcv))
                 .forEach(([key, value]) => $.style.setProperty(`--${ key }`, value))

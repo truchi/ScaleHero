@@ -4,8 +4,10 @@ import './styles/index.css'
 import registerServiceWorker from './registerServiceWorker'
 import App from './components/App'
 
-
-ReactDOM.render(
-    <App />,
-    document.getElementById('root'))
-registerServiceWorker()
+setTimeout(() => {
+    ReactDOM.render(
+        <App />,
+        document.getElementById('root'))
+    registerServiceWorker()
+}
+, 500)

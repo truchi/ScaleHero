@@ -2,3 +2,9 @@
     position: absolute;
     display: block;
 }
+
+.svg {
+    display: block;
+    width: 0;
+    height: 0;
+}

@@ -1,70 +1,31 @@
 import React, { Component } from 'react'
-import { get } from './polygons.js'
 import rcv from '../../../lib/rcv/rcv.js'
 import styles from './BoxUnit.module.css'
 
-const ENTER    = 'enter'
-const ENTERING = 'entering'
-const ENTERED  = 'entered'
-const LEAVE    = 'leave'
-const LEAVING  = 'leaving'
-const LEFT     = 'left'
-const B        = rcv(<boxunit></boxunit>)
+const Unit  = rcv(<boxunit></boxunit>)
+const Enter = rcv(<div></div>)
+const Leave = rcv(<div></div>)
 
 class BoxUnit extends Component {
-    componentDidMount() {
-        this.enter()
-    }
-
-    componentDidUpdate() {
-        const animate = this.props.animate
-
-        if      (animate === ENTER) this.enter()
-        else if (animate === LEAVE) this.leave()
-    }
-
-    enter() {
-        if (this.animationState === ENTERING)
-            return this
-
-        this.animationState = ENTERING
-        setTimeout(() => {
-            this.animationState = ENTERED
-        }, 1000)
-
-        return this
-    }
-
-    leave() {
-        if (this.animationState === LEAVING)
-            return this
-
-        this.animationState = LEAVING
-        setTimeout(() => {
-            this.animationState = LEFT
-            this.props.onLeft(this.props.id)
-        }, 1000)
-
-        return this
-    }
-
     render() {
-        let rcv = this.props.rcv
-        rcv     = {
+        const clip = type => ({ clip: `url("#${ this.props.id }-${ type }")` })
+        let   rcv  = this.props.rcv
+        rcv        = {
             ...rcv,
-            clip: get(rcv.clip),
             border: {
                 ...rcv.border,
-                radius: rcv.border.radius /  2 + '%'
+                radius: rcv.border.radius ? rcv.border.radius /  2 + '%' : null
             }
         }
-        const className = [styles.boxUnit, rcv.clip? styles.clip : null].join(' ').trim()
 
         return (
-            <B { ...{ className, rcv } }></B>
+            <Leave className={ styles.leave } rcv={ clip('leave') }>
+                <Enter className={ styles.enter } rcv={ clip('enter') }>
+                    <Unit className={ styles.boxUnit } rcv={{ ...rcv, ...clip('shape') }}></Unit>
+                </Enter>
+            </Leave>
         )
     }
 }
 
-export { ENTER, LEAVE }
 export default BoxUnit

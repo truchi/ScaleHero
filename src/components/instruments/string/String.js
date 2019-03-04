@@ -7,7 +7,7 @@ class String extends Component {
         return (
             <string className={ styles.string }>
                 { this.props.boxes.map(box => (
-                    <Box { ...box } />
+                    <Box key={ box.key } rcv={ box.styles } maskKeys={ this.props.maskKeys } />
                 )) }
             </string>
         )
