@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import BoxUnit, { ENTER, LEAVE } from '../boxunit/BoxUnit.js'
+import BoxUnit from '../boxunit/BoxUnit.js'
 import styles from './Box.module.css'
 
 class Box extends Component {
@@ -9,7 +9,7 @@ class Box extends Component {
         // Remove old
         const maskKeys = this.props.maskKeys
         for (let unitKey in this._units)
-            if (!maskKeys.includes(unitKeys))
+            if (!maskKeys.includes(unitKey))
                 delete this._units[unitKey]
 
         // Add new
