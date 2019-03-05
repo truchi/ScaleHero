@@ -30,31 +30,18 @@ const guitar = (layers = 5, strings = 6, boxes = 12, { color, border, clip } = {
     }))
 })
 
-const styles = [
-    { },
-    { color: 'hsl(  0, 60%, 60%)' },
-    { color: 'hsl( 36, 60%, 60%)' },
-    { color: 'hsl( 72, 60%, 60%)' },
-    { color: 'hsl(108, 60%, 60%)' },
-    { color: 'hsl(144, 60%, 60%)' },
-    { color: 'hsl(180, 60%, 60%)' },
-    { color: 'hsl(216, 60%, 60%)' },
-    { color: 'hsl(252, 60%, 60%)' },
-    { color: 'hsl(288, 60%, 60%)' },
-    { color: 'hsl(324, 60%, 60%)' },
-]
+const duration = 100
+const color    = i => ({ color: `hsl(${ i * 360 / duration }, 60%, 60%)` })
 const clip     = 'horizontal-1-2-north'
 const border   = { width: '2px', style: 'solid', color: 'white', radius: 50 }
-const duration = 100
+const getState = i => guitar(1, 1, 1, { ...color(i), clip, border })
 
 class App extends Component {
     constructor(props) {
         super(props)
 
         this.i = -1
-        this.state = {
-            guitar: guitar(1, 1, 1, { ...styles[styles.length - 1], clip, border })
-        }
+        this.state = { guitar: getState(this.i) }
     }
 
     componentDidMount() {
@@ -66,14 +53,11 @@ class App extends Component {
     }
 
     tick() {
-        this.i = (this.i + 1) % styles.length
-        this.setState({
-            guitar: guitar(1, 1, 1, { ...styles[this.i], clip, border })
-        })
+        this.i = this.i + 1
+        this.setState({ guitar: getState(this.i) })
     }
 
     render() {
-        console.log(this.state.guitar)
         return <Guitar { ...this.state.guitar }></Guitar>
     }
 }
