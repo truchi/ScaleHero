@@ -5,7 +5,8 @@ const capitalize = s => s.charAt(0).toUpperCase() + s.slice(1)
 const flatObject = (o, prefix = '') =>
     Object.entries(o)
         .reduce((o, [key, value]) => {
-            if (value === null || value === undefined) return o
+            if (value === null || value === undefined)
+                return { ...o, [key]: null }
 
             prefix && (key = prefix + capitalize(key))
             return typeof value === 'object'
