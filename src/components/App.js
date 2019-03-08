@@ -1,5 +1,10 @@
 import React, { Component } from 'react'
 import Guitar from './instruments/guitar/Guitar'
+import klasses, { get } from '../lib/polygons'
+
+for (let klass in klasses) {
+    window[klass] = klasses[klass]
+}
 
 const makeArray = (length = 0, fn = null) => {
     return new Array(length)
@@ -7,11 +12,11 @@ const makeArray = (length = 0, fn = null) => {
         .map((undef, index) => index)
         .map(fn ? fn : i => i)
 }
-const guitar = (layers = 5, strings = 6, boxes = 12, { color, border, clip } = {}) => ({
+const guitar = (layers = 5, strings = 6, boxes = 12, { color, border, clips } = {}) => ({
     layers: makeArray(layers, (layer, l) => ({
         key: l,
         duration: '1s',
-        clip,
+        clip: clips[l],
         strings: makeArray(strings, (string, s) => ({
             key: s,
             boxes: makeArray(boxes, (box, b) => ({
@@ -30,11 +35,13 @@ const guitar = (layers = 5, strings = 6, boxes = 12, { color, border, clip } = {
     }))
 })
 
-const duration = 100
-const color    = i => ({ color: `hsl(${ i * 360 / duration }, 60%, 60%)` })
-const clip     = 'horizontal-1-2-north'
+const duration = 1000
+const color    = i => ({ color: `hsl(${ i * 36000 / duration }, 60%, 60%)` })
+const clips    = [get(1/2, 'topleft', 'southeast'), get(1/2, 'bottomright', 'northwest')]
 const border   = { width: '2px', style: 'solid', color: 'white', radius: 50 }
-const getState = i => guitar(1, 1, 1, { ...color(i), clip, border })
+const getState = i => guitar(2, 1, 1, { ...color(i), clips, border })
+
+console.log(clips)
 
 class App extends Component {
     constructor(props) {

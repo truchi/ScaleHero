@@ -4,6 +4,7 @@ import BoxMask from '../boxmask/BoxMask'
 import styles from './Layer.module.css'
 
 class Layer extends Component {
+    debug = false
     masks = {}
 
     remove = mask => {
@@ -11,9 +12,15 @@ class Layer extends Component {
     }
 
     render() {
-        const key       = Math.random().toString(36).substr(2, 9)
-        this.masks[key] =
-            <BoxMask id={ key } key={ key } rcv={{ duration: this.props.duration }} onLeft={ this.remove }></BoxMask>
+        const key = Math.random().toString(36).substr(2, 9)
+        const { duration, clip } = this.props
+
+        clip.enter.animation.duration = duration
+        clip.leave.animation.duration = duration
+
+        this.masks[key] = (
+            <BoxMask id={ key } key={ key } rcv={ clip } onLeft={ this.remove }></BoxMask>
+        )
 
         return (
             <layer className={ styles.layer }>
@@ -27,6 +34,9 @@ class Layer extends Component {
                 { this.props.strings.map(string => (
                     <String { ...string } maskKeys={ Object.keys(this.masks) }/>
                 )) }
+                { this.debug ?
+                    <BoxMask id="debug" key="debug" rcv={ clip } debug="debug"></BoxMask>
+                : null}
             </layer>
         )
     }
