@@ -2,6 +2,7 @@ import Polygon from './Polygon.js'
 import Point from './Point.js'
 import Rectangle from './Rectangle.js'
 import Triangle from './Triangle.js'
+import Diamond from './Diamond.js'
 
 const TRANSITIONS = {
   north    : { angle:   0, x:  0, y: -1 },
@@ -14,15 +15,18 @@ const TRANSITIONS = {
   southwest: { angle: -45, x: -1, y:  0 }
 }
 
-const make      = (constructor, multiplier) => (size, type) => constructor.make(size * multiplier, type)
-const rectangle = make(Rectangle, 1)
-const triangle  = make(Triangle , 2)
+const make      = (constructor, fn) => (size, type) => constructor.make(fn(size), type)
+const rectangle = make(Rectangle, s => s)
+const triangle  = make(Triangle , s => 2 * s)
+const diamond   = make(Diamond  , s => s > 1 / 2 ? 0 : 2 * (Polygon.X - 2 * s))
 
 const getShape = (size, type) => {
   if (Rectangle.TYPES.includes(type)) return rectangle(size, type)
   if ( Triangle.TYPES.includes(type)) return triangle (size, type)
+  if (  Diamond.TYPES.includes(type)) return diamond  (size, type)
 
-  throw new Error(`Invalid type "${ type }" (${ Rectangle.TYPES.concat(Triangle.TYPES).join(', ') })`)
+  const types = Rectangle.TYPES.concat(Triangle.TYPES).concat(Diamond.TYPES)
+  throw new Error(`Invalid type "${ type }" (${ types.join(', ') })`)
 }
 
 const getTransition = (trans) => {
@@ -94,4 +98,4 @@ const get = (s = 1, type = 'top', trans = 'north') => {
 }
 
 export { get }
-export default { Polygon, Point, Rectangle, Triangle }
+export default { Polygon, Point, Rectangle, Triangle, Diamond }

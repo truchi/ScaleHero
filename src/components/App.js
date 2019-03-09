@@ -37,9 +37,15 @@ const guitar = (layers = 5, strings = 6, boxes = 12, { color, border, clips } = 
 
 const duration = 1000
 const color    = i => ({ color: `hsl(${ i * 36000 / duration }, 60%, 60%)` })
-const clips    = [get(1/2, 'topleft', 'southeast'), get(1/2, 'bottomright', 'northwest')]
-const border   = { width: '2px', style: 'solid', color: 'white', radius: 50 }
-const getState = i => guitar(2, 1, 1, { ...color(i), clips, border })
+const border   = { width: '2px', style: 'solid', color: 'white', radius: 100 }
+const clips    = [
+    get(1/4, 'diamond', 'southeast'),
+    get(1/4, 'topright', 'southwest'),
+    get(1/4, 'topleft', 'southeast'),
+    get(1/4, 'bottomright', 'northwest'),
+    get(1/4, 'bottomleft', 'northeast')
+]
+const getState = i => guitar(5, 1, 1, { ...color(i), clips, border })
 
 console.log(clips)
 
