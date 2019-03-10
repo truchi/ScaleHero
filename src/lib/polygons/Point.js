@@ -16,6 +16,9 @@ export default class Point {
   }
 
   scale(value = new Point(), origin = new Point()) {
+    if (typeof value === 'number')
+      value = new Point({ x: value, y: value })
+
     return origin
       .translate(
         this
@@ -44,6 +47,25 @@ export default class Point {
       coord =>
         (Math.round(coord * Math.pow(10, precision)) / Math.pow(10, precision)) || 0
     )
+  }
+
+  quarterify(size = new Point(), fn = _ => _) {
+    const point  = this.clone()
+    const center = size.clone(coord => coord / 2)
+
+    const angle = (() => {
+      const [px, py, cx, cy] = [point.x, point.y, center.x, center.y]
+
+      if (px > cx && py > cy) return 0
+      if (px < cx && py > cy) return 90
+      if (px < cx && py < cy) return 180
+      return 270
+    })()
+
+    const transform = point => point.rotate(-angle, center).translate(center.opposite()).scale(2)
+    const inverse   = point => point.scale(1/2).translate(center).rotate(angle, center)
+
+    return inverse(fn(transform(point)))
   }
 
   clone(fn = _ => _) {
