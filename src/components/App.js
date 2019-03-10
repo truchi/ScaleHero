@@ -35,17 +35,20 @@ const guitar = (layers = 5, strings = 6, boxes = 12, { color, border, clips } = 
     }))
 })
 
+// TODO take border into account!
+const loop     = false
 const duration = 1000
+const radius   = 100
 const color    = i => ({ color: `hsl(${ i * 36000 / duration }, 60%, 60%)` })
-const border   = { width: '2px', style: 'solid', color: 'white', radius: 100 }
+const border   = { width: '2px', style: 'solid', color: 'white', radius }
 const clips    = [
-    get(1/4, 'diamond', 'southeast'),
+    get(6/10, 'left', 'southeast', radius),
     get(1/4, 'topright', 'southwest'),
     get(1/4, 'topleft', 'southeast'),
     get(1/4, 'bottomright', 'northwest'),
     get(1/4, 'bottomleft', 'northeast')
 ]
-const getState = i => guitar(5, 1, 1, { ...color(i), clips, border })
+const getState = i => guitar(1, 1, 1, { ...color(i), clips, border })
 
 console.log(clips)
 
@@ -58,7 +61,8 @@ class App extends Component {
     }
 
     componentDidMount() {
-        this.intervalID = setInterval(() => this.tick(), duration)
+        if (loop)
+            this.intervalID = setInterval(() => this.tick(), duration)
     }
 
     componentWillUnmount() {
