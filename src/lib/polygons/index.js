@@ -2,7 +2,33 @@ import Polygon from './Polygon.js'
 import Point from './Point.js'
 import Rectangle from './Rectangle.js'
 import Triangle from './Triangle.js'
-import Diamond from './Diamond.js'
+
+// In this file we assume Polygon.X === Polygon.Y
+const S = Polygon.X
+
+const SHAPES = s => ({
+  rect: {
+    _constructor: Rectangle,
+    top         : { size: { y: s }                                },
+    horizontal  : { size: { y: s }, translate: { y: (1 - s) / 2 } },
+    bottom      : { size: { y: s }, translate: { y:  1 - s      } },
+    left        : { size: { x: s }                                },
+    vertical    : { size: { x: s }, translate: { x: (1 - s) / 2 } },
+    right       : { size: { x: s }, translate: { x:  1 - s      } },
+    topleft     : { size: s                          },
+    topright    : { size: s, translate: { x: S / 2 } },
+    bottomleft  : { size: s, translate: { y: S / 2 } },
+    bottomright : { size: s, translate:      S / 2   },
+    diamond     : { size: s, rotate: 45, scale: 1 / Math.sqrt(2) },
+  },
+  triangle: {
+    _constructor: Triangle,
+    topleft     : { size: 2                          },
+    topright    : { size: 2, scale: { x: -1, y:  1 } },
+    bottomleft  : { size: 2, scale: { x:  1, y: -1 } },
+    bottomright : { size: 2, scale: { x: -1, y: -1 } },
+  },
+})
 
 const TRANSITIONS = {
   north    : { angle:   0, x:  0, y: -1 },
@@ -15,26 +41,40 @@ const TRANSITIONS = {
   southwest: { angle: -45, x: -1, y:  0 }
 }
 
-const make      = (constructor, fn) => (size, type) => constructor.make(fn(size), type)
-const rectangle = make(Rectangle, s => s)
-const triangle  = make(Triangle , s => 2 * s)
-const diamond   = make(Diamond  , s => s > 1 / 2 ? 0 : 2 * (Polygon.X - 2 * s))
+const getShape = (s, type, subtype) => {
+  const types     = SHAPES(s)
+  const typesList = Object.keys(types)
 
-const getShape = (size, type) => {
-  if (Rectangle.TYPES.includes(type)) return rectangle(size, type)
-  if ( Triangle.TYPES.includes(type)) return triangle (size, type)
-  if (  Diamond.TYPES.includes(type)) return diamond  (size, type)
+  if (!typesList.includes(type))
+    throw new Error(`Invalid type "${ type }" (${ typesList.join(', ') })`)
 
-  const types = Rectangle.TYPES.concat(Triangle.TYPES).concat(Diamond.TYPES)
-  throw new Error(`Invalid type "${ type }" (${ types.join(', ') })`)
-}
+  const subtypes     = types[type]
+  const subtypesList = Object.keys(subtypes)
 
-const getTransition = (trans) => {
-  const transition = TRANSITIONS[trans]
-  if (!transition)
-    throw new Error(`Invalid transition "${ trans }" (${ Object.keys(TRANSITIONS).join(', ') })`)
+  if (!subtypesList.includes(subtype) || subtype === '_constructor')
+    throw new Error(`Invalid subtype "${ subtype }" for type "${ type }" (${ subtypes.join(', ') })`)
 
-  return transition
+  const constructor = subtypes._constructor
+  let { size, translate, rotate, scale } = Object.assign({
+    size     : {},
+    translate: {},
+    rotate   : 0,
+    scale    : {},
+  }, subtypes[subtype])
+
+  if (typeof size      === 'number') size      = { x: size     , y: size      }
+  if (typeof translate === 'number') translate = { x: translate, y: translate }
+  if (typeof scale     === 'number') scale     = { x: scale    , y: scale     }
+
+  size      = Object.assign({ x: 1, y: 1 }, size)
+  translate = Object.assign({ x: 0, y: 0 }, translate)
+  scale     = Object.assign({ x: 1, y: 1 }, scale)
+
+  const center = new Point({ x: S / 2, y: S / 2 })
+  return new constructor(new Point(size))
+    .translate(translate)
+    .rotate   (rotate, center)
+    .scale    (scale , center)
 }
 
 const getSize = polygon => {
@@ -43,6 +83,14 @@ const getSize = polygon => {
   const br = bb.points[2]
 
   return new Point({ x: br.x - tl.x, y: br.y - tl.y })
+}
+
+const getTransition = (trans) => {
+  const transition = TRANSITIONS[trans]
+  if (!transition)
+    throw new Error(`Invalid transition "${ trans }" (${ Object.keys(TRANSITIONS).join(', ') })`)
+
+  return transition
 }
 
 const getAnimation = (p, c, a) => (s, e) => ({
@@ -65,8 +113,8 @@ const getDebug = (rotated, boxed, size, dir, start, end) => ({
   end    : { enter:   end.enter.toString(), leave:   end.leave.toString() }
 })
 
-const get = (s = 1, type = 'top', trans = 'north') => {
-  const shape           = getShape(s, type).crop(Rectangle.make())
+const get = (s = 1, type = 'rect', subtype = 'top', trans = 'north') => {
+  const shape           = getShape(s, type, subtype).crop(new Rectangle({ x: S, y: S }))
   const { x, y, angle } = getTransition(trans)
   const dir             = new Point({ x, y })
 
@@ -97,5 +145,11 @@ const get = (s = 1, type = 'top', trans = 'north') => {
   }
 }
 
+window.get = get
 export { get }
-export default { Polygon, Point, Rectangle, Triangle, Diamond }
+export default {
+  Polygon,
+  Point,
+  Rectangle,
+  Triangle,
+}
