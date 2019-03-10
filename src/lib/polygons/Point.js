@@ -28,7 +28,7 @@ export default class Point {
   }
 
   rotate(angle = 0, center = new Point()) { // angle: clockwise degrees
-    const rad = 2 * Math.PI * angle / 360
+    const rad = - 2 * Math.PI * angle / 360
     const cos = Math.cos(rad)
     const sin = Math.sin(rad)
 
@@ -57,9 +57,9 @@ export default class Point {
       const [px, py, cx, cy] = [point.x, point.y, center.x, center.y]
 
       if (px > cx && py > cy) return 0
-      if (px < cx && py > cy) return 90
-      if (px < cx && py < cy) return 180
-      return 270
+      if (px < cx && py > cy) return -90
+      if (px < cx && py < cy) return -180
+      return -270
     })()
 
     const transform = point => point.rotate(-angle, center).translate(center.opposite()).scale(2)
