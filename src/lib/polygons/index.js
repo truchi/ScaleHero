@@ -3,23 +3,27 @@ import Point from './Point.js'
 import Rectangle from './Rectangle.js'
 import Triangle from './Triangle.js'
 
-const sq2 = Math.sqrt(2)
+const sq2  = Math.sqrt(2)
+const far  = s => (1 - s)
+const mid  = s => (1 - s) / 2
+const diag = s => ({ size: { x: sq2 * s, y: sq2 }, translate: { x: mid(sq2 * s), y: mid(sq2) } })
+
 const SHAPES = s => ({
   rect: {
     _constructor: Rectangle,
-    top         : { size: { y: s }                                },
-    horizontal  : { size: { y: s }, translate: { y: (1 - s) / 2 } },
-    bottom      : { size: { y: s }, translate: { y:  1 - s      } },
-    left        : { size: { x: s }                                },
-    vertical    : { size: { x: s }, translate: { x: (1 - s) / 2 } },
-    right       : { size: { x: s }, translate: { x:  1 - s      } },
+    top         : { size: { y: s }                           },
+    horizontal  : { size: { y: s }, translate: { y: mid(s) } },
+    bottom      : { size: { y: s }, translate: { y: far(s) } },
+    left        : { size: { x: s }                           },
+    vertical    : { size: { x: s }, translate: { x: mid(s) } },
+    right       : { size: { x: s }, translate: { x: far(s) } },
     topleft     : { size: s                          },
     topright    : { size: s, translate: { x: 1 / 2 } },
     bottomleft  : { size: s, translate: { y: 1 / 2 } },
     bottomright : { size: s, translate:      1 / 2   },
     diamond     : { size: s, rotate: 45, scale: 1 / sq2 },
-    diagasc     : { size: { x: sq2 * s,  y: sq2 }, translate: { x: (1 - sq2 * s) / 2, y: (1 - sq2) / 2 }, rotate: -45 },
-    diagdesc    : { size: { x: sq2 * s,  y: sq2 }, translate: { x: (1 - sq2 * s) / 2, y: (1 - sq2) / 2 }, rotate:  45 },
+    diagasc     : { ...diag(s), rotate: -45 },
+    diagdesc    : { ...diag(s), rotate:  45 },
   },
   triangle: {
     _constructor: Triangle,
