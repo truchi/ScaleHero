@@ -3,23 +3,19 @@ import Point from './Point.js'
 import Rectangle from './Rectangle.js'
 import Triangle from './Triangle.js'
 
-// In this file we assume Polygon.X === Polygon.Y
-const S = Polygon.X
-
 const SHAPES = s => ({
   rect: {
     _constructor: Rectangle,
     top         : { size: { y: s }                                },
-    horizontal  : { size: { y: s }, translate: { y: (S - s) / 2 } },
-    bottom      : { size: { y: s }, translate: { y:  S - s      } },
+    horizontal  : { size: { y: s }, translate: { y: (1 - s) / 2 } },
+    bottom      : { size: { y: s }, translate: { y:  1 - s      } },
     left        : { size: { x: s }                                },
-    vertical    : { size: { x: s }, translate: { x: (S - s) / 2 } },
-    right       : { size: { x: s }, translate: { x:  S - s      } },
+    vertical    : { size: { x: s }, translate: { x: (1 - s) / 2 } },
+    right       : { size: { x: s }, translate: { x:  1 - s      } },
     topleft     : { size: s                          },
-    topright    : { size: s, translate: { x: S / 2 } },
-    bottomleft  : { size: s, translate: { y: S / 2 } },
-    bottomright : { size: s, translate:      S / 2   },
-    diamond     : { size: s, rotate: 45, scale: 1 / Math.sqrt(2) },
+    topright    : { size: s, translate: { x: 1 / 2 } },
+    bottomleft  : { size: s, translate: { y: 1 / 2 } },
+    bottomright : { size: s, translate:      1 / 2   },
   },
   triangle: {
     _constructor: Triangle,
@@ -70,7 +66,7 @@ const getShape = (s, type, subtype) => {
   translate = Object.assign({ x: 0, y: 0 }, translate)
   scale     = Object.assign({ x: 1, y: 1 }, scale)
 
-  const center = new Point({ x: S / 2, y: S / 2 })
+  const center = new Point({ x: 1/2, y: 1/2 })
   return new constructor(new Point(size))
     .translate(translate)
     .rotate   (rotate, center)
@@ -115,7 +111,7 @@ const getDebug = (rotated, boxed, size, dir, start, end) => ({
 })
 
 const get = (s = 1, type = 'rect', subtype = 'top', trans = 'north') => {
-  const shape           = getShape(s, type, subtype).crop(new Rectangle({ x: S, y: S }))
+  const shape           = getShape(s, type, subtype).crop(new Rectangle({ x: 1, y: 1 }))
   const { x, y, angle } = getTransition(trans)
   const dir             = new Point({ x, y: -y }) // Screen has -y...
 

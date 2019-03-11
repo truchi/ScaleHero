@@ -1,9 +1,7 @@
 import Point from './Point'
 
 export default class Polygon {
-  points        = []
-  static X      = 1
-  static Y      = 1
+  points = []
 
   constructor(points = []) {
     this.points = points
@@ -13,7 +11,7 @@ export default class Polygon {
     return this.clone(point => point.translate(vector))
   }
 
-  rotate(angle = 0, center = new Point({ x: Polygon.X / 2, y: Polygon.Y / 2 })) {
+  rotate(angle = 0, center = new Point()) {
     return this.clone(point => point.rotate(angle, center))
   }
 
