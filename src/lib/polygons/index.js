@@ -23,10 +23,10 @@ const SHAPES = s => ({
   },
   triangle: {
     _constructor: Triangle,
-    topleft     : { size: 2                          },
-    topright    : { size: 2, scale: { x: -1, y:  1 } },
-    bottomleft  : { size: 2, scale: { x:  1, y: -1 } },
-    bottomright : { size: 2, scale: { x: -1, y: -1 } },
+    topleft     : { size: 2 * s                          },
+    topright    : { size: 2 * s, scale: { x: -1, y:  1 } },
+    bottomleft  : { size: 2 * s, scale: { x:  1, y: -1 } },
+    bottomright : { size: 2 * s, scale: { x: -1, y: -1 } },
   },
 })
 
