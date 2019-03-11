@@ -10,11 +10,11 @@ const SHAPES = s => ({
   rect: {
     _constructor: Rectangle,
     top         : { size: { y: s }                                },
-    horizontal  : { size: { y: s }, translate: { y: (1 - s) / 2 } },
-    bottom      : { size: { y: s }, translate: { y:  1 - s      } },
+    horizontal  : { size: { y: s }, translate: { y: (S - s) / 2 } },
+    bottom      : { size: { y: s }, translate: { y:  S - s      } },
     left        : { size: { x: s }                                },
-    vertical    : { size: { x: s }, translate: { x: (1 - s) / 2 } },
-    right       : { size: { x: s }, translate: { x:  1 - s      } },
+    vertical    : { size: { x: s }, translate: { x: (S - s) / 2 } },
+    right       : { size: { x: s }, translate: { x:  S - s      } },
     topleft     : { size: s                          },
     topright    : { size: s, translate: { x: S / 2 } },
     bottomleft  : { size: s, translate: { y: S / 2 } },
@@ -52,7 +52,7 @@ const getShape = (s, type, subtype) => {
   const subtypesList = Object.keys(subtypes)
 
   if (!subtypesList.includes(subtype) || subtype === '_constructor')
-    throw new Error(`Invalid subtype "${ subtype }" for type "${ type }" (${ subtypes.join(', ') })`)
+    throw new Error(`Invalid subtype "${ subtype }" for type "${ type }" (${ subtypesList.join(', ') })`)
 
   const constructor = subtypes._constructor
   let { size, translate, rotate, scale } = Object.assign({
