@@ -3,6 +3,7 @@ import Point from './Point.js'
 import Rectangle from './Rectangle.js'
 import Triangle from './Triangle.js'
 
+const sq2 = Math.sqrt(2)
 const SHAPES = s => ({
   rect: {
     _constructor: Rectangle,
@@ -16,6 +17,9 @@ const SHAPES = s => ({
     topright    : { size: s, translate: { x: 1 / 2 } },
     bottomleft  : { size: s, translate: { y: 1 / 2 } },
     bottomright : { size: s, translate:      1 / 2   },
+    diamond     : { size: s, rotate: 45, scale: 1 / sq2 },
+    diagasc     : { size: { x: sq2 * s,  y: sq2 }, translate: { x: (1 - sq2 * s) / 2, y: (1 - sq2) / 2 }, rotate: -45 },
+    diagdesc    : { size: { x: sq2 * s,  y: sq2 }, translate: { x: (1 - sq2 * s) / 2, y: (1 - sq2) / 2 }, rotate:  45 },
   },
   triangle: {
     _constructor: Triangle,
