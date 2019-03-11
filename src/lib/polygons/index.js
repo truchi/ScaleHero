@@ -31,14 +31,14 @@ const SHAPES = s => ({
 })
 
 const TRANSITIONS = {
-  north    : { angle:   0, x:  0, y: -1 },
+  north    : { angle:   0, x:  0, y:  1 },
   east     : { angle:   0, x:  1, y:  0 },
-  south    : { angle:   0, x:  0, y:  1 },
+  south    : { angle:   0, x:  0, y: -1 },
   west     : { angle:   0, x: -1, y:  0 },
-  northeast: { angle: -45, x:  1, y:  0 },
-  northwest: { angle:  45, x: -1, y:  0 },
-  southeast: { angle:  45, x:  1, y:  0 },
-  southwest: { angle: -45, x: -1, y:  0 }
+  northeast: { angle:  45, x:  1, y:  0 },
+  northwest: { angle: -45, x: -1, y:  0 },
+  southeast: { angle: -45, x:  1, y:  0 },
+  southwest: { angle:  45, x: -1, y:  0 }
 }
 
 const getShape = (s, type, subtype) => {
@@ -97,10 +97,11 @@ const getAnimation = (p, c, a) => (s, e) => ({
   points: p.toString(),
   animation: {
     origin: c.toString('px', ' '),
+    // Screen has -y...
     from:
-      `rotate(${ a }deg) translate(${ s.toString('px') })`,
+      `rotate(${ -a }deg) translate(${ s.toString('px') })`,
     to:
-      `rotate(${ a }deg) translate(${ e.toString('px') })`
+      `rotate(${ -a }deg) translate(${ e.toString('px') })`
   }
 })
 
@@ -116,7 +117,7 @@ const getDebug = (rotated, boxed, size, dir, start, end) => ({
 const get = (s = 1, type = 'rect', subtype = 'top', trans = 'north') => {
   const shape           = getShape(s, type, subtype).crop(new Rectangle({ x: S, y: S }))
   const { x, y, angle } = getTransition(trans)
-  const dir             = new Point({ x, y })
+  const dir             = new Point({ x, y: -y }) // Screen has -y...
 
   const center  = shape.center()
   const rotated = shape.rotate(-angle, center)
