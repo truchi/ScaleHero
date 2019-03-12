@@ -35,7 +35,7 @@ class Layer extends Component {
                     <String { ...string } maskKeys={ Object.keys(this.masks) }/>
                 )) }
                 { this.debug ?
-                    <BoxMask id="debug" key="debug" rcv={ clip } debug="debug"></BoxMask>
+                    <BoxMask id="debug" rcv={ clip } debug="debug"></BoxMask>
                 : null}
             </layer>
         )

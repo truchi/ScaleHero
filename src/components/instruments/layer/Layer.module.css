@@ -1,6 +1,6 @@
 .layer {
-    position: absolute;
     display: block;
+    grid-area: layers;
 }
 
 .svg {

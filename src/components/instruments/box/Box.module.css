@@ -5,6 +5,4 @@
     width: _box-width;
     height: _box-height;
     margin: 0 _box-gap;
-
-    border: 1px dotted gold; /* TODO remove */
 }

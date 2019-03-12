@@ -1,4 +1,4 @@
 .guitar {
-    position: relative;
-    display: block;
+    display: grid;
+    grid-template-areas: "layers";
 }
