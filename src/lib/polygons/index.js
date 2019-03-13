@@ -3,6 +3,7 @@ import Point from './Point.js'
 import Rectangle from './Rectangle.js'
 import Triangle from './Triangle.js'
 
+const e    = .02
 const sq2  = Math.sqrt(2)
 const far  = s => (1 - s)
 const mid  = s => (1 - s) / 2
@@ -15,7 +16,7 @@ const SHAPES = s => ({
     horizontal  : { size: { y: s }, translate: { y: mid(s) } },
     bottom      : { size: { y: s }, translate: { y: far(s) } },
     left        : { size: { x: s } },
-    vertical    : { size: { x: s }, translate: { x: mid(s) } },
+    vertical    : { size: { x: s + e }, translate: { x: mid(s + e) } },
     right       : { size: { x: s }, translate: { x: far(s) } },
     topleft     : { size: s },
     topright    : { size: s, translate: { x: 1 / 2 } },
@@ -27,10 +28,10 @@ const SHAPES = s => ({
   },
   triangle: {
     _constructor: Triangle,
-    topleft     : { size: 2 * s },
-    topright    : { size: 2 * s, scale: { x: -1, y:  1 } },
-    bottomleft  : { size: 2 * s, scale: { x:  1, y: -1 } },
-    bottomright : { size: 2 * s, scale: { x: -1, y: -1 } },
+    topleft     : { size: 2 * s + e },
+    topright    : { size: 2 * s + e, scale: { x: -1, y:  1 } },
+    bottomleft  : { size: 2 * s + e, scale: { x:  1, y: -1 } },
+    bottomright : { size: 2 * s + e, scale: { x: -1, y: -1 } },
   },
 })
 
