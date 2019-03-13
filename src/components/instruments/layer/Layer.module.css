@@ -3,6 +3,10 @@
     grid-area: layers;
 }
 
+.shape {
+    clip: var(--clip);
+}
+
 .svg {
     display: block;
     width: 0;

@@ -6,8 +6,8 @@ class Guitar extends Component {
     render() {
         return (
             <guitar className={ styles.guitar }>
-                { this.props.layers.map(layer => (
-                    <Layer { ...layer } />
+                { this.props.layers.map((layer, i) => (
+                    <Layer key={ i } { ...layer } />
                 )) }
             </guitar>
         )
