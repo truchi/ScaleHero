@@ -6,12 +6,12 @@ import rcv from '../../../lib/rcv/rcv'
 import entries from '../../../utils/entries'
 import styles from './Layer.module.css'
 
-const IDLE = 'idle'
-const BUSY = 'busy'
 
 class Layer extends Component {
     static #id       = 0
     static MAX_MASKS = 2
+    static IDLE = 'idle'
+    static BUSY = 'busy'
     id     = null
     #masks = {}
 
@@ -25,31 +25,31 @@ class Layer extends Component {
 
             this.#masks[id] = {
                 id,
-                state: IDLE,
+                state: Layer.IDLE,
                 $    : (
-                    <BoxMask id={ id } key={ id } onLeft={ this.remove }></BoxMask>
+                    <BoxMask id={ id } key={ id } enter={ BoxMask.DEFAULT } leave={ BoxMask.DEFAULT } onLeft={ this.remove } />
                 )
             }
         }
     }
 
     remove = mask => {
-        this.#masks[mask.id].state = IDLE
+        this.#masks[mask.id].state = Layer.IDLE
     }
 
     masks(enter, leave) {
-        const current = Object.values(this.#masks).find(mask => mask.state === IDLE)
+        const current = Object.values(this.#masks).find(mask => mask.state === Layer.IDLE)
         if(!current) throw new Error(`${ Layer.MAX_MASKS } masks are not enough`)
 
         this.#masks = entries(this.#masks, entries => entries
             .map(([id, mask]) => [id, {
                 id   : mask.id,
-                state: mask.id === current.id ? BUSY : mask.state,
+                state: mask.id === current.id ? Layer.BUSY : mask.state,
                 $    : React.cloneElement(
                     mask.$,
                     mask.id === current.id
-                        ? { animate: 'enter', enter, leave }
-                        : { animate: 'leave' }
+                        ? { animate: BoxMask.ENTER, enter, leave }
+                        : { animate: BoxMask.LEAVE }
                 )
             }])
         )

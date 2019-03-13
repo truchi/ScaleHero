@@ -1,10 +1,14 @@
 import React, { Component } from 'react'
 import rcv from '../../../lib/rcv/rcv.js'
+import entries from '../../../utils/entries'
 import styles from './BoxMask.module.css'
 
 const Polygon = rcv(<polygon />)
 
-class BoxMask extends Component {
+export default class BoxMask extends Component {
+    static DEFAULT = { points: '', animation: {} }
+    static ENTER   = 'enter'
+    static LEAVE   = 'leave'
     rcv    = {}
     states = {
         // paused : false,
@@ -24,9 +28,11 @@ class BoxMask extends Component {
 
     events(action) {
         const method = action + 'EventListener'
+        const enter  = this.rcv.enter
+        const leave  = this.rcv.leave
 
-        this.rcv.enter.$[method]('animationend', this.entered)
-        this.rcv.leave.$[method]('animationend', this.left   )
+        enter && enter.$[method]('animationend', this.entered)
+        leave && leave.$[method]('animationend', this.left   )
     }
 
     componentDidMount() {
@@ -49,10 +55,10 @@ class BoxMask extends Component {
     }
 
     animate() {
-        if (!this.states.entered)
+        if (this.props.animate === BoxMask.ENTER)
             this.enter()
 
-        if (this.props.leave)
+        if (this.props.animate === BoxMask.LEAVE)
             this.leave()
     }
 
@@ -85,16 +91,17 @@ class BoxMask extends Component {
     }
 
     render() {
-        let { id, animate, enter, leave } = this.props
-
-        const defaultData = { points: '', animation: {} }
-        animate = animate || ''
-        enter   = enter   || defaultData
-        leave   = leave   || defaultData
+        let { id, shape, enter, leave } = this.props
+        const polygons = Object.entries(
+            entries(
+                { shape, enter, leave },
+                entries => entries.filter(([type, data]) => data)
+            )
+        )
 
         return (
             <>
-                { Object.entries({ enter, leave }).map(([type, data]) => (
+                { polygons.map(([type, data]) => (
                     <clipPath id={ `${ id }-${ type }` } key={ type } clipPathUnits="objectBoundingBox">
                         <Polygon
                             className={ styles[type] }
@@ -107,14 +114,3 @@ class BoxMask extends Component {
         )
     }
 }
-/* {[ 'leave', 'enter', 'shape' ].map(type => (
- *     <clipPath id={ `${ this.id }-${ type }` } key={ type } clipPathUnits="objectBoundingBox">
- *         <Polygon
- *             className={ styles[type] }
- *             points   ={ this.props.rcv[type].points }
- *             rcv      ={[ this.props.rcv[type].animation, rcv => this.rcv[type] = rcv ]}
- *         />
- *     </clipPath>
- * ))} */
-
-export default BoxMask
