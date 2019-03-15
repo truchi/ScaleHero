@@ -61,29 +61,28 @@ export default class BoxMask extends Component {
         if (this.states.entering) return
 
         this.states.entering = true
-        this.rcv.enter({
-            state: 'running'
-        })
+        this.rcv.leave({ mode : 'backwards' })
+        this.rcv.enter({ state: 'running'   })
     }
 
     leave() {
         if (this.states.leaving) return
 
         this.states.leaving = true
-        this.rcv.leave({
-            state: 'running'
-        })
+        this.rcv.leave({ state: 'running' })
     }
 
     entered = e => {
         this.states.entering = false
         this.states.entered  = true
+        this.rcv.enter({ state: 'paused' })
         this.onEntered(this, e)
     }
 
     left = e => {
         this.states.leaving = false
         this.states.left    = true
+        this.rcv.leave({ state: 'paused' })
         this.onLeft(this, e)
     }
 
@@ -91,7 +90,7 @@ export default class BoxMask extends Component {
         let { id, shape, enter, leave, duration } = this.props
 
         const noop     = _ => _
-        const defaults = { points: '', animation: { duration } }
+        const defaults = { points: '', animation: { duration, mode: 'both' } }
         const sanitize = data => {
             data           = { ...defaults, ...data }
             data.animation = { ...defaults.animation, ...data.animation }

@@ -3,7 +3,7 @@
 .animation {
     animation-name: animate;
     animation-timing-function: _easing;
-    animation-fill-mode: both;
+    animation-fill-mode: var(--mode);
     animation-duration: var(--duration);
     animation-play-state: var(--state, paused);
 

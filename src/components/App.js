@@ -15,6 +15,7 @@ const intervals = [
 
 const palettes = {
     blue: entries(intervals.map(interval => [interval, { color: 'blue' }])),
+    red : entries(intervals.map(interval => [interval, { color: 'red' }])),
     cool: entries(
         intervals.map(interval => {
             const color = (a, i) => `hsl(${ a * 360 / 7 }, ${ 50 + i }%, ${ 50 + i }%)`
@@ -77,7 +78,7 @@ const lesson = {
             /* { root: 'C', scale: scales.ionian , palette: palettes.cool }, */
         ],
         [
-            { root: 'F', scale: scales.pentaM , palette: palettes.cool },
+            { root: 'F', scale: scales.pentaM , palette: palettes.red },
             /* { root: 'F', scale: scales.ionian , palette: palettes.cool }, */
         ],
     ]
