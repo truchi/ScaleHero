@@ -14,7 +14,7 @@ const intervals = [
 ]
 
 const palettes = {
-    black: entries(intervals.map(interval => [interval, { color: 'black' }])),
+    blue: entries(intervals.map(interval => [interval, { color: 'blue' }])),
     cool: entries(
         intervals.map(interval => {
             const color = (a, i) => `hsl(${ a * 360 / 7 }, ${ 50 + i }%, ${ 50 + i }%)`
@@ -73,7 +73,7 @@ const lesson = {
             /* { root: 'C', scale: scales.aeolian, palette: palettes.cool }, */
         ],
         [
-            { root: 'C', scale: scales.pentaM , palette: palettes.black },
+            { root: 'C', scale: scales.pentaM , palette: palettes.blue },
             /* { root: 'C', scale: scales.ionian , palette: palettes.cool }, */
         ],
         [
@@ -100,7 +100,15 @@ const makeStates = (lesson) => {
                 return {
                     palette,
                     ...get(layer.mask.size, layer.mask.type, layer.mask.shape, layer.transition),
-                    duration: '1s'
+                    duration: '1s',
+                    strings: [
+                        {
+                            boxes: ['b3', '3']
+                        },
+                        {
+                            boxes: ['b3', '3']
+                        },
+                    ]
                 }
             })
         }

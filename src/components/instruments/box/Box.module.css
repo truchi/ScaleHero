@@ -1,5 +1,12 @@
 @value _box-width, _box-height, _box-gap from "../variables.css";
 
+.svg {
+    width: 100%;
+    height: 100%;
+}
+
+.use {}
+
 .box {
     display: inline-block;
     width: _box-width;

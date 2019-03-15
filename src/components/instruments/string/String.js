@@ -6,8 +6,8 @@ class String extends Component {
     render() {
         return (
             <string className={ styles.string }>
-                { this.props.boxes.map(box => (
-                    <Box key={ box.key } rcv={ box.styles } maskKeys={ this.props.maskKeys } />
+                { this.props.boxes.map((box, i) => (
+                    <Box key={ i } rcv={ box.styles } />
                 )) }
             </string>
         )

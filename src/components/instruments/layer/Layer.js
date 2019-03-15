@@ -85,27 +85,32 @@ class Layer extends Component {
 
         return (
             <layer className={ styles.layer }>
-                <svg className={ styles.svg } xmlns="http://www.w3.org/2000/svg">
-                    <ActivationList
-                        Component    ={ BoxMask   }
-                        length       ={ Layer.MAX }
-                        active       ={ candidate }
-                        initialProps ={ this.maskInitialProps  }
-                        activeProps  ={ this.maskActiveProps   }
-                        inactiveProps={ this.maskInactiveProps }
-                    />
-                    { this.keys.map(key => (
-                        <g id={ this.getId('box')(key) } key={ key }>
-                            <ActivationList
-                                Component   ={ BoxUnit   }
-                                length      ={ Layer.MAX }
-                                active      ={ candidate }
-                                initialProps={ this.unitInitialProps(key) }
-                                activeProps ={ this.unitActiveProps (key) }
-                            />
-                        </g>
-                    ))}
+                <svg className={ styles.svg }>
+                    <defs>
+                        <ActivationList
+                            Component    ={ BoxMask   }
+                            length       ={ Layer.MAX }
+                            active       ={ candidate }
+                            initialProps ={ this.maskInitialProps  }
+                            activeProps  ={ this.maskActiveProps   }
+                            inactiveProps={ this.maskInactiveProps }
+                        />
+                        { this.keys.map(key => (
+                            <g id={ this.getId('box')(key) } key={ key }>
+                                <ActivationList
+                                    Component   ={ BoxUnit   }
+                                    length      ={ Layer.MAX }
+                                    active      ={ candidate }
+                                    initialProps={ this.unitInitialProps(key) }
+                                    activeProps ={ this.unitActiveProps (key) }
+                                />
+                            </g>
+                        ))}
+                    </defs>
                 </svg>
+                { this.props.strings.map((string, i) => (
+                    <String key={ i } { ...string } />
+                )) }
             </layer>
         )
     }
