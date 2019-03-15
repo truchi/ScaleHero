@@ -3,7 +3,6 @@ import ActivationList from './ActivationList'
 import BoxMask from './BoxMask'
 import BoxUnit from './BoxUnit'
 import String from '../string/String'
-/* import rcv from '../../../lib/rcv/rcv' */
 import styles from './Layer.module.css'
 
 class Layer extends Component {
@@ -13,7 +12,6 @@ class Layer extends Component {
     static BUSY = 'busy'
     id          = Layer.#id++
     #list       = []
-    #candidate  = 0
 
     constructor(props) {
         super(props)
@@ -60,7 +58,13 @@ class Layer extends Component {
         animate: prev === i ? BoxMask.LEAVE : null
     })
 
-    unitInitialProps = i => ({
+    unitInitialProps = key => i => ({
+        // If palette doesn't change much
+        // we have less style attributes to change
+        // by setting them all at first
+        styles: {
+            ...this.props.palette[key],
+        },
         clip: `url("#${ this.getId(i)('shape') }")`
     })
 
@@ -76,9 +80,7 @@ class Layer extends Component {
     }
 
     render() {
-        const { palette } = this.props
-        const candidate   = this.getCandidate()
-
+        const candidate = this.getCandidate()
         this.#list[candidate] = Layer.BUSY
 
         return (
@@ -98,8 +100,8 @@ class Layer extends Component {
                                 Component   ={ BoxUnit   }
                                 length      ={ Layer.MAX }
                                 active      ={ candidate }
-                                initialProps={ this.unitInitialProps     }
-                                activeProps ={ this.unitActiveProps(key) }
+                                initialProps={ this.unitInitialProps(key) }
+                                activeProps ={ this.unitActiveProps (key) }
                             />
                         </g>
                     ))}
