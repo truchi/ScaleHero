@@ -1,0 +1,10 @@
+.unit {
+    clip-path: var(--clip);
+
+    border-width: var(--borderWidth);
+    border-style: var(--borderStyle);
+    border-color: var(--borderColor);
+    border-radius: var(--borderRadius);
+
+    background-color: var(--color);
+}

@@ -14,6 +14,7 @@ const intervals = [
 ]
 
 const palettes = {
+    black: entries(intervals.map(interval => [interval, { color: 'black' }])),
     cool: entries(
         intervals.map(interval => {
             const color = (a, i) => `hsl(${ a * 360 / 7 }, ${ 50 + i }%, ${ 50 + i }%)`
@@ -31,7 +32,12 @@ const palettes = {
             }
 
             if ([1, 3, 5, 7].includes(+interval)) {
-                style.border = '1px solid gold'
+                style.border = {
+                    width : '1px',
+                    style : 'solid',
+                    color : 'gold',
+                    radius: 50
+                }
             }
 
             return [interval, style]
@@ -56,23 +62,23 @@ const instruments = {
 }
 
 const lesson = {
-    instrument: 'guitarStandard',
+    instrument: instruments.guitarStandard,
     layers: [
-        { mask: 'fullRect'  , transition: 'north' },
-        { mask: 'tlTriangle', transition: 'north' },
+        { mask: masks.fullRect  , transition: 'north' },
+        /* { mask: masks.tlTriangle, transition: 'north' }, */
     ],
     timeline: [
         [
-            { root: 'C', scale: 'pentam' , palette: 'cool' },
-            { root: 'C', scale: 'aeolian', palette: 'cool' },
+            { root: 'C', scale: scales.pentam , palette: palettes.cool },
+            /* { root: 'C', scale: scales.aeolian, palette: palettes.cool }, */
         ],
         [
-            { root: 'C', scale: 'pentaM' , palette: 'cool' },
-            { root: 'C', scale: 'ionian' , palette: 'cool' },
+            { root: 'C', scale: scales.pentaM , palette: palettes.black },
+            /* { root: 'C', scale: scales.ionian , palette: palettes.cool }, */
         ],
         [
-            { root: 'F', scale: 'pentaM' , palette: 'cool' },
-            { root: 'F', scale: 'ionian' , palette: 'cool' },
+            { root: 'F', scale: scales.pentaM , palette: palettes.cool },
+            /* { root: 'F', scale: scales.ionian , palette: palettes.cool }, */
         ],
     ]
 }
@@ -85,17 +91,16 @@ const makeStates = (lesson) => {
                     ...layer,
                     ...lesson.layers[i]
                 }
-                const paletteName = layer.palette
-                const palette = {
-                    [paletteName]:
-                    entries(palettes[paletteName], entries => entries
-                        .filter(([interval, style]) => layer.scale.includes(interval))
-                    )
-                }
+                const palette = layer.palette
+                /* const palette =
+                 *     entries(layer.palette, entries => entries
+                 *         .filter(([interval, style]) => layer.scale.includes(interval))
+                 *     ) */
 
                 return {
                     palette,
-                    ...get(layer.mask.size, layer.mask.type, layer.mask.shape, layer.transition)
+                    ...get(layer.mask.size, layer.mask.type, layer.mask.shape, layer.transition),
+                    duration: '1s'
                 }
             })
         }
@@ -138,9 +143,7 @@ class App extends Component {
 
     render() {
         return (
-            <>
-                <Guitar { ...this.state }></Guitar>
-            </>
+            <Guitar { ...this.state }></Guitar>
         )
     }
 }

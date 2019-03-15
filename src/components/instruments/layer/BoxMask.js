@@ -1,14 +1,12 @@
 import React, { Component } from 'react'
 import rcv from '../../../lib/rcv/rcv.js'
-import entries from '../../../utils/entries'
 import styles from './BoxMask.module.css'
 
 const Polygon = rcv(<polygon />)
 
 export default class BoxMask extends Component {
-    static DEFAULT = { points: '', animation: {} }
-    static ENTER   = 'enter'
-    static LEAVE   = 'leave'
+    static ENTER = 'enter'
+    static LEAVE = 'leave'
     rcv    = {}
     states = {
         // paused : false,
@@ -21,18 +19,15 @@ export default class BoxMask extends Component {
     constructor(props) {
         super(props)
 
-        this.id        = this.props.id
         this.onEntered = this.props.onEntered || (_ => _)
         this.onLeft    = this.props.onLeft    || (_ => _)
     }
 
     events(action) {
         const method = action + 'EventListener'
-        const enter  = this.rcv.enter
-        const leave  = this.rcv.leave
 
-        enter && enter.$[method]('animationend', this.entered)
-        leave && leave.$[method]('animationend', this.left   )
+        this.rcv.enter.$[method]('animationend', this.entered)
+        this.rcv.leave.$[method]('animationend', this.left   )
     }
 
     componentDidMount() {
@@ -81,34 +76,47 @@ export default class BoxMask extends Component {
     }
 
     entered = e => {
-        this.states.entered = true
+        this.states.entering = false
+        this.states.entered  = true
         this.onEntered(this, e)
     }
 
     left = e => {
-        this.states.left = true
+        this.states.leaving = false
+        this.states.left    = true
         this.onLeft(this, e)
     }
 
     render() {
-        let { id, shape, enter, leave } = this.props
-        const polygons = Object.entries(
-            entries(
-                { shape, enter, leave },
-                entries => entries.filter(([type, data]) => data)
-            )
-        )
+        let { id, shape, enter, leave, duration } = this.props
+
+        const defaults = { points: '', animation: {} }
+        id    = id    || (_ => _)
+        shape = shape || { ...defaults }
+        enter = enter || { ...defaults }
+        leave = leave || { ...defaults }
+
+        enter.animation.duration = duration
+        leave.animation.duration = duration
+
+        shape.clip = id('enter')
+        enter.clip = id('leave')
 
         return (
             <>
-                { polygons.map(([type, data]) => (
-                    <clipPath id={ `${ id }-${ type }` } key={ type } clipPathUnits="objectBoundingBox">
-                        <Polygon
-                            className={ styles[type] }
-                            points   ={ data.points }
-                            rcv      ={[ data.animation, rcv => this.rcv[type] = rcv ]}
-                        />
-                    </clipPath>
+              { Object.entries({ shape, enter, leave }).map(([type, data]) => (
+                  <clipPath
+                      id           ={ id(type) }
+                      key          ={ type }
+                      clipPathUnits="objectBoundingBox"
+                      clipPath     ={ data.clip ? `url("#${ data.clip }")` : null }
+                  >
+                      <Polygon
+                          className={ styles[type] }
+                          points   ={ data.points }
+                          rcv      ={[ data.animation, rcv => this.rcv[type] = rcv ]}
+                      />
+                  </clipPath>
                 ))}
             </>
         )
