@@ -17,18 +17,13 @@ const flatObject = (o, prefix = '') =>
 export default element =>
     class extends Component {
         static displayName = `RCV(${ element.type })`
-        rcv = {}
 
         constructor(props) {
             super(props)
 
             const rcv = this.props.rcv
-            if (Array.isArray(rcv)) {
-                this.rcv = rcv[0] || this.rcv
-
-                if (typeof rcv[1] === 'function') rcv[1](this.css)
-            } else {
-                this.rcv = rcv || {}
+            if (Array.isArray(rcv) && typeof rcv[1] === 'function') {
+                rcv[1](this.css)
             }
         }
 
@@ -40,19 +35,33 @@ export default element =>
             this.css()
         }
 
-        css = (styles) => {
-            const $   = findDOMNode(this)
-            const rcv = styles || this.rcv
+        getStyles(styles) {
+            if (styles) return styles
 
+            styles = this.props.rcv
+
+            if (Array.isArray(styles))
+                styles = styles[0]
+
+            return styles || {}
+        }
+
+        css = (styles) => {
+            const $ = findDOMNode(this)
             if (!$) return
 
             this.css.$ = $
+            styles     = flatObject(this.getStyles(styles))
+
             Object
-                .entries(flatObject(rcv))
+                .entries(styles)
                 .forEach(([key, value]) => $.style.setProperty(`--${ key }`, value))
         }
 
         render() {
-            return React.cloneElement(element, this.props)
+            const props = { ...this.props }
+            delete props.rcv
+
+            return React.cloneElement(element, props)
         }
     }
