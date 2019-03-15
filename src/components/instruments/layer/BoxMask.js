@@ -90,14 +90,25 @@ export default class BoxMask extends Component {
     render() {
         let { id, shape, enter, leave, duration } = this.props
 
+        const noop     = _ => _
         const defaults = { points: '', animation: { duration } }
-        id    = id || (_ => _)
-        shape = { ...defaults, ...shape }
-        enter = { ...defaults, ...enter }
-        leave = { ...defaults, ...leave }
+        const sanitize = data => {
+            data           = { ...defaults, ...data }
+            data.animation = { ...defaults.animation, ...data.animation }
+            data.rcvFn     = type => rcv => this.rcv[type] = rcv
+
+            return data
+        }
+
+        id    = id || noop
+        shape = sanitize(shape)
+        enter = sanitize(enter)
+        leave = sanitize(leave)
 
         shape.clip = id('enter')
         enter.clip = id('leave')
+
+        shape.rcvFn = noop
 
         return (
             <>
@@ -111,7 +122,7 @@ export default class BoxMask extends Component {
                       <Polygon
                           className={ styles[type] }
                           points   ={ data.points }
-                          rcv      ={[ data.animation, rcv => this.rcv[type] = rcv ]}
+                          rcv      ={[ data.animation, data.rcvFn(type) ]}
                       />
                   </clipPath>
                 ))}
