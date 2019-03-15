@@ -90,14 +90,11 @@ export default class BoxMask extends Component {
     render() {
         let { id, shape, enter, leave, duration } = this.props
 
-        const defaults = { points: '', animation: {} }
-        id    = id    || (_ => _)
-        shape = shape || { ...defaults }
-        enter = enter || { ...defaults }
-        leave = leave || { ...defaults }
-
-        enter.animation.duration = duration
-        leave.animation.duration = duration
+        const defaults = { points: '', animation: { duration } }
+        id    = id || (_ => _)
+        shape = { ...defaults, ...shape }
+        enter = { ...defaults, ...enter }
+        leave = { ...defaults, ...leave }
 
         shape.clip = id('enter')
         enter.clip = id('leave')
