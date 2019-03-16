@@ -82,6 +82,11 @@ class Layer extends Component {
     render() {
         const candidate = this.getCandidate()
         this.#list[candidate] = Layer.BUSY
+        const box = {
+            href    : this.getId('box'),
+            styles  : key => this.props.palette[key],
+            duration: this.duration
+        }
 
         return (
             <layer className={ styles.layer }>
@@ -109,7 +114,7 @@ class Layer extends Component {
                     </defs>
                 </svg>
                 { this.props.strings.map((string, i) => (
-                    <String key={ i } { ...string } />
+                    <String key={ i } { ...string } box={ box } />
                 )) }
             </layer>
         )

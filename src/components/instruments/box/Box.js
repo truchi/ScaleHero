@@ -1,14 +1,21 @@
 import React, { Component } from 'react'
-import BoxUnit from '../boxunit/BoxUnit.js'
+import rcv from '../../../lib/rcv/rcv.js'
 import styles from './Box.module.css'
+
+const Svg = rcv(<svg />)
 
 class Box extends Component {
     render() {
+        let { id, duration, href } = this.props
+        let { radius } = this.props.styles(id)
+        radius = radius ? radius / 2 + '%' : '0%'
+        href   = href(id)
+
         return (
             <box className={ styles.box }>
-                <svg className={ styles.svg }>
-                    <use className={ styles.use } href={ `#0-box-3` } />
-                </svg>
+                <Svg className={ styles.svg } rcv={{ radius, duration }}>
+                    <use className={ styles.use } href={ `#${ href }` } />
+                </Svg>
             </box>
         )
     }

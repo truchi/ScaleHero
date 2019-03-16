@@ -25,18 +25,18 @@ const palettes = {
             }
 
             if (interval.startsWith('bb')) {
-                style.color = color(last, -20)
+                style.color = color(last, -30)
             } else if (interval.startsWith('b')) {
-                style.color = color(last, -10)
+                style.color = color(last, -20)
             } else if (interval.startsWith('#')) {
-                style.color = color(last, 10)
+                style.color = color(last, 20)
             } else {
                 style.color = color(last, 0)
             }
 
             if ([1, 3, 5, 7].includes(+interval)) {
                 style.stroke = {
-                    width: '1px',
+                    width: '10px',
                     color: 'gold'
                 }
             }
@@ -70,7 +70,7 @@ const lesson = {
     ],
     timeline: [
         [
-            { root: 'C', scale: scales.pentam , palette: palettes.cool },
+            { root: 'C', scale: scales.pentam , palette: palettes.red },
             /* { root: 'C', scale: scales.aeolian, palette: palettes.cool }, */
         ],
         [
@@ -78,7 +78,7 @@ const lesson = {
             /* { root: 'C', scale: scales.ionian , palette: palettes.cool }, */
         ],
         [
-            { root: 'F', scale: scales.pentaM , palette: palettes.red },
+            { root: 'F', scale: scales.pentaM , palette: palettes.cool },
             /* { root: 'F', scale: scales.ionian , palette: palettes.cool }, */
         ],
     ]
@@ -103,12 +103,13 @@ const makeStates = (lesson) => {
                     ...get(layer.mask.size, layer.mask.type, layer.mask.shape, layer.transition),
                     duration: '1s',
                     strings: [
-                        {
-                            boxes: ['b3', '3']
-                        },
-                        {
-                            boxes: ['b3', '3']
-                        },
+                        { boxes: [{ id: '1' }] },
+                        { boxes: [{ id: 'b2' }, { id: '2' }, { id: '#2' }] },
+                        { boxes: [{ id: 'b3' }, { id: '3' }] },
+                        { boxes: [{ id: 'b4' }, { id: '4' }, { id: '#4' }] },
+                        { boxes: [{ id: 'b5' }, { id: '5' }, { id: '#5' }] },
+                        { boxes: [{ id: 'b6' }, { id: '6' }] },
+                        { boxes: [{ id: 'bb7' }, { id: 'b7' }, { id: '7' }] },
                     ]
                 }
             })
