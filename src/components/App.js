@@ -20,7 +20,9 @@ const palettes = {
         intervals.map(interval => {
             const color = (a, i) => `hsl(${ a * 360 / 7 }, ${ 50 + i }%, ${ 50 + i }%)`
             const last  = +interval[interval.length - 1]
-            const style = {}
+            const style = {
+                radius: 50
+            }
 
             if (interval.startsWith('bb')) {
                 style.color = color(last, -20)
@@ -33,11 +35,9 @@ const palettes = {
             }
 
             if ([1, 3, 5, 7].includes(+interval)) {
-                style.border = {
-                    width : '1px',
-                    style : 'solid',
-                    color : 'gold',
-                    radius: 50
+                style.stroke = {
+                    width: '1px',
+                    color: 'gold'
                 }
             }
 
