@@ -108,6 +108,7 @@ export default class BoxMask extends Component {
         enter.clip = id('leave')
 
         shape.rcvFn = noop
+        shape.animation.duration = null
 
         return (
             <>
