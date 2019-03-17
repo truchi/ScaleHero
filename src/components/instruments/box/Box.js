@@ -6,10 +6,10 @@ const Svg = rcv(<svg />)
 
 class Box extends Component {
     render() {
-        let { id, duration, href } = this.props
-        let { radius } = this.props.styles(id)
+        let { name, duration, href } = this.props
+        let radius = this.props.styles(name).radius
         radius = radius ? radius / 2 + '%' : '0%'
-        href   = href(id)
+        href   = href(name)
 
         return (
             <box className={ styles.box }>

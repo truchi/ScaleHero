@@ -3,21 +3,31 @@ import Guitar from './instruments/guitar/Guitar'
 import { get } from '../lib/polygons/index'
 import entries from '../utils/entries'
 
-const intervals = [
-    '1',
-    'b2', '2', '#2',
-    'b3', '3',
-    'b4', '4', '#4',
-    'b5', '5', '#5',
-    'b6', '6',
-    'bb7', 'b7', '7'
-]
+const notes = {
+    C: 0, 'C#': 1,
+    D: 2, 'D#': 3,
+    E: 4,
+    F: 5, 'F#': 6,
+    G: 7, 'G#': 8,
+    A: 9, 'A#': 10,
+    B: 11
+}
+const N = Object.keys(notes).length
+const intervals = {
+    '1'  : 0,
+    'b2' : 1, '2' : 2, '#2': 3,
+    'b3' : 3, '3' : 4,
+    'b4' : 4, '4' : 5, '#4': 6,
+    'b5' : 6, '5' : 7, '#5': 8,
+    'b6' : 8, '6' : 9,
+    'bb7': 9, 'b7': 10, '7': 11
+}
 
 const palettes = {
-    blue: entries(intervals.map(interval => [interval, { color: 'blue' }])),
-    red : entries(intervals.map(interval => [interval, { color: 'red' }])),
+    blue: entries(Object.keys(intervals).map(interval => [interval, { color: 'blue' }])),
+    red : entries(Object.keys(intervals).map(interval => [interval, { color: 'red' }])),
     cool: entries(
-        intervals.map(interval => {
+        Object.keys(intervals).map(interval => {
             const color = (a, i) => `hsl(${ a * 360 / 7 }, ${ 50 + i }%, ${ 50 + i }%)`
             const last  = +interval[interval.length - 1]
             const style = {
@@ -34,11 +44,15 @@ const palettes = {
                 style.color = color(last, 0)
             }
 
-            if ([1, 3, 5, 7].includes(+interval)) {
+            if (['1', 'b3', '3', 'b5', '5', 'bb7', 'b7', '7'].includes(interval)) {
                 style.stroke = {
                     width: '10px',
                     color: 'gold'
                 }
+            }
+
+            if (+interval === 1) {
+                style.color = 'white'
             }
 
             return [interval, style]
@@ -51,6 +65,7 @@ const scales = {
     aeolian: ['1', '2', 'b3', '4', '5', 'b6', 'b7'],
     pentaM: ['1', '2', '3', '5', '6'],
     ionian: ['1', '2', '3', '4', '5', '6', '7'],
+    chromatic: ['1', 'b2', '2', 'b3', '3', '4', 'b5', '5', 'b6', '6', 'b7', '7'],
 }
 
 const masks = {
@@ -64,25 +79,51 @@ const instruments = {
 
 const lesson = {
     instrument: instruments.guitarStandard,
+    length: 12,
     layers: [
         { mask: masks.fullRect  , transition: 'north' },
         /* { mask: masks.tlTriangle, transition: 'north' }, */
     ],
     timeline: [
         [
-            { root: 'C', scale: scales.pentam , palette: palettes.red },
+            { root: 'C', scale: scales.pentam , palette: palettes.cool },
             /* { root: 'C', scale: scales.aeolian, palette: palettes.cool }, */
         ],
         [
-            { root: 'C', scale: scales.pentaM , palette: palettes.blue },
+            { root: 'C', scale: scales.pentaM , palette: palettes.cool },
             /* { root: 'C', scale: scales.ionian , palette: palettes.cool }, */
         ],
         [
-            { root: 'F', scale: scales.pentaM , palette: palettes.cool },
+            { root: 'C', scale: scales.ionian , palette: palettes.cool },
             /* { root: 'F', scale: scales.ionian , palette: palettes.cool }, */
         ],
     ]
 }
+
+const findNoteName = note => Object.entries(notes).find(([name, int]) => note === int)[0]
+const makePalette  = (root, scale, palette) => {
+    root = notes[root]
+    const scaleValues = scale.map(note => (root + intervals[note]) % N)
+
+    return entries(notes, entries => entries.map(([note, value]) => {
+        const i = scaleValues.findIndex(v => v === value)
+
+        return [ note, i >= 0 ? palette[scale[i]] : {} ]
+    }))
+}
+
+const makeStrings = (instrument, length) =>
+    instrument.map(instrumentNote => {
+        const boxes    = []
+        instrumentNote = notes[instrumentNote]
+
+        for(let i = 0; i < length; ++i)
+            boxes.push({
+                name: findNoteName((instrumentNote + i) % N)
+            })
+
+        return { boxes }
+    })
 
 const makeStates = (lesson) => {
     return lesson.timeline.map(layers => {
@@ -92,25 +133,11 @@ const makeStates = (lesson) => {
                     ...layer,
                     ...lesson.layers[i]
                 }
-                const palette = layer.palette
-                /* const palette =
-                 *     entries(layer.palette, entries => entries
-                 *         .filter(([interval, style]) => layer.scale.includes(interval))
-                 *     ) */
-
                 return {
-                    palette,
+                    palette: makePalette(layer.root, layer.scale, layer.palette),
+                    strings: makeStrings(lesson.instrument, lesson.length),
                     ...get(layer.mask.size, layer.mask.type, layer.mask.shape, layer.transition),
-                    duration: '1s',
-                    strings: [
-                        { boxes: [{ id: '1' }] },
-                        { boxes: [{ id: 'b2' }, { id: '2' }, { id: '#2' }] },
-                        { boxes: [{ id: 'b3' }, { id: '3' }] },
-                        { boxes: [{ id: 'b4' }, { id: '4' }, { id: '#4' }] },
-                        { boxes: [{ id: 'b5' }, { id: '5' }, { id: '#5' }] },
-                        { boxes: [{ id: 'b6' }, { id: '6' }] },
-                        { boxes: [{ id: 'bb7' }, { id: 'b7' }, { id: '7' }] },
-                    ]
+                    duration: '1s'
                 }
             })
         }

@@ -59,12 +59,6 @@ class Layer extends Component {
     })
 
     unitInitialProps = key => i => ({
-        // If palette doesn't change much
-        // we have less style attributes to change
-        // by setting them all at first
-        styles: {
-            ...this.props.palette[key],
-        },
         clip: `url("#${ this.getId(i)('shape') }")`
     })
 
