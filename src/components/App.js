@@ -23,6 +23,14 @@ const intervals = {
     'bb7': 9, 'b7': 10, '7': 11
 }
 
+const defaultStyle = {
+    color : 'transparent',
+    radius: null,
+    stroke: {
+        width: null,
+        color: 'transparent'
+    }
+}
 const palettes = {
     blue: entries(Object.keys(intervals).map(interval => [interval, { color: 'blue' }])),
     red : entries(Object.keys(intervals).map(interval => [interval, { color: 'red' }])),
@@ -82,20 +90,24 @@ const lesson = {
     length: 12,
     layers: [
         { mask: masks.fullRect  , transition: 'north' },
-        /* { mask: masks.tlTriangle, transition: 'north' }, */
+        { mask: masks.tlTriangle, transition: 'north' },
     ],
     timeline: [
         [
             { root: 'C', scale: scales.pentam , palette: palettes.cool },
-            /* { root: 'C', scale: scales.aeolian, palette: palettes.cool }, */
+            { root: 'C', scale: scales.aeolian, palette: palettes.cool },
         ],
         [
             { root: 'C', scale: scales.pentaM , palette: palettes.cool },
-            /* { root: 'C', scale: scales.ionian , palette: palettes.cool }, */
+            { root: 'C', scale: scales.ionian , palette: palettes.cool },
         ],
         [
             { root: 'C', scale: scales.ionian , palette: palettes.cool },
-            /* { root: 'F', scale: scales.ionian , palette: palettes.cool }, */
+            { root: 'F', scale: scales.ionian , palette: palettes.cool },
+        ],
+        [
+            { root: 'C', scale: scales.pentam , palette: palettes.cool },
+            { root: 'F', scale: scales.ionian , palette: palettes.cool },
         ],
     ]
 }
@@ -106,9 +118,13 @@ const makePalette  = (root, scale, palette) => {
     const scaleValues = scale.map(note => (root + intervals[note]) % N)
 
     return entries(notes, entries => entries.map(([note, value]) => {
-        const i = scaleValues.findIndex(v => v === value)
+        const i     = scaleValues.findIndex(v => v === value)
+        let   style = i >= 0 ? palette[scale[i]] : {}
 
-        return [ note, i >= 0 ? palette[scale[i]] : {} ]
+        style        = { ...defaultStyle       , ...style        }
+        style.stroke = { ...defaultStyle.stroke, ...style.stroke }
+
+        return [note, style]
     }))
 }
 
@@ -149,7 +165,7 @@ const states = makeStates(lesson)
 console.log(palettes, scales, instruments, lesson)
 console.log(states)
 
-const duration = 1000
+const duration = 3000
 
 class App extends Component {
     constructor(props) {

@@ -1,21 +1,17 @@
 @value _easing: cubic-bezier(0.55, 0.085, 0.68, 0.53);
 
-.animation {
-    animation-name: animate;
-    animation-timing-function: _easing;
-    animation-fill-mode: var(--mode);
-    animation-duration: var(--duration);
-    animation-play-state: var(--state, paused);
-
+.transition {
+    transform: var(--from);
     transform-origin: var(--origin);
-    will-change: transform;
+
+    /* will-change: transform; */
+}
+
+.to {
+    transform: var(--to);
+    transition: transform var(--duration) _easing;
 }
 
 .shape {}
-.enter { composes: animation; }
-.leave { composes: animation; }
-
-@keyframes animate {
-    from { transform: var(--from) }
-    to   { transform: var(--to  ) }
-}
+.enter { composes: transition; }
+.leave { composes: transition; }

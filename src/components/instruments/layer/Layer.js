@@ -7,7 +7,7 @@ import styles from './Layer.module.css'
 
 class Layer extends Component {
     static #id  = 0
-    static MAX  = 3
+    static MAX  = 2
     static IDLE = 'idle'
     static BUSY = 'busy'
     id          = Layer.#id++
@@ -28,7 +28,7 @@ class Layer extends Component {
     }
 
     getId(i) {
-        return type => `${ this.id }-${ i }-${ type }`
+        return type => `Layer-${ this.id }-${ i }-${ type }`
     }
 
     getCandidate() {

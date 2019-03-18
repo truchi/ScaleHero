@@ -26,63 +26,66 @@ export default class BoxMask extends Component {
     events(action) {
         const method = action + 'EventListener'
 
-        this.rcv.enter.$[method]('animationend', this.entered)
-        this.rcv.leave.$[method]('animationend', this.left   )
+        this.rcv.enter.$[method]('transitionend', this.entered)
+        this.rcv.leave.$[method]('transitionend', this.left   )
     }
 
     componentDidMount() {
-        if (this.props.debug) return
-
         this.events('add')
-        this.animate()
+        this.animate(true)
     }
 
     componentDidUpdate() {
-        if (this.props.debug) return
-
         this.animate()
     }
 
     componentWillUnmount() {
-        if (this.props.debug) return
-
         this.events('remove')
     }
 
-    animate() {
-        if (this.props.animate === BoxMask.ENTER)
-            this.enter()
+    animate(delay = false) {
+        const animate = () => {
+            if (this.props.animate === BoxMask.ENTER)
+                this.enter()
 
-        if (this.props.animate === BoxMask.LEAVE)
-            this.leave()
+            if (this.props.animate === BoxMask.LEAVE)
+                this.leave()
+        };
+
+        delay ? setTimeout(animate) : animate()
     }
 
     enter() {
         if (this.states.entering) return
 
         this.states.entering = true
-        this.rcv.leave({ mode : 'backwards' })
-        this.rcv.enter({ state: 'running'   })
+        this.rcv.leave.$.classList.remove(styles.to)
+        this.rcv.enter.$.classList.add(styles.to)
     }
 
     leave() {
         if (this.states.leaving) return
 
         this.states.leaving = true
-        this.rcv.leave({ state: 'running' })
+        this.rcv.leave.$.classList.add(styles.to)
     }
 
     entered = e => {
+        if (!this.states.entering) return
+
         this.states.entering = false
         this.states.entered  = true
-        this.rcv.enter({ state: 'paused' })
+
         this.onEntered(this, e)
     }
 
     left = e => {
+        if (!this.states.leaving) return
+
         this.states.leaving = false
         this.states.left    = true
-        this.rcv.leave({ state: 'paused' })
+
+        this.rcv.enter.$.classList.remove(styles.to)
         this.onLeft(this, e)
     }
 
@@ -90,7 +93,7 @@ export default class BoxMask extends Component {
         let { id, shape, enter, leave, duration } = this.props
 
         const noop     = _ => _
-        const defaults = { points: '', animation: { duration, mode: 'both' } }
+        const defaults = { points: '', animation: { duration } }
         const sanitize = data => {
             data           = { ...defaults, ...data }
             data.animation = { ...defaults.animation, ...data.animation }
