@@ -9,9 +9,8 @@ class Box extends Component {
 
     render() {
         let { name, duration, href } = this.props
-        let radius = this.props.styles(name).radius
-        radius = radius ? radius / 2 + '%' : this.prevRadius
-        href   = href(name)
+        const radius = this.props.styles(name).radius / 2 + '%'
+        href = href(name)
 
         this.prevRadius = radius
         return (

@@ -25,9 +25,9 @@ const intervals = {
 
 const defaultStyle = {
     color : 'transparent',
-    radius: null,
+    radius: 0,
     stroke: {
-        width: null,
+        width: 0,
         color: 'transparent'
     }
 }
@@ -38,9 +38,7 @@ const palettes = {
         Object.keys(intervals).map(interval => {
             const color = (a, i) => `hsl(${ a * 360 / 7 }, ${ 50 + i }%, ${ 50 + i }%)`
             const last  = +interval[interval.length - 1]
-            const style = {
-                radius: 50
-            }
+            const style = {}
 
             if (interval.startsWith('bb')) {
                 style.color = color(last, -30)
