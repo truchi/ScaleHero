@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import Guitar from './instruments/guitar/Guitar'
 import { Mask as BoxMask } from '../lib/polygons'
-import entries from '../utils/entries'
 import { Note, Interval, Scale } from '../lib/music'
 import { Instrument, Mask as InstrumentMask } from '../lib/instruments'
 
@@ -62,9 +61,9 @@ const defaultStyle = {
     }
 }
 const palettes = {
-    blue: entries(Object.keys(intervals).map(interval => [interval, { color: 'blue' }])),
-    red : entries(Object.keys(intervals).map(interval => [interval, { color: 'red' }])),
-    cool: entries(
+    blue: Object.fromEntries(Object.keys(intervals).map(interval => [interval, { color: 'blue' }])),
+    red : Object.fromEntries(Object.keys(intervals).map(interval => [interval, { color: 'red' }])),
+    cool: Object.fromEntries(
         Object.keys(intervals).map(interval => {
             const color = (a, i) => `hsl(${ a * 360 / 7 }, ${ 50 + i }%, ${ 50 + i }%)`
             const last  = +interval[interval.length - 1]
@@ -145,15 +144,17 @@ const makePalette  = (root, scale, palette) => {
     root = notes[root]
     const scaleValues = scale.map(note => (root + intervals[note]) % N)
 
-    return entries(notes, entries => entries.map(([note, value]) => {
-        const i     = scaleValues.findIndex(v => v === value)
-        let   style = i >= 0 ? palette[scale[i]] : {}
+    return Object.fromEntries(
+        Object.entries(notes).map(([note, value]) => {
+            const i     = scaleValues.findIndex(v => v === value)
+            let   style = i >= 0 ? palette[scale[i]] : {}
 
-        style        = { ...defaultStyle       , ...style        }
-        style.stroke = { ...defaultStyle.stroke, ...style.stroke }
+            style        = { ...defaultStyle       , ...style        }
+            style.stroke = { ...defaultStyle.stroke, ...style.stroke }
 
-        return [note, style]
-    }))
+            return [note, style]
+        })
+    )
 }
 
 const makeStrings = (instrument, length) =>
