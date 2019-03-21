@@ -36,14 +36,14 @@ const SHAPES = {
 }
 
 const TRANSITIONS = {
-  north    : { angle:   0, x:  0, y:  1 },
-  east     : { angle:   0, x:  1, y:  0 },
-  south    : { angle:   0, x:  0, y: -1 },
-  west     : { angle:   0, x: -1, y:  0 },
-  northeast: { angle:  45, x:  1, y:  0 },
-  northwest: { angle: -45, x: -1, y:  0 },
-  southeast: { angle: -45, x:  1, y:  0 },
-  southwest: { angle:  45, x: -1, y:  0 }
+  east     : 0,
+  northeast: 1,
+  north    : 2,
+  northwest: 3,
+  west     : 4,
+  southwest: 5,
+  south    : 6,
+  southeast: 7,
 }
 
 const getSize = polygon => {
@@ -113,26 +113,25 @@ export default class Mask extends settable({ DEFAULTS }) {
   }
 
   _afterSet() {
-    const shape           = this._getShape().crop(new Rectangle({ x: 1, y: 1 }))
-    const { x, y, angle } = this._getTransition()
-    const dir             = new Point({ x, y: -y }) // Screen has -y...
+    const shape = this._getShape().crop(new Rectangle({ x: 1, y: 1 }))
+    const angle = this._getAngle()
 
     const center  = shape.center()
     const rotated = shape.rotate(-angle, center)
     const boxed   = rotated.boundingBox()
     const size    = getSize(boxed)
 
+    // Screen has -y...
+    const animation = getAnimation(boxed, center, -angle)
+
     const start = {
-      enter: size.scale(dir.opposite()),
+      enter: size.scale(new Point({ x: -1, y: 0 })),
       leave: new Point()
     }
     const end = {
-      enter: start.enter.translate(size.scale(dir)),
-      leave: start.leave.translate(size.scale(dir))
+      enter: start.enter,
+      leave: start.leave.translate(size.scale(new Point({ x: 1, y: 0 })))
     }
-
-    // Screen has -y...
-    const animation = getAnimation(boxed, center, -angle)
 
     this.shape = shape
     this.enter = animation(start.enter, end.enter)
@@ -175,11 +174,10 @@ export default class Mask extends settable({ DEFAULTS }) {
       .scale    (scale , center)
   }
 
-  _getTransition() {
-    const transition = TRANSITIONS[this._transition]
-    if (!transition)
-      throw new Error(`Invalid transition "${ this._transition }" (${ Object.keys(TRANSITIONS).join(', ') })`)
+  _getAngle() {
+    if (!Mask.TRANSITIONS.includes(this._transition))
+      throw new Error(`Invalid transition "${ this._transition }" (${ Mask.TRANSITIONS.join(', ') })`)
 
-    return transition
+    return TRANSITIONS[this._transition] * 45
   }
 }
