@@ -8,31 +8,31 @@ const far  = s => (1 - s)
 const mid  = s => (1 - s) / 2
 const diag = s => ({ size: { x: sq2 * s, y: sq2 }, translate: { x: mid(sq2 * s), y: mid(sq2) } })
 
-const SHAPES = s => ({
+const SHAPES = {
   rect: {
     _constructor: Rectangle,
-    top         : { size: { y: s } },
-    horizontal  : { size: { y: s }, translate: { y: mid(s) } },
-    bottom      : { size: { y: s }, translate: { y: far(s) } },
-    left        : { size: { x: s } },
-    vertical    : { size: { x: s + e }, translate: { x: mid(s + e) } },
-    right       : { size: { x: s }, translate: { x: far(s) } },
-    topleft     : { size: s },
-    topright    : { size: s, translate: { x: 1 / 2 } },
-    bottomleft  : { size: s, translate: { y: 1 / 2 } },
-    bottomright : { size: s, translate:      1 / 2   },
-    diamond     : { size: s, rotate: 45, scale: 1 / sq2 },
-    diagasc     : { ...diag(s), rotate: -45 },
-    diagdesc    : { ...diag(s), rotate:  45 },
+    top         : s => ({ size: { y: s } }),
+    horizontal  : s => ({ size: { y: s }, translate: { y: mid(s) } }),
+    bottom      : s => ({ size: { y: s }, translate: { y: far(s) } }),
+    left        : s => ({ size: { x: s } }),
+    vertical    : s => ({ size: { x: s + e }, translate: { x: mid(s + e) } }),
+    right       : s => ({ size: { x: s }, translate: { x: far(s) } }),
+    topleft     : s => ({ size: s }),
+    topright    : s => ({ size: s, translate: { x: 1 / 2 } }),
+    bottomleft  : s => ({ size: s, translate: { y: 1 / 2 } }),
+    bottomright : s => ({ size: s, translate:      1 / 2   }),
+    diamond     : s => ({ size: s, rotate: 45, scale: 1 / sq2 }),
+    diagasc     : s => ({ ...diag(s), rotate: -45 }),
+    diagdesc    : s => ({ ...diag(s), rotate:  45 }),
   },
   triangle: {
     _constructor: Triangle,
-    topleft     : { size: 2 * s + e },
-    topright    : { size: 2 * s + e, scale: { x: -1, y:  1 } },
-    bottomleft  : { size: 2 * s + e, scale: { x:  1, y: -1 } },
-    bottomright : { size: 2 * s + e, scale: { x: -1, y: -1 } },
+    topleft     : s => ({ size: 2 * s + e }),
+    topright    : s => ({ size: 2 * s + e, scale: { x: -1, y:  1 } }),
+    bottomleft  : s => ({ size: 2 * s + e, scale: { x:  1, y: -1 } }),
+    bottomright : s => ({ size: 2 * s + e, scale: { x: -1, y: -1 } }),
   },
-})
+}
 
 const TRANSITIONS = {
   north    : { angle:   0, x:  0, y:  1 },
@@ -81,6 +81,16 @@ const toStrings = function() {
   }
 }
 
+const SUBTYPES = Object.fromEntries(
+  Object.entries(SHAPES)
+    .map(
+      ([type, data]) => [
+        type,
+        Object.keys(data).filter(subtype => subtype !== '_constructor')
+      ]
+    )
+)
+
 const DEFAULTS = {
   size      : 1,
   type      : 'rect',
@@ -89,6 +99,9 @@ const DEFAULTS = {
 }
 
 export default class Mask {
+  static TYPES       = Object.keys(SUBTYPES)
+  static SUBTYPES    = SUBTYPES
+  static TRANSITIONS = Object.keys(TRANSITIONS)
   #size       = DEFAULTS.size
   #type       = DEFAULTS.type
   #subtype    = DEFAULTS.subtype
@@ -144,25 +157,20 @@ export default class Mask {
   }
 
   _shape() {
-    const types     = SHAPES(this.#size)
-    const typesList = Object.keys(types)
+    if (!Mask.TYPES.includes(this.#type))
+      throw new Error(`Invalid type "${ this.#type }" (${ Mask.TYPES.join(', ') })`)
 
-    if (!typesList.includes(this.#type))
-      throw new Error(`Invalid type "${ this.#type }" (${ typesList.join(', ') })`)
+    if (!Mask.SUBTYPES[this.#type].includes(this.#subtype))
+      throw new Error(`Invalid subtype "${ this.#subtype }" for type "${ this.#type }" (${ Mask.SUBTYPES[this.#type].join(', ') })`)
 
-    const subtypes     = types[this.#type]
-    const subtypesList = Object.keys(subtypes)
-
-    if (!subtypesList.includes(this.#subtype) || this.#subtype === '_constructor')
-      throw new Error(`Invalid subtype "${ this.#subtype }" for type "${ this.#type }" (${ subtypesList.join(', ') })`)
-
-    const constructor = subtypes._constructor
+    const constructor = SHAPES[this.#type]._constructor
+    const data        = SHAPES[this.#type][this.#subtype](this.#size)
     let { size, translate, rotate, scale } = Object.assign({
       size     : {},
       translate: {},
       rotate   : 0,
       scale    : {},
-    }, subtypes[this.#subtype])
+    }, data[this.#subtype])
 
     if (typeof size      === 'number') size      = { x: size     , y: size      }
     if (typeof translate === 'number') translate = { x: translate, y: translate }

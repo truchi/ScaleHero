@@ -4,6 +4,16 @@ import { Mask as BoxMask } from '../lib/polygons'
 import { Note, Interval, Scale } from '../lib/music'
 import { Instrument, Mask as InstrumentMask } from '../lib/instruments'
 
+console.log(
+    BoxMask.TYPES,
+    BoxMask.SUBTYPES,
+    BoxMask.TRANSITIONS,
+    Note.NAMES,
+    Note.VALUES,
+    Interval.NAMES,
+    Interval.VALUES,
+)
+
 const mask = new InstrumentMask({
     position  : 5,
     definition: position => [
