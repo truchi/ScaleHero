@@ -1,7 +1,37 @@
 import React, { Component } from 'react'
 import Guitar from './instruments/guitar/Guitar'
-import { get } from '../lib/polygons/index'
+import { Mask as BoxMask } from '../lib/polygons'
 import entries from '../utils/entries'
+import { Note, Interval, Scale } from '../lib/music'
+import { Instrument, Mask as InstrumentMask } from '../lib/instruments'
+
+const mask = new InstrumentMask({
+    position  : 5,
+    definition: position => [
+        [[-Infinity, position], [position + 3, Infinity]],
+        [[-Infinity, position], [position + 3, Infinity]],
+        [[-Infinity, position], [position + 3, Infinity]],
+        [[-Infinity, position], [position + 3, Infinity]],
+        [[-Infinity, position], [position + 3, Infinity]],
+    ]
+})
+const i = new Instrument({
+    tuning: ['E', 'A', 'D', 'G', 'B', 'E'].map(name => new Note({ name })),
+    from  : 5,
+    masks : [mask]
+})
+const scale = new Scale({
+    intervals: ['1', 'b2', '2', 'b3', '3', '4', 'b5', '5', 'b6', '6', 'b7', '7'].map(name => new Interval({ name }))
+})
+
+const bmask = new BoxMask({ size: 1, type: 'rect', subtype: 'top', transition: 'east' })
+
+window.instr = i
+window.scale = scale
+window.bmask = bmask
+window.Instrument = Instrument
+window.Note = Note
+window.Interval = Interval
 
 const notes = {
     C: 0, 'C#': 1,
@@ -150,7 +180,7 @@ const makeStates = (lesson) => {
                 return {
                     palette: makePalette(layer.root, layer.scale, layer.palette),
                     strings: makeStrings(lesson.instrument, lesson.length),
-                    ...get(layer.mask.size, layer.mask.type, layer.mask.shape, layer.transition),
+                    /* ...get(layer.mask.size, layer.mask.type, layer.mask.shape, layer.transition), */
                     duration: '1s'
                 }
             })
@@ -179,6 +209,7 @@ class App extends Component {
     componentWillUnmount() { clearTimeout(this.timer) }
 
     update() {
+        return
         const state = this.getState()
         console.log('next state', state)
 
