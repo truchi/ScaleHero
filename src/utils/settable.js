@@ -8,7 +8,7 @@ export default ({ DEFAULTS = {}, validate = _ => true, Base = class {}, prefix =
     const that = {}
     Object.entries(DEFAULTS)
       .forEach(([name, value]) =>
-        that[name] = props[name] || this[prefix + name] || value
+        that[name] = [props[name], this[prefix + name], value].find(value => value !== undefined)
       )
 
     validate(that)
