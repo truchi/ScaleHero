@@ -10,4 +10,4 @@ const NOTES = {
   'Bb': 10, 'B' : 11, 'B#':  0,
 }
 
-export default base(NOTES, 'Note')
+export default class Note extends base(NOTES) {}

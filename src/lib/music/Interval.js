@@ -10,4 +10,4 @@ const INTERVALS = {
   'bb7': 9, 'b7': 10, '7': 11,
 }
 
-export default base(INTERVALS, 'Interval')
+export default class Interval extends base(INTERVALS) {}

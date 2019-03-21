@@ -1,4 +1,4 @@
-export default (VALUES, type) => {
+export default (VALUES) => {
   const NAMES = {
     0: [], 1: [], 2: [], 3: [],  4: [],  5: [],
     6: [], 7: [], 8: [], 9: [], 10: [], 11: []
@@ -6,14 +6,13 @@ export default (VALUES, type) => {
   Object.entries(VALUES).forEach(([name, value]) => NAMES[value].push(name))
 
   const DEFAULTS = {
-    name: NAMES[0]
+    name: NAMES[0][0]
   }
 
   return class Base {
     static N     = 12
     static VALUES = VALUES
     static NAMES  = NAMES
-    type  = type
     #name = DEFAULTS.name
 
     constructor({ name } = {}) {
