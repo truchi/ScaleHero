@@ -1,3 +1,5 @@
+import settable from '../../utils/settable'
+
 export default (VALUES) => {
   const NAMES = {
     0: [], 1: [], 2: [], 3: [],  4: [],  5: [],
@@ -9,30 +11,22 @@ export default (VALUES) => {
     name: NAMES[0][0]
   }
 
-  return class Base {
-    static N     = 12
+  return class Base extends settable({ DEFAULTS }) {
+    static N      = 12
     static VALUES = VALUES
     static NAMES  = NAMES
-    #name = DEFAULTS.name
+    _name
 
     constructor({ name } = {}) {
-      this.set({ name })
-    }
-
-    set({ name = this.#name } = {}) {
-      ({ name } = { ...DEFAULTS, name })
-
-      this.#name = name
-
-      return this
+      super({ name })
     }
 
     get name() {
-      return this.#name
+      return this._name
     }
 
     get value() {
-      return VALUES[this.#name]
+      return VALUES[this._name]
     }
 
     add(value) {

@@ -1,3 +1,4 @@
+import settable from '../../utils/settable'
 import Note from './Note'
 import Interval from './Interval'
 
@@ -6,24 +7,15 @@ const DEFAULTS = {
   intervals: []
 }
 
-export default class Scale {
-  #root      = DEFAULTS.root
-  #intervals = DEFAULTS.intervals
+export default class Scale extends settable({ DEFAULTS }) {
+  _root
+  _intervals
 
   constructor({ root, intervals } = {}) {
-    this.set({ root, intervals })
-  }
-
-  set({ root = this.#root, intervals = this.#intervals } = {}) {
-    ({ root, intervals } = { ...DEFAULTS, root, intervals })
-
-    this.#root      = root
-    this.#intervals = intervals
-
-    return this
+    super({ root, intervals })
   }
 
   notes() {
-    return this.#intervals.map(interval => this.#root.add(interval.value))
+    return this._intervals.map(interval => this._root.add(interval.value))
   }
 }

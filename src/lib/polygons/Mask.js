@@ -1,3 +1,4 @@
+import settable from '../../utils/settable'
 import Point from './Point.js'
 import Rectangle from './Rectangle.js'
 import Triangle from './Triangle.js'
@@ -98,35 +99,22 @@ const DEFAULTS = {
   transition: 'east'
 }
 
-export default class Mask {
+export default class Mask extends settable({ DEFAULTS }) {
   static TYPES       = Object.keys(SUBTYPES)
   static SUBTYPES    = SUBTYPES
   static TRANSITIONS = Object.keys(TRANSITIONS)
-  #size       = DEFAULTS.size
-  #type       = DEFAULTS.type
-  #subtype    = DEFAULTS.subtype
-  #transition = DEFAULTS.transition
+  _size
+  _type
+  _subtype
+  _transition
 
   constructor({ size, type, subtype, transition } = {}) {
-    this.set({ size, type, subtype, transition })
+    super({ size, type, subtype, transition })
   }
 
-  set({ size = this.#size, type = this.#type, subtype = this.#subtype, transition = this.#transition } = {}) {
-    ({ size, type, subtype, transition } = { ...DEFAULTS, size, type, subtype, transition })
-
-    this.#size       = size
-    this.#type       = type
-    this.#subtype    = subtype
-    this.#transition = transition
-
-    this._make()
-
-    return this
-  }
-
-  _make() {
-    const shape           = this._shape().crop(new Rectangle({ x: 1, y: 1 }))
-    const { x, y, angle } = this._transition()
+  _afterSet() {
+    const shape           = this._getShape().crop(new Rectangle({ x: 1, y: 1 }))
+    const { x, y, angle } = this._getTransition()
     const dir             = new Point({ x, y: -y }) // Screen has -y...
 
     const center  = shape.center()
@@ -156,21 +144,21 @@ export default class Mask {
     return this
   }
 
-  _shape() {
-    if (!Mask.TYPES.includes(this.#type))
-      throw new Error(`Invalid type "${ this.#type }" (${ Mask.TYPES.join(', ') })`)
+  _getShape() {
+    if (!Mask.TYPES.includes(this._type))
+      throw new Error(`Invalid type "${ this._type }" (${ Mask.TYPES.join(', ') })`)
 
-    if (!Mask.SUBTYPES[this.#type].includes(this.#subtype))
-      throw new Error(`Invalid subtype "${ this.#subtype }" for type "${ this.#type }" (${ Mask.SUBTYPES[this.#type].join(', ') })`)
+    if (!Mask.SUBTYPES[this._type].includes(this._subtype))
+      throw new Error(`Invalid subtype "${ this._subtype }" for type "${ this._type }" (${ Mask.SUBTYPES[this._type].join(', ') })`)
 
-    const constructor = SHAPES[this.#type]._constructor
-    const data        = SHAPES[this.#type][this.#subtype](this.#size)
+    const constructor = SHAPES[this._type]._constructor
+    const data        = SHAPES[this._type][this._subtype](this._size)
     let { size, translate, rotate, scale } = Object.assign({
       size     : {},
       translate: {},
       rotate   : 0,
       scale    : {},
-    }, data[this.#subtype])
+    }, data[this._subtype])
 
     if (typeof size      === 'number') size      = { x: size     , y: size      }
     if (typeof translate === 'number') translate = { x: translate, y: translate }
@@ -187,10 +175,10 @@ export default class Mask {
       .scale    (scale , center)
   }
 
-  _transition() {
-    const transition = TRANSITIONS[this.#transition]
+  _getTransition() {
+    const transition = TRANSITIONS[this._transition]
     if (!transition)
-      throw new Error(`Invalid transition "${ this.#transition }" (${ Object.keys(TRANSITIONS).join(', ') })`)
+      throw new Error(`Invalid transition "${ this._transition }" (${ Object.keys(TRANSITIONS).join(', ') })`)
 
     return transition
   }

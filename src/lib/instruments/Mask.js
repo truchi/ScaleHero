@@ -1,23 +1,16 @@
+import settable from '../../utils/settable'
+
 const DEFAULTS = {
   position  : 0,
   definition: _ => []
 }
 
-export default class Mask {
-  #position   = DEFAULTS.position
-  #definition = DEFAULTS.definition
+export default class Mask extends settable({ DEFAULTS }) {
+  _position
+  _definition
 
   constructor({ position, definition } = {}) {
-    this.set({ position, definition })
-  }
-
-  set({ position = this.#position, definition = this.#definition } = {}) {
-    ({ position, definition } = { ...DEFAULTS, position, definition })
-
-    this.#position   = position
-    this.#definition = definition
-
-    return this
+    super({ position, definition })
   }
 
   in(i = 0, j = 0) {
@@ -27,7 +20,7 @@ export default class Mask {
   }
 
   get _def() {
-    return this.#definition(this.#position)
+    return this._definition(this._position)
   }
 
   static in(masks = [], i = 0, j = 0) {
