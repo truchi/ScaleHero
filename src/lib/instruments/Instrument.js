@@ -7,9 +7,7 @@ const DEFAULTS = {
   from  : 0,
   to    : Note.N
 }
-const validate = that => {
-  const { from, to } = that
-
+const validate = ({ from, to }) => {
   if (from > to)
     throw new Error(`from (${ from }) is geater than to (${ to })`)
 }
