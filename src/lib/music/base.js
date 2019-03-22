@@ -29,13 +29,13 @@ export default (VALUES) => {
       return VALUES[this._name]
     }
 
-    add(value) {
-      return Base.value(this.value + value)
+    add(other = new Base()) {
+      return Base.value(this.value + other.value, this.constructor)
     }
 
-    static value(i = VALUES[DEFAULTS.name]) {
-      return new Base({
-        name: NAMES[i % Base.N][0]
+    static value(value = VALUES[DEFAULTS.name], Class = Base) {
+      return new Class({
+        name: NAMES[value % Base.N][0]
       })
     }
   }

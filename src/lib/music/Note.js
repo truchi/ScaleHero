@@ -10,4 +10,10 @@ const NOTES = {
   'Bb': 10, 'B' : 11, 'B#':  0,
 }
 
-export default class Note extends base(NOTES) {}
+const Parent = base(NOTES)
+
+export default class Note extends Parent {
+  static value(value) {
+    return Parent.value(value, Note)
+  }
+}
