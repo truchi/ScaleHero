@@ -3,19 +3,17 @@ import Note from './Note'
 import Interval from './Interval'
 
 const DEFAULTS = {
-  root     : new Note(),
   intervals: []
 }
 
 export default class Scale extends settable({ DEFAULTS }) {
-  _root
   _intervals
 
-  constructor({ root, intervals } = {}) {
-    super({ root, intervals })
+  constructor({ intervals } = {}) {
+    super({ intervals })
   }
 
-  notes() {
-    return this._intervals.map(interval => this._root.add(interval.value))
+  notes(root = new Note()) {
+    return this._intervals.map(interval => root.add(interval.value))
   }
 }
