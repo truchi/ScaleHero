@@ -103,6 +103,9 @@ export default class Mask extends settable({ DEFAULTS, after: '_make' }) {
   static TYPES       = Object.keys(SUBTYPES)
   static SUBTYPES    = SUBTYPES
   static TRANSITIONS = Object.keys(TRANSITIONS)
+  shape
+  enter
+  leave
   _size
   _type
   _subtype
