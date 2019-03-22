@@ -31,15 +31,14 @@ export default class Instrument extends settable({ DEFAULTS, validate }) {
         stringIndex: index,
         stringNote : note
       }))
-      .map(({ stringIndex, stringNote }) =>
-        Array.from(
+      .map(({ stringIndex, stringNote }) => ({
+        boxes: Array.from(
           Array(this.length),
-          (v, boxIndex) =>
-            cb({
-              note: stringNote.add(this._from + boxIndex),
-              inside: Mask.inside(masks, stringIndex, boxIndex)
-            })
+          (v, boxIndex) => cb({
+            note  : stringNote.add(Note.value(this._from + boxIndex)),
+            inside: Mask.inside(masks, stringIndex, boxIndex)
+          })
         )
-      )
+      }))
   }
 }
