@@ -3,208 +3,165 @@ import Guitar from './instruments/guitar/Guitar'
 import { Mask as BoxMask } from '../lib/polygons'
 import { Note, Interval, Scale } from '../lib/music'
 import { Instrument, Mask as InstrumentMask } from '../lib/instruments'
+import Style from '../classes/Style'
+import Palette from '../classes/Palette'
+import Lesson from '../classes/Lesson'
 
-console.log(
-    BoxMask.TYPES,
-    BoxMask.SUBTYPES,
-    BoxMask.TRANSITIONS,
-    Note.NAMES,
-    Note.VALUES,
-    Interval.NAMES,
-    Interval.VALUES,
+Object.entries(
+    { BoxMask, Note, Interval, Scale, Instrument, InstrumentMask, Style, Palette, Lesson }
+).forEach(([name, klass]) => window[name] = klass)
+
+const palettes = {
+    blue: new Palette(new Style({ color: 'blue' })),
+    red : new Palette(new Style({ color: 'red' })),
+    cool: new Palette(interval => {
+        interval = interval.name
+        const color = (a, i) => `hsl(${ a * 360 / 7 }, ${ 50 + i }%, ${ 50 + i }%)`
+        const last  = +interval[interval.length - 1]
+        const style = {}
+
+        if      (interval.startsWith('bb')) style.color = color(last, -30)
+        else if (interval.startsWith('b') ) style.color = color(last, -20)
+        else if (interval.startsWith('#') ) style.color = color(last,  20)
+        else                                style.color = color(last,  0)
+
+        if (['1', 'b3', '3', 'b5', '5', 'bb7', 'b7', '7'].includes(interval)) {
+            /* style.stroke = { width: '10px', color: 'gold' } */
+            style.radius = 100
+        }
+
+        if (+interval === 1) style.color = 'white'
+
+        return new Style(style)
+    })
+}
+
+const scales = Object.fromEntries(
+    Object.entries({
+        pentam   : ['1', 'b3', '4', '5', 'b7'],
+        aeolian  : ['1', '2', 'b3', '4', '5', 'b6', 'b7'],
+        pentaM   : ['1', '2', '3', '5', '6'],
+        ionian   : ['1', '2', '3', '4', '5', '6', '7'],
+        chromatic: ['1', 'b2', '2', 'b3', '3', '4', 'b5', '5', 'b6', '6', 'b7', '7'],
+    }).map(([name, intervals]) => [name, new Scale({ intervals: intervals.map(name => new Interval({ name })) })])
 )
 
-const mask = new InstrumentMask({
-    position  : 5,
-    definition: position => [
-        [[-Infinity, position], [position + 3, Infinity]],
-        [[-Infinity, position], [position + 3, Infinity]],
-        [[-Infinity, position], [position + 3, Infinity]],
-        [[-Infinity, position], [position + 3, Infinity]],
-        [[-Infinity, position], [position + 3, Infinity]],
-    ]
-})
-const i = new Instrument({
-    tuning: ['E', 'A', 'D', 'G', 'B', 'E'].map(name => new Note({ name })),
-    from  : 5,
-    masks : [mask]
-})
-const scale = new Scale({
-    intervals: ['1', 'b2', '2', 'b3', '3', '4', 'b5', '5', 'b6', '6', 'b7', '7'].map(name => new Interval({ name }))
-})
+const boxMasks = Object.fromEntries(
+    Object.entries({
+        fullRect  : { size: 1  , type: 'rect'    , subtype: 'top'        , transition: 'southeast' },
+        tlTriangle: { size: 1/3, type: 'triangle', subtype: 'topleft'    , transition: 'southeast' },
+        brTriangle: { size: 1/3, type: 'triangle', subtype: 'bottomright', transition: 'southeast' },
+        diag      : { size: 1/3, type: 'rect'    , subtype: 'diagasc'    , transition: 'southeast' },
+    }).map(([name, data]) => [name, new BoxMask(data)])
+)
 
-const bmask = new BoxMask({ size: 1, type: 'rect', subtype: 'top', transition: 'east' })
+const instruments = Object.fromEntries(
+    Object.entries({
+        guitarStandard: ['E', 'A', 'D', 'G', 'B', 'E']
+    }).map(([name, tuning]) => [name, new Instrument({ tuning: tuning.reverse().map(name => new Note({ name })) })])
+)
 
-window.instr = i
-window.scale = scale
-window.bmask = bmask
-window.Instrument = Instrument
-window.Note = Note
-window.Interval = Interval
-
-const notes = {
-    C: 0, 'C#': 1,
-    D: 2, 'D#': 3,
-    E: 4,
-    F: 5, 'F#': 6,
-    G: 7, 'G#': 8,
-    A: 9, 'A#': 10,
-    B: 11
-}
-const N = Object.keys(notes).length
-const intervals = {
-    '1'  : 0,
-    'b2' : 1, '2' : 2, '#2': 3,
-    'b3' : 3, '3' : 4,
-    'b4' : 4, '4' : 5, '#4': 6,
-    'b5' : 6, '5' : 7, '#5': 8,
-    'b6' : 8, '6' : 9,
-    'bb7': 9, 'b7': 10, '7': 11
-}
-
-const defaultStyle = {
-    color : 'transparent',
-    radius: 0,
-    stroke: {
-        width: 0,
-        color: 'transparent'
+const instrumentMasks = [
+    {
+        definition: position => [
+            [[-Infinity, position], [position + 4, Infinity]],
+            [[-Infinity, position], [position + 4, Infinity]],
+            [[-Infinity, position], [position + 4, Infinity]],
+            [[-Infinity, position], [position + 4, Infinity]],
+            [[-Infinity, position], [position + 4, Infinity]],
+            [[-Infinity, position], [position + 4, Infinity]],
+        ]
     }
-}
-const palettes = {
-    blue: Object.fromEntries(Object.keys(intervals).map(interval => [interval, { color: 'blue' }])),
-    red : Object.fromEntries(Object.keys(intervals).map(interval => [interval, { color: 'red' }])),
-    cool: Object.fromEntries(
-        Object.keys(intervals).map(interval => {
-            const color = (a, i) => `hsl(${ a * 360 / 7 }, ${ 50 + i }%, ${ 50 + i }%)`
-            const last  = +interval[interval.length - 1]
-            const style = {}
+].map(mask => new InstrumentMask(mask))
 
-            if (interval.startsWith('bb')) {
-                style.color = color(last, -30)
-            } else if (interval.startsWith('b')) {
-                style.color = color(last, -20)
-            } else if (interval.startsWith('#')) {
-                style.color = color(last, 20)
-            } else {
-                style.color = color(last, 0)
-            }
-
-            if (['1', 'b3', '3', 'b5', '5', 'bb7', 'b7', '7'].includes(interval)) {
-                style.stroke = {
-                    width: '10px',
-                    color: 'gold'
-                }
-            }
-
-            if (+interval === 1) {
-                style.color = 'white'
-            }
-
-            return [interval, style]
-        })
-    )
-}
-
-const scales = {
-    pentam: ['1', 'b3', '4', '5', 'b7'],
-    aeolian: ['1', '2', 'b3', '4', '5', 'b6', 'b7'],
-    pentaM: ['1', '2', '3', '5', '6'],
-    ionian: ['1', '2', '3', '4', '5', '6', '7'],
-    chromatic: ['1', 'b2', '2', 'b3', '3', '4', 'b5', '5', 'b6', '6', 'b7', '7'],
-}
-
-const masks = {
-    fullRect  : { size: 1  , type: 'rect'    , shape: 'top'     },
-    tlTriangle: { size: 1/2, type: 'triangle', shape: 'topleft' },
-}
-
-const instruments = {
-    guitarStandard: ['E', 'A', 'D', 'G', 'B', 'E'].reverse()
-}
-
-const lesson = {
+const lesson = new Lesson({
     instrument: instruments.guitarStandard,
-    length: 12,
     layers: [
-        { mask: masks.fullRect  , transition: 'north' },
-        { mask: masks.tlTriangle, transition: 'north' },
+        { boxMask: boxMasks.brTriangle, palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [{ position: 5, mask: instrumentMasks[0] }] },
+        { boxMask: boxMasks.diag      , palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [] },
+        { boxMask: boxMasks.tlTriangle, palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [] },
     ],
     timeline: [
         [
-            { root: 'C', scale: scales.pentam , palette: palettes.cool },
-            { root: 'C', scale: scales.aeolian, palette: palettes.cool },
+            { root: 'C' },
+            { root: 'G' },
+            { root: 'F' },
         ],
         [
-            { root: 'C', scale: scales.pentaM , palette: palettes.cool },
-            { root: 'C', scale: scales.ionian , palette: palettes.cool },
+            { root: 'G', instrumentMasks: [{}, { position: 4, mask: instrumentMasks[0] }] },
+            { root: 'F' },
+            { root: 'C' },
         ],
         [
-            { root: 'C', scale: scales.ionian , palette: palettes.cool },
-            { root: 'F', scale: scales.ionian , palette: palettes.cool },
+            { root: 'F' },
+            { root: 'C' },
+            { root: 'G' },
         ],
         [
-            { root: 'C', scale: scales.pentam , palette: palettes.cool },
-            { root: 'F', scale: scales.ionian , palette: palettes.cool },
+            { root: 'C', instrumentMasks: [{ position: 0 }, null] },
+            { root: 'G' },
+            { root: 'F' },
         ],
-    ]
-}
+    ].map(layers => layers.map(({ root, instrumentMasks }) => ({ instrumentMasks, root: new Note({ name: root }) })))
+})
 
-const findNoteName = note => Object.entries(notes).find(([name, int]) => note === int)[0]
-const makePalette  = (root, scale, palette) => {
-    root = notes[root]
-    const scaleValues = scale.map(note => (root + intervals[note]) % N)
+Object.entries(
+    { palettes, scales, instruments, boxMasks, instrumentMasks, lesson }
+).forEach(([name, object]) => console.log(name, object))
+/* const findNoteName = note => Object.entries(Note.VALUES).find(([name, int]) => note === int)[0]
+ * const makePalette  = (root, scale, palette) => {
+ *     root = Note.VALUES[root]
+ *     const scaleValues = scale.map(note => (root + Interval.VALUES[note]) % Note.N)
+ * 
+ *     return Object.fromEntries(
+ *         Object.entries(Note.VALUES).map(([note, value]) => {
+ *             const i     = scaleValues.findIndex(v => v === value)
+ *             let   style = i >= 0 ? palette[scale[i]] : {}
+ * 
+ *             style        = { ...defaultStyle       , ...style        }
+ *             style.stroke = { ...defaultStyle.stroke, ...style.stroke }
+ * 
+ *             return [note, style]
+ *         })
+ *     )
+ * }
+ * 
+ * const makeStrings = (instrument, length) =>
+ *     instrument.map(instrumentNote => {
+ *         const boxes    = []
+ *         instrumentNote = Note.VALUES[instrumentNote]
+ * 
+ *         for(let i = 0; i < length; ++i)
+ *             boxes.push({
+ *                 name: findNoteName((instrumentNote + i) % Note.N)
+ *             })
+ * 
+ *         return { boxes }
+ *     })
+ * 
+ * const makeStates = (lesson) => {
+ *     return lesson.timeline.map(layers => {
+ *         return {
+ *             layers: layers.map((layer, i) => {
+ *                 layer = {
+ *                     ...layer,
+ *                     ...lesson.layers[i]
+ *                 }
+ *                 return {
+ *                     palette: makePalette(layer.root, layer.scale, layer.palette),
+ *                     strings: makeStrings(lesson.instrument, lesson.length),
+ *                     ...get(layer.mask.size, layer.mask.type, layer.mask.shape, layer.transition),
+ *                     duration: '1s'
+ *                 }
+ *             })
+ *         }
+ *     })
+ * }
+ * 
+ * const states = makeStates(lesson)
+ * console.log(states) */
 
-    return Object.fromEntries(
-        Object.entries(notes).map(([note, value]) => {
-            const i     = scaleValues.findIndex(v => v === value)
-            let   style = i >= 0 ? palette[scale[i]] : {}
-
-            style        = { ...defaultStyle       , ...style        }
-            style.stroke = { ...defaultStyle.stroke, ...style.stroke }
-
-            return [note, style]
-        })
-    )
-}
-
-const makeStrings = (instrument, length) =>
-    instrument.map(instrumentNote => {
-        const boxes    = []
-        instrumentNote = notes[instrumentNote]
-
-        for(let i = 0; i < length; ++i)
-            boxes.push({
-                name: findNoteName((instrumentNote + i) % N)
-            })
-
-        return { boxes }
-    })
-
-const makeStates = (lesson) => {
-    return lesson.timeline.map(layers => {
-        return {
-            layers: layers.map((layer, i) => {
-                layer = {
-                    ...layer,
-                    ...lesson.layers[i]
-                }
-                return {
-                    palette: makePalette(layer.root, layer.scale, layer.palette),
-                    strings: makeStrings(lesson.instrument, lesson.length),
-                    /* ...get(layer.mask.size, layer.mask.type, layer.mask.shape, layer.transition), */
-                    duration: '1s'
-                }
-            })
-        }
-    })
-}
-
-const states = makeStates(lesson)
-
-console.log(palettes, scales, instruments, lesson)
-console.log(states)
-
-const duration = 3000
+const duration = 2000
 
 class App extends Component {
     constructor(props) {
@@ -229,12 +186,13 @@ class App extends Component {
     }
 
     getState() {
-        if (this.i >= states.length) return false
+        /* if (this.i >= states.length) return false
 
-        return states[this.i++]
+         * return states[this.i++] */
     }
 
     render() {
+        return (<div></div>)
         return (
             <Guitar { ...this.state }></Guitar>
         )
