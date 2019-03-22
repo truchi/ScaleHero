@@ -1,4 +1,10 @@
-export default ({ DEFAULTS = {}, validate = _ => true, Base = class {}, prefix = '_' }) => class extends Base {
+export default ({
+  DEFAULTS = {},
+  validate = _ => true,
+  Base = class {},
+  prefix = '_',
+  after = null,
+}) => class extends Base {
   constructor(props) {
     super()
     this.set(props)
@@ -21,7 +27,7 @@ export default ({ DEFAULTS = {}, validate = _ => true, Base = class {}, prefix =
     Object.entries(valid)
         .forEach(([name, value]) => this[prefix + name] = value)
 
-    this._afterSet && this._afterSet()
+    after && this[after] && this[after]()
 
     return this
   }

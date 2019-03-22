@@ -99,7 +99,7 @@ const DEFAULTS = {
   transition: 'east'
 }
 
-export default class Mask extends settable({ DEFAULTS }) {
+export default class Mask extends settable({ DEFAULTS, after: '_make' }) {
   static TYPES       = Object.keys(SUBTYPES)
   static SUBTYPES    = SUBTYPES
   static TRANSITIONS = Object.keys(TRANSITIONS)
@@ -112,7 +112,7 @@ export default class Mask extends settable({ DEFAULTS }) {
     super({ size, type, subtype, transition })
   }
 
-  _afterSet() {
+  _make() {
     const shape = this._getShape().crop(new Rectangle({ x: 1, y: 1 }))
     const angle = this._getAngle()
 
