@@ -37,7 +37,7 @@ export default class Instrument extends settable({ DEFAULTS, validate }) {
           (v, boxIndex) =>
             cb({
               note: stringNote.add(this._from + boxIndex),
-              in  : Mask.in(masks, stringIndex, this._from + boxIndex)
+              in  : Mask.in(masks, stringIndex, boxIndex)
             })
         )
       )
