@@ -33,6 +33,10 @@ export default (VALUES) => {
       return Base.value(this.value + other.value, this.constructor)
     }
 
+    equals(other = new Base()) {
+      return this.value === other.value
+    }
+
     static value(value = VALUES[DEFAULTS.name], Class = Base) {
       return new Class({
         name: NAMES[value % Base.N][0]
