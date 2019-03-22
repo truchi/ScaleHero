@@ -19,6 +19,8 @@ export default class Mask extends settable({ DEFAULTS }) {
   }
 
   static in(masks = [], i = 0, j = 0) {
-    return -1 !== masks.findIndex(({ position, mask }) => mask.in(position, i, j))
+    return masks.length
+      ? -1 !== masks.findIndex(({ position, mask }) => mask.in(position, i, j))
+      : true
   }
 }
