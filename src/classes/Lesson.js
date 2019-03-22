@@ -1,68 +1,46 @@
 import settable from '../utils/settable'
 import { Instrument } from '../lib/instruments'
 
-const get = (object, i, key) =>
-  object[i] !== undefined
-    ? object[i][key]
-    : undefined
-
-const mergeLayers = (prev, layer) => {
-  const prevMasks       = prev .instrumentMasks || []
-  const layerMasks      = layer.instrumentMasks || []
-  const instrumentMasks =
-    Array.from(
-      Array(Math.max(prevMasks.length, layerMasks.length)),
-      (x, i) =>
-        layerMasks[i] === null
-          ? null
-          : {
-            position: [ get(layerMasks, i, 'position'), get(prevMasks, i, 'position')].find(v => v !== undefined),
-            mask    : [ get(layerMasks, i, 'mask'    ), get(prevMasks, i, 'mask'    )].find(v => v !== undefined)
-          }
-    )
-
-  return { ...prev, ...layer, instrumentMasks }
-}
-
 const DEFAULTS = {
   instrument: new Instrument(),
-  layers    : [],
-  timeline  : [],
+  timeline  : [[]],
 }
 
-export default class Lesson extends settable({ DEFAULTS, after: '_states' }) {
+export default class Lesson extends settable({ DEFAULTS, after: 'states' }) {
   _instrument
-  _layers
   _timeline
+  _states
 
-  constructor({ instrument, layers, timeline } = {}) {
-    super({ instrument, layers, timeline })
+  constructor({ instrument, timeline } = {}) {
+    super({ instrument, timeline })
   }
 
-  _states() {
-    const a = this._timeline
-            .reduce(
-              (timeline, layers, timelineIndex) => {
-                console.log('-----', timelineIndex)
+  *iterator() {
+    yield* this._states.map(({ layers }) => ({ layers: layers.map(({ strings }) => ({ strings })) }))
+  }
 
-                return timeline.concat({
-                  layers: layers.map(
-                    (layer, layerIndex) => {
-                      layer = mergeLayers(timeline[timelineIndex].layers[layerIndex], layer)
-                      const masks = layer.instrumentMasks.filter(mask => mask !== null)
+  [Symbol.iterator]() {
+    return this.iterator()
+  }
 
-                      const strings = this._instrument.strings({ masks })
-                      console.log('->', layerIndex, masks, strings)
-                      // TODO finish
+  states() {
+    this._states = this._timeline
+      .map(
+        layers => ({
+          layers: layers.map(
+            layer => {
+              const { palette, scale, instrumentMasks: masks} = layer
 
-                      return layer
-                    })
-                })
-              },
-              [{ layers: this._layers }]
-            )
-            .slice(1)
+              const cb = ({ note, inside }) => ({
+                style: palette.get(inside ? scale.get(layer.root, note) : null),
+                mask : layer.boxMask
+              })
+              const strings = this._instrument.strings({ masks, cb })
 
-    console.log(a)
+              return { ...layer, strings }
+            }
+          )
+        })
+      )
   }
 }
