@@ -161,7 +161,7 @@ export default class Mask extends settable({ DEFAULTS, after: '_make' }) {
       translate: {},
       rotate   : 0,
       scale    : {},
-    }, data[this._subtype])
+    }, data)
 
     if (typeof size      === 'number') size      = { x: size     , y: size      }
     if (typeof translate === 'number') translate = { x: translate, y: translate }
