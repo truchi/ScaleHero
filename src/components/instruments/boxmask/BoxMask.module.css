@@ -12,6 +12,11 @@
     transition: transform var(--duration) _easing;
 }
 
+.ellipse {
+    rx: var(--radius);
+    ry: var(--radius);
+}
+
 .shape {}
 .enter { composes: transition; }
 .leave { composes: transition; }

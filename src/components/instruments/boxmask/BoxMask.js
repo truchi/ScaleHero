@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import rcv from '../../../lib/rcv/rcv'
 import styles from './BoxMask.module.css'
 
+const Rect    = rcv(<rect />)
 const Polygon = rcv(<polygon />)
 
 export default class BoxMask extends Component {
@@ -90,8 +91,9 @@ export default class BoxMask extends Component {
     }
 
     render() {
-        let { id, shape, enter, leave, duration } = this.props
+        let { id, shape, enter, leave, radius, duration } = this.props
 
+        const url      = id => `url("#${ id }")`
         const noop     = _ => _
         const defaults = { points: '', animation: { duration } }
         const sanitize = data => {
@@ -115,19 +117,33 @@ export default class BoxMask extends Component {
 
         return (
             <>
-              { Object.entries({ shape, enter, leave }).map(([type, data]) => (
-                  <clipPath
-                      id           ={ id(type) }
-                      key          ={ type }
-                      clipPathUnits="objectBoundingBox"
-                      clipPath     ={ data.clip ? `url("#${ data.clip }")` : null }
-                  >
-                      <Polygon
-                          className={ styles[type] }
-                          points   ={ data.points }
-                          rcv      ={[ data.animation, data.rcvFn(type) ]}
-                      />
-                  </clipPath>
+                <clipPath
+                    id           ={ id('mask') }
+                    clipPathUnits="objectBoundingBox"
+                    clipPath     ={ url(id('shape')) }
+                >
+                    <Rect
+                        className={ styles.ellipse }
+                        x        ="0"
+                        y        ="0"
+                        width    ="1"
+                        height   ="1"
+                        rcv      ={{ radius }}
+                    />
+                </clipPath>
+                { Object.entries({ shape, enter, leave }).map(([type, data]) => (
+                    <clipPath
+                        id           ={ id(type) }
+                        key          ={ type }
+                        clipPathUnits="objectBoundingBox"
+                        clipPath     ={ data.clip ? url(data.clip) : null }
+                    >
+                        <Polygon
+                            className={ styles[type] }
+                            points   ={ data.points }
+                            rcv      ={[ data.animation, data.rcvFn(type) ]}
+                        />
+                    </clipPath>
                 ))}
             </>
         )

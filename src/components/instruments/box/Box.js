@@ -78,7 +78,8 @@ class Box extends Component {
     })
 
     maskActiveProps = i => ({
-        animate: BoxMask.ENTER
+        animate: BoxMask.ENTER,
+        radius : this.props.style.radius
     })
 
     maskInactiveProps = (i, prev) => ({
@@ -86,7 +87,7 @@ class Box extends Component {
     })
 
     unitInitialProps = i => ({
-        clip: `url("#${ this.id }-${ i }-shape")`
+        clip: `url("#${ this.id }-${ i }-mask")`
     })
 
     unitActiveProps = i => ({
