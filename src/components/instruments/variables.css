@@ -6,3 +6,6 @@
 @value _box-width: 80px;
 @value _box-height: 60px;
 @value _box-gap: 3px;
+
+/* BoxMask */
+@value _easing: cubic-bezier(0.55, 0.085, 0.68, 0.53);

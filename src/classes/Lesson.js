@@ -3,16 +3,18 @@ import { Instrument } from '../lib/instruments'
 
 const DEFAULTS = {
   instrument: new Instrument(),
+  duration  : '',
   timeline  : [[]],
 }
 
 export default class Lesson extends settable({ DEFAULTS, after: 'states' }) {
   _instrument
+  _duration
   _timeline
   _states
 
-  constructor({ instrument, timeline } = {}) {
-    super({ instrument, timeline })
+  constructor({ instrument, duration, timeline } = {}) {
+    super({ instrument, duration, timeline })
   }
 
   *iterator() {
@@ -32,9 +34,11 @@ export default class Lesson extends settable({ DEFAULTS, after: 'states' }) {
               const { palette, scale, instrumentMasks: masks} = layer
 
               const cb = ({ note, inside }) => ({
-                style: palette.get(inside ? scale.get(layer.root, note) : null),
-                mask : layer.boxMask
+                style   : palette.get(inside ? scale.get(layer.root, note) : null).toJSON(),
+                mask    : layer.boxMask.get(),
+                duration: this._duration
               })
+
               const strings = this._instrument.strings({ masks, cb })
 
               return { ...layer, strings }

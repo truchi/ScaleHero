@@ -26,8 +26,8 @@ const palettes = {
         else                                style.color = color(last,  0)
 
         if (['1', 'b3', '3', 'b5', '5', 'bb7', 'b7', '7'].includes(interval)) {
-            /* style.stroke = { width: '10px', color: 'gold' } */
-            style.radius = 100
+            style.stroke = { width: '5px', color: 'gold' }
+            style.radius = 50
         }
 
         if (+interval === 1) style.color = 'white'
@@ -38,6 +38,7 @@ const palettes = {
 
 const scales = Object.fromEntries(
     Object.entries({
+        empty    : [],
         pentam   : ['1', 'b3', '4', '5', 'b7'],
         aeolian  : ['1', '2', 'b3', '4', '5', 'b6', 'b7'],
         pentaM   : ['1', '2', '3', '5', '6'],
@@ -71,32 +72,43 @@ const instrumentMasks = [
             [[-Infinity, position], [position + 4, Infinity]],
             [[-Infinity, position], [position + 4, Infinity]],
         ]
-    }
+    },
+    {
+        definition: position => [
+            [[-Infinity, Infinity]],
+            [[-Infinity, Infinity]],
+            [[-Infinity, Infinity]],
+            [[-Infinity, Infinity]],
+            [[-Infinity, Infinity]],
+            [[-Infinity, Infinity]],
+        ]
+    },
 ].map(mask => new InstrumentMask(mask))
 
-const m = ({ position: 5, mask: instrumentMasks[0] })
+const m = ({ position: 5, mask: instrumentMasks[1] })
 const lesson = new Lesson({
     instrument: instruments.guitarStandard,
+    duration: '1s',
     timeline: [
         [
-            { root: 'C', boxMask: boxMasks.brTriangle, palette: palettes.cool, scale: scales.pentam   , instrumentMasks: [m] },
-            { root: 'G', boxMask: boxMasks.diag      , palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [m] },
-            { root: 'F', boxMask: boxMasks.tlTriangle, palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [m] },
+            { root: 'C', boxMask: boxMasks.brTriangle, palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [m] },
+            /* { root: 'G', boxMask: boxMasks.diag      , palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [m] },
+             * { root: 'F', boxMask: boxMasks.tlTriangle, palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [m] }, */
         ],
         [
-            { root: 'G', boxMask: boxMasks.brTriangle, palette: palettes.cool, scale: scales.pentam   , instrumentMasks: [m] },
-            { root: 'F', boxMask: boxMasks.diag      , palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [m] },
-            { root: 'C', boxMask: boxMasks.tlTriangle, palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [m] },
+            { root: 'G', boxMask: boxMasks.brTriangle, palette: palettes.cool, scale: scales.empty, instrumentMasks: [m] },
+            /* { root: 'F', boxMask: boxMasks.diag      , palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [m] },
+             * { root: 'C', boxMask: boxMasks.tlTriangle, palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [m] }, */
         ],
         [
-            { root: 'F', boxMask: boxMasks.brTriangle, palette: palettes.cool, scale: scales.pentam   , instrumentMasks: [m] },
-            { root: 'C', boxMask: boxMasks.diag      , palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [m] },
-            { root: 'G', boxMask: boxMasks.tlTriangle, palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [m] },
+            { root: 'F', boxMask: boxMasks.brTriangle, palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [m] },
+            /* { root: 'C', boxMask: boxMasks.diag      , palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [m] },
+             * { root: 'G', boxMask: boxMasks.tlTriangle, palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [m] }, */
         ],
         [
-            { root: 'C', boxMask: boxMasks.brTriangle, palette: palettes.cool, scale: scales.pentam   , instrumentMasks: [m] },
-            { root: 'G', boxMask: boxMasks.diag      , palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [m] },
-            { root: 'F', boxMask: boxMasks.tlTriangle, palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [m] },
+            { root: 'C', boxMask: boxMasks.brTriangle, palette: palettes.cool, scale: scales.empty, instrumentMasks: [m] },
+            /* { root: 'G', boxMask: boxMasks.diag      , palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [m] },
+             * { root: 'F', boxMask: boxMasks.tlTriangle, palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [m] }, */
         ],
     ].map(layers => layers.map(layer => ({ ...layer, root: new Note({ name: layer.root }) })))
 })
@@ -112,9 +124,8 @@ class App extends Component {
     constructor(props) {
         super(props)
 
-        this.i = 0
-        this.state = this.getState()
-        console.log('initial state', this.state)
+        this.iterator = lesson.iterator()
+        this.state    = this.getState()
     }
 
     componentDidMount   () { this.update() }
@@ -122,24 +133,22 @@ class App extends Component {
     componentWillUnmount() { clearTimeout(this.timer) }
 
     update() {
-        return
         const state = this.getState()
-        console.log('next state', state)
 
         if (state)
             this.timer = setTimeout(() => this.setState(state), duration)
     }
 
     getState() {
-        /* if (this.i >= states.length) return false
+        const next = this.iterator.next()
 
-         * return states[this.i++] */
+        return next.done ? null : next.value
     }
 
     render() {
-        return (<div></div>)
+        console.log('state', this.state)
         return (
-            <Guitar { ...this.state }></Guitar>
+            <Guitar layers={ this.state.layers }></Guitar>
         )
     }
 }

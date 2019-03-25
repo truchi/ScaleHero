@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import rcv from '../../../lib/rcv/rcv.js'
+import rcv from '../../../lib/rcv/rcv'
 import styles from './BoxMask.module.css'
 
 const Polygon = rcv(<polygon />)

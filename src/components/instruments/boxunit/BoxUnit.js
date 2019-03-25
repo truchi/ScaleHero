@@ -6,14 +6,8 @@ const Unit = rcv(<rect />)
 
 class BoxUnit extends Component {
     render() {
-        let rcv = this.props.styles || {}
-        const { clip } = this.props
-
-        rcv = {
-            ...rcv,
-            clip,
-            radius: rcv.radius ? rcv.radius /  2 + '%' : '0%'
-        }
+        const { style, clip } = this.props
+        const rcv = { ...style, clip }
 
         return (
             <Unit className={ styles.unit } rcv={ rcv }></Unit>

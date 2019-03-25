@@ -19,4 +19,11 @@ export default class Palette {
 
     this._styles = Object.fromEntries(apply(fn))
   }
+
+  get(interval) {
+    return interval instanceof Interval
+      ? this._styles[interval.name]
+      : new Style()
+  }
+
 }

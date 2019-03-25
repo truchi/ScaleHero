@@ -1,4 +1,4 @@
-@value _easing: cubic-bezier(0.55, 0.085, 0.68, 0.53);
+@value _easing from "../variables.css";
 
 .transition {
     transform: var(--from);

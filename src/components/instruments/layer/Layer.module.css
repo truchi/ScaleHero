@@ -2,9 +2,3 @@
     display: block;
     grid-area: layers;
 }
-
-.svg {
-    display: block;
-    width: 0;
-    height: 0;
-}

@@ -70,14 +70,14 @@ const getAnimation = (points, origin, rotate) =>
     }
   })
 
-const animationToString = function() { return `rotate(${ this.rotate }deg) translate(${ this.translate.toString('px') })` }
-const toStrings = function() {
+const animationToString = data => `rotate(${ data.rotate }deg) translate(${ data.translate.toString('px') })`
+const toStrings = data => {
   return {
-    points: this.points.toString(),
+    points: data.points.toString(),
     animation: {
-      origin: this.animation.origin.toString('px', ' '),
-      from  : animationToString.call(this.animation.from),
-      to    : animationToString.call(this.animation.to  ),
+      origin: data.animation.origin.toString('px', ' '),
+      from  : animationToString(data.animation.from),
+      to    : animationToString(data.animation.to  ),
     }
   }
 }
@@ -115,6 +115,10 @@ export default class Mask extends settable({ DEFAULTS, after: '_make' }) {
     super({ size, type, subtype, transition })
   }
 
+  get(debug = false) {
+    return this._data[debug ? 'debug' : 'strings']
+  }
+
   _make() {
     const shape = this._getShape().crop(new Rectangle({ x: 1, y: 1 }))
     const angle = this._getAngle()
@@ -122,26 +126,23 @@ export default class Mask extends settable({ DEFAULTS, after: '_make' }) {
     const center  = shape.center()
     const rotated = shape.rotate(-angle, center)
     const boxed   = rotated.boundingBox()
-    const size    = getSize(boxed)
+    const width   = getSize(boxed).x
 
     // Screen has -y...
     const animation = getAnimation(boxed, center, -angle)
 
-    const start = {
-      enter: size.scale(new Point({ x: -1, y: 0 })),
-      leave: new Point()
-    }
-    const end = {
-      enter: start.enter,
-      leave: start.leave.translate(size.scale(new Point({ x: 1, y: 0 })))
+    const enter = animation(new Point({ x: -width, y: 0 }), new Point()                  )
+    const leave = animation(new Point()                   , new Point({ x: width, y: 0 }))
+
+    this._data = {
+      debug  : { shape, enter, leave },
+      strings: {
+        shape: { points: shape.toString() },
+        enter: toStrings(enter),
+        leave: toStrings(leave)
+      }
     }
 
-    this.shape = shape
-    this.enter = animation(start.enter, end.enter)
-    this.leave = animation(start.leave, end.leave)
-
-    this.enter.toStrings = toStrings.bind(this.enter)
-    this.leave.toStrings = toStrings.bind(this.leave)
 
     return this
   }
