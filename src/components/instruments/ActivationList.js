@@ -1,37 +1,32 @@
 import React, { Component } from 'react'
 
-const sanitized = (fn = _ => _, i) => ({
+const sanitized = i => ({
     i,
-    key: i,
-    ...fn(i)
+    key: i
 })
 
 export default class ActivationList extends Component {
     #components = []
     prev = false
 
-    constructor(props) {
-        super(props)
-
-        const { length, Component, initialProps } = this.props
-
-        for(let i = 0; i < length; ++i) {
-            this.#components.push(React.cloneElement((<Component />), sanitized(initialProps, i)))
-        }
-    }
-
     render() {
-        let { active, activeProps, inactiveProps } = this.props
+        let { Component, length, active, alwaysProps, activeProps, inactiveProps } = this.props
 
           activeProps =   activeProps || (_ => _)
         inactiveProps = inactiveProps || (_ => _)
 
-        this.#components = this.#components.map(
-            component =>
-                React.cloneElement(
-                    component,
-                    (component.props.i === active ? activeProps : inactiveProps)
-                        .call(null, component.props.i, this.prev)
+        this.#components = Array.from(
+            Array(length),
+            (v, i) =>
+                 React.cloneElement(
+                    this.#components[i] || (<Component />),
+                    {
+                        ...alwaysProps(i, this.prev),
+                        ...(i === active ? activeProps : inactiveProps)
+                            .call(null, i, this.prev),
+                        i,
+                        key: i,
+                    }
                 )
         )
 

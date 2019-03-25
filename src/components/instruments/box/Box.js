@@ -10,9 +10,9 @@ const id = randId(10)
 let    i = 0
 
 class Box extends Component {
-    static MAX  = 2
-    static IDLE = 'idle'
-    static BUSY = 'busy'
+    static MASKS = 3
+    static IDLE  = 'idle'
+    static BUSY  = 'busy'
     #list = []
 
     constructor(props) {
@@ -20,23 +20,30 @@ class Box extends Component {
 
         this.id = `${ id() }-${ ++i }`
 
-        for(let i = 0; i < Box.MAX; ++i)
+        // Minimize DOM io
+        for(let i = 0; i < Box.MASKS; ++i)
             this.#list.push(Box.IDLE)
     }
 
-    get idle() {
-        const idle = this.#list.findIndex(state => state === Box.IDLE)
-        console.log('%ccandidate', 'font-weight: bold', idle, JSON.stringify(this.#list))
+    get length() {
+        return this.#list.length
+    }
 
-        if(idle === -1)
-            throw new Error(`${ Box.MAX } masks are not enough`)
+    get idle() {
+        let idle = this.#list.findIndex(state => state === Box.IDLE)
+
+        if(idle === -1) {
+            this.#list.push(Box.IDLE)
+            idle = this.length - 1
+        }
+        console.log('%ccandidate', 'font-weight: bold', idle, JSON.stringify(this.#list))
 
         return idle
     }
 
     remove = mask => {
         this.#list[mask.props.i] = Box.IDLE
-        console.log('REMOVED', JSON.stringify(this.#list))
+        console.log('REMOVED', mask.props.i, JSON.stringify(this.#list))
     }
 
     render() {
@@ -48,19 +55,19 @@ class Box extends Component {
               <svg className={ styles.svg }>
                     <defs>
                         <ActivationList
-                            Component    ={ BoxMask }
-                            length       ={ Box.MAX }
-                            active       ={ idle    }
-                            initialProps ={ this.maskInitialProps  }
+                            Component    ={ BoxMask     }
+                            length       ={ this.length }
+                            active       ={ idle        }
+                            alwaysProps  ={ this.maskAlwaysProps   }
                             activeProps  ={ this.maskActiveProps   }
                             inactiveProps={ this.maskInactiveProps }
                         />
                     </defs>
                     <ActivationList
-                        Component   ={ BoxUnit }
-                        length      ={ Box.MAX }
-                        active      ={ idle    }
-                        initialProps={ this.unitInitialProps }
+                        Component   ={ BoxUnit     }
+                        length      ={ this.length }
+                        active      ={ idle        }
+                        alwaysProps ={ this.unitAlwaysProps  }
                         activeProps ={ this.unitActiveProps  }
                     />
                 </svg>
@@ -68,7 +75,7 @@ class Box extends Component {
         )
     }
 
-    maskInitialProps = i => ({
+    maskAlwaysProps = i => ({
         id      : type => `${ this.id }-${ i }-${ type }`,
         shape   : this.props.mask.shape,
         enter   : this.props.mask.enter,
@@ -86,7 +93,7 @@ class Box extends Component {
         animate: prev === i ? BoxMask.LEAVE : null
     })
 
-    unitInitialProps = i => ({
+    unitAlwaysProps = i => ({
         clip: `url("#${ this.id }-${ i }-mask")`
     })
 
