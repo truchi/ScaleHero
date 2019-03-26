@@ -19,25 +19,6 @@ export default class Polygon {
     return this.clone(point => point.scale(value, origin))
   }
 
-  center() {
-    const l = this.points.length
-    if (!l) return new Point()
-
-    const sum = this.points
-      .reduce(
-        (sum, point) => ({
-            x: sum.x + point.x,
-            y: sum.y + point.y
-        }),
-        { x: 0, y: 0 }
-      )
-
-    return new Point({
-      x: sum.x / l,
-      y: sum.y / l
-    })
-  }
-
   boundingBox() {
     const first = this.points[0] || new Point()
 
@@ -63,7 +44,7 @@ export default class Polygon {
   clone(fn = _ => _) {
     return new Polygon(
       this.points.map(
-        point => fn(point.clone())
+        (point, i) => fn(point.clone(), i)
       )
     )
   }
@@ -91,6 +72,7 @@ export default class Polygon {
     const p1 = new Point({ x: x1, y: y1 })
     const p2 = new Point({ x: x2, y: y2 })
 
+    // Doubles some points (eg for diamond 1)
     const inside = pos => pos > 0
 
     return points.reduce(

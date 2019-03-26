@@ -99,13 +99,10 @@ const DEFAULTS = {
   transition: 'east'
 }
 
-export default class Mask extends settable({ DEFAULTS, after: '_make' }) {
+export default class Mask extends settable({ DEFAULTS }) {
   static TYPES       = Object.keys(SUBTYPES)
   static SUBTYPES    = SUBTYPES
   static TRANSITIONS = Object.keys(TRANSITIONS)
-  shape
-  enter
-  leave
   _size
   _type
   _subtype
@@ -115,18 +112,15 @@ export default class Mask extends settable({ DEFAULTS, after: '_make' }) {
     super({ size, type, subtype, transition })
   }
 
-  get(debug = false) {
-    return this._data[debug ? 'debug' : 'strings']
-  }
-
-  _make() {
+  get(radius = 0, debug = false) {
     const shape = this._getShape().crop(new Rectangle({ x: 1, y: 1 }))
     const angle = this._getAngle()
 
-    const center  = shape.center()
-    const rotated = shape.rotate(-angle, center)
-    const boxed   = rotated.boundingBox()
-    const width   = getSize(boxed).x
+    const s        = 2 * radius * (1 - sq2) + sq2
+    const radiused = new Rectangle({ x: s, y: s }).translate(new Point({ x: (1 - s) / 2, y: (1 - s) / 2 }))
+    const center   = new Point({ x: .5, y: .5 })
+    const boxed    = shape.rotate(-angle, center).crop(radiused).boundingBox()
+    const width    = getSize(boxed).x
 
     // Screen has -y...
     const animation = getAnimation(boxed, center, -angle)
@@ -134,17 +128,14 @@ export default class Mask extends settable({ DEFAULTS, after: '_make' }) {
     const enter = animation(new Point({ x: -width, y: 0 }), new Point()                  )
     const leave = animation(new Point()                   , new Point({ x: width, y: 0 }))
 
-    this._data = {
-      debug  : { shape, enter, leave },
-      strings: {
+    return debug
+      ? { shape, enter, leave }
+      : {
         shape: { points: shape.toString() },
         enter: toStrings(enter),
         leave: toStrings(leave)
       }
-    }
 
-
-    return this
   }
 
   _getShape() {
