@@ -33,11 +33,16 @@ export default class Lesson extends settable({ DEFAULTS, after: 'states' }) {
             layer => {
               const { palette, scale, instrumentMasks: masks} = layer
 
-              const cb = ({ note, inside }) => ({
-                style   : palette.get(inside ? scale.get(layer.root, note) : null).toJSON(),
-                mask    : layer.boxMask,
-                duration: this._duration
-              })
+              const cb = ({ note, inside }) => {
+                note = scale.get(layer.root, note)
+
+                return {
+                  empty   : !inside || !note,
+                  style   : palette.get(inside ? note : null).toJSON(),
+                  mask    : layer.boxMask,
+                  duration: this._duration
+                }
+              }
 
               const strings = this._instrument.strings({ masks, cb })
 
@@ -47,32 +52,52 @@ export default class Lesson extends settable({ DEFAULTS, after: 'states' }) {
         })
       )
 
-    this._states.forEach(({ layers }, stateIndex) =>
-      layers.forEach(({ strings }, layerIndex) =>
-        strings.forEach(({ boxes }, stringIndex) =>
-          boxes.forEach((box, boxIndex) => {
-            const min = 0
-            const max = this._states.length - 1
-            const ind = i => Math.max(Math.min(i, max), min)
-            const get = i =>
-              this._states[ind(i)]
-                .layers [layerIndex]
-                .strings[stringIndex]
-                .boxes  [boxIndex]
+    Array
+      .from(this._boxIterator())
+      .forEach(({ stateIndex, layerIndex, stringIndex, boxIndex, box }) => {
+        const min = 0
+        const max = this._states.length - 1
+        const ind = i => Math.max(Math.min(i, max), min)
+        const get = i => this
+          ._states[ind(i)]
+          .layers [layerIndex]
+          .strings[stringIndex]
+          .boxes  [boxIndex]
 
-            const prev    = get(stateIndex - 1).style.radius
-            const current = box                .style.radius
-            const next    = get(stateIndex + 1).style.radius
+        const radius = box.style.radius
+        const { empty: prevEmpty, style: { radius: prevRadius } } = get(stateIndex - 1)
+        const { empty: nextEmpty, style: { radius: nextRadius } } = get(stateIndex + 1)
 
-            box.mask = {
-              shape: box.mask.shape,
-              angle: box.mask.angle,
-              enter: box.mask.enter(Math.min(current, prev)),
-              leave: box.mask.leave(Math.min(current, next)),
-            }
-          })
-        )
-      )
-    )
+        const enter = prevEmpty ? radius : Math.min(radius, prevRadius)
+        const leave = nextEmpty ? radius : Math.min(radius, nextRadius)
+
+        box.mask = {
+          shape: box.mask.shape,
+          angle: box.mask.angle,
+          enter: box.mask.enter(enter),
+          leave: box.mask.leave(leave),
+        }
+      })
+  }
+
+  *_boxIterator() {
+    yield* this._states.map(
+      ({ layers }, stateIndex) =>
+        layers.map(
+          ({ strings }, layerIndex) =>
+            strings.map(
+              ({ boxes }, stringIndex) =>
+                boxes.map(
+                  (box, boxIndex) => ({
+                    stateIndex,
+                    layerIndex,
+                    stringIndex,
+                    boxIndex,
+                    box
+                  })
+              ).flat()
+            ).flat()
+        ).flat()
+    ).flat()
   }
 }

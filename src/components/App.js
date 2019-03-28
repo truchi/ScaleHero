@@ -106,7 +106,7 @@ const lesson = new Lesson({
             { root: 'C', boxMask: boxMasks.brTriangle, palette: palettes.sGreen, scale: scales.chromatic, instrumentMasks: [m] },
         ],
         [
-            { root: 'C', boxMask: boxMasks.tlTriangle, palette: palettes.sGreen, scale: scales.chromatic, instrumentMasks: [m] },
+            { root: 'C', boxMask: boxMasks.tlTriangle, palette: palettes.sGreen, scale: scales.empty, instrumentMasks: [m] },
             { root: 'C', boxMask: boxMasks.brTriangle, palette: palettes.sBlue, scale: scales.chromatic, instrumentMasks: [m] },
         ],
         [
@@ -114,7 +114,7 @@ const lesson = new Lesson({
             { root: 'C', boxMask: boxMasks.brTriangle, palette: palettes.sGreen, scale: scales.chromatic, instrumentMasks: [m] },
         ],
         [
-            { root: 'C', boxMask: boxMasks.tlTriangle, palette: palettes.rGreen, scale: scales.chromatic, instrumentMasks: [m] },
+            { root: 'C', boxMask: boxMasks.tlTriangle, palette: palettes.rGreen, scale: scales.empty, instrumentMasks: [m] },
             { root: 'C', boxMask: boxMasks.brTriangle, palette: palettes.sBlue, scale: scales.chromatic, instrumentMasks: [m] },
         ],
         [
