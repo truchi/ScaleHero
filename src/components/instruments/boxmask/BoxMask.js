@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import rcv from '../../../lib/rcv/rcv'
 import styles from './BoxMask.module.css'
 
+const G       = rcv(<g />)
 const Rect    = rcv(<rect />)
 const Polygon = rcv(<polygon />)
 
@@ -91,61 +92,73 @@ export default class BoxMask extends Component {
     }
 
     render() {
-        let { id, shape, enter, leave, radius, duration } = this.props
-
-        const url      = id => `url("#${ id }")`
-        const noop     = _ => _
-        const defaults = { points: '', animation: { duration } }
-        const sanitize = data => {
-            data           = { ...defaults, ...data }
-            data.animation = { ...defaults.animation, ...data.animation }
-            data.rcvFn     = type => rcv => this.rcv[type] = rcv
-
-            return data
-        }
-
-        id    = id || noop
-        shape = sanitize(shape)
-        enter = sanitize(enter)
-        leave = sanitize(leave)
-
-        shape.clip = id('enter')
-        enter.clip = id('leave')
-
-        shape.rcvFn = noop
-        shape.animation.duration = null
+        const { g, mask: { clipPath, rect }, data } = this.renderData()
 
         return (
-            <>
-                <clipPath
-                    id           ={ id('mask') }
-                    clipPathUnits="objectBoundingBox"
-                    clipPath     ={ url(id('shape')) }
-                >
-                    <Rect
-                        className={ styles.ellipse }
-                        x        ="0"
-                        y        ="0"
-                        width    ="1"
-                        height   ="1"
-                        rcv      ={{ radius }}
-                    />
+            <G { ...g }>
+                <clipPath { ...clipPath }>
+                    <Rect { ...rect } />
                 </clipPath>
-                { Object.entries({ shape, enter, leave }).map(([type, data]) => (
-                    <clipPath
-                        id           ={ id(type) }
-                        key          ={ type }
-                        clipPathUnits="objectBoundingBox"
-                        clipPath     ={ data.clip ? url(data.clip) : null }
-                    >
-                        <Polygon
-                            className={ styles[type] }
-                            points   ={ data.points }
-                            rcv      ={[ data.animation, data.rcvFn(type) ]}
-                        />
+                { data.map(({ clipPath, polygon }) => (
+                    <clipPath { ...clipPath }>
+                        <Polygon { ...polygon } />
                     </clipPath>
                 ))}
-            </>
+            </G>
         )
+    }
+
+    renderData() {
+        const { angle, radius, duration } = this.props
+
+        const id   = type => type ? `${ this.props.id }-${ type }` : null
+        const url  = id   => id   ? `url("#${ id }")`              : null
+        const clip = Object.fromEntries(
+            [['shape', 'enter'], ['enter', 'leave']].map(([o, clip]) => [o, url(id(clip))])
+        )
+
+        const g = {
+            className: styles.mask,
+            rcv: {
+                angle: `${ -angle }deg`,
+                duration
+            }
+        }
+
+        const mask = {
+            clipPath: {
+                id           : id('mask'),
+                clipPath     : url(id('shape')),
+                clipPathUnits: 'objectBoundingBox'
+            },
+            rect: {
+                className: styles.ellipse,
+                x     : '0',
+                y     : '0',
+                width : '1',
+                height: '1',
+                rcv   : { radius }
+            }
+        }
+
+        const data = ['shape', 'enter', 'leave']
+            .map(key => ({
+                clipPath: {
+                    key,
+                    id           : id(key),
+                    clipPath     : clip[key],
+                    clipPathUnits: 'objectBoundingBox'
+                },
+                polygon: {
+                    className: styles[key],
+                    points   : this.props[key].shape,
+                    rcv      : [
+                        { width: `${ this.props[key].width }px` },
+                        rcv => this.rcv[key] = rcv
+                    ]
+                },
+            }))
+
+        return { g, mask, data }
     }
 }

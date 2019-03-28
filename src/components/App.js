@@ -14,6 +14,11 @@ Object.entries(
 const palettes = {
     blue: new Palette(new Style({ color: 'blue' })),
     red : new Palette(new Style({ color: 'red' })),
+    rGreen: new Palette(new Style({ color: 'green', radius: .5 })),
+    sGreen: new Palette(new Style({ color: 'green', radius: 0 })),
+    rBlue: new Palette(new Style({ color: 'blue', radius: .5 })),
+    sBlue: new Palette(new Style({ color: 'blue', radius: 0 })),
+    squared: new Palette(new Style({ color: 'green', radius: 0 })),
     cool: new Palette(interval => {
         interval = interval.name
         const color = (a, i) => `hsl(${ a * 360 / 7 }, ${ 50 + i }%, ${ 50 + i }%)`
@@ -26,8 +31,8 @@ const palettes = {
         else                                style.color = color(last,  0)
 
         if (['1', 'b3', '3', 'b5', '5', 'bb7', 'b7', '7'].includes(interval)) {
-            style.stroke = { width: '5px', color: 'gold' }
-            style.radius = 50
+            /* style.stroke = { width: '5px', color: 'gold' } */
+            /* style.radius = 50 */
         }
 
         if (+interval === 1) style.color = 'white'
@@ -49,17 +54,19 @@ const scales = Object.fromEntries(
 
 const boxMasks = Object.fromEntries(
     Object.entries({
+        brTriangle: { size: 1/3, type: 'triangle', subtype: 'bottomright', transition: 'southeast' },
         fullRect  : { size: 1  , type: 'rect'    , subtype: 'top'        , transition: 'southeast' },
         tlTriangle: { size: 1/3, type: 'triangle', subtype: 'topleft'    , transition: 'southeast' },
-        brTriangle: { size: 1/3, type: 'triangle', subtype: 'bottomright', transition: 'southeast' },
+        trTriangle: { size: 1/3, type: 'triangle', subtype: 'topright'   , transition: 'southeast' },
         diag      : { size: 1/3, type: 'rect'    , subtype: 'diagasc'    , transition: 'southeast' },
     }).map(([name, data]) => [name, new BoxMask(data)])
 )
 
 const instruments = Object.fromEntries(
     Object.entries({
-        guitarStandard: ['E', 'A', 'D', 'G', 'B', 'E']
-    }).map(([name, tuning]) => [name, new Instrument({ tuning: tuning.reverse().map(name => new Note({ name })) })])
+        /* guitarStandard: ['E', 'A', 'D', 'G', 'B', 'E'] */
+        guitarStandard: ['E']
+    }).map(([name, tuning]) => [name, new Instrument({ to: 0, tuning: tuning.reverse().map(name => new Note({ name })) })])
 )
 
 const instrumentMasks = [
@@ -88,27 +95,31 @@ const instrumentMasks = [
 const m = ({ position: 5, mask: instrumentMasks[1] })
 const lesson = new Lesson({
     instrument: instruments.guitarStandard,
-    duration: '1s',
+    duration: '2s',
     timeline: [
         [
-            { root: 'C', boxMask: boxMasks.brTriangle, palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [m] },
-            /* { root: 'G', boxMask: boxMasks.diag      , palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [m] },
-             * { root: 'F', boxMask: boxMasks.tlTriangle, palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [m] }, */
+            { root: 'C', boxMask: boxMasks.tlTriangle, palette: palettes.rGreen, scale: scales.chromatic, instrumentMasks: [m] },
+            { root: 'C', boxMask: boxMasks.brTriangle, palette: palettes.sBlue, scale: scales.chromatic, instrumentMasks: [m] },
         ],
         [
-            { root: 'G', boxMask: boxMasks.brTriangle, palette: palettes.cool, scale: scales.empty, instrumentMasks: [m] },
-            /* { root: 'F', boxMask: boxMasks.diag      , palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [m] },
-             * { root: 'C', boxMask: boxMasks.tlTriangle, palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [m] }, */
+            { root: 'C', boxMask: boxMasks.tlTriangle, palette: palettes.rBlue, scale: scales.chromatic, instrumentMasks: [m] },
+            { root: 'C', boxMask: boxMasks.brTriangle, palette: palettes.sGreen, scale: scales.chromatic, instrumentMasks: [m] },
         ],
         [
-            { root: 'F', boxMask: boxMasks.brTriangle, palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [m] },
-            /* { root: 'C', boxMask: boxMasks.diag      , palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [m] },
-             * { root: 'G', boxMask: boxMasks.tlTriangle, palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [m] }, */
+            { root: 'C', boxMask: boxMasks.tlTriangle, palette: palettes.sGreen, scale: scales.chromatic, instrumentMasks: [m] },
+            { root: 'C', boxMask: boxMasks.brTriangle, palette: palettes.sBlue, scale: scales.chromatic, instrumentMasks: [m] },
         ],
         [
-            { root: 'C', boxMask: boxMasks.brTriangle, palette: palettes.cool, scale: scales.empty, instrumentMasks: [m] },
-            /* { root: 'G', boxMask: boxMasks.diag      , palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [m] },
-             * { root: 'F', boxMask: boxMasks.tlTriangle, palette: palettes.cool, scale: scales.chromatic, instrumentMasks: [m] }, */
+            { root: 'C', boxMask: boxMasks.tlTriangle, palette: palettes.sBlue, scale: scales.chromatic, instrumentMasks: [m] },
+            { root: 'C', boxMask: boxMasks.brTriangle, palette: palettes.sGreen, scale: scales.chromatic, instrumentMasks: [m] },
+        ],
+        [
+            { root: 'C', boxMask: boxMasks.tlTriangle, palette: palettes.rGreen, scale: scales.chromatic, instrumentMasks: [m] },
+            { root: 'C', boxMask: boxMasks.brTriangle, palette: palettes.sBlue, scale: scales.chromatic, instrumentMasks: [m] },
+        ],
+        [
+            { root: 'C', boxMask: boxMasks.tlTriangle, palette: palettes.rBlue, scale: scales.chromatic, instrumentMasks: [m] },
+            { root: 'C', boxMask: boxMasks.brTriangle, palette: palettes.sGreen, scale: scales.chromatic, instrumentMasks: [m] },
         ],
     ].map(layers => layers.map(layer => ({ ...layer, root: new Note({ name: layer.root }) })))
 })
@@ -118,7 +129,7 @@ Object.entries(
     { palettes, scales, instruments, boxMasks, instrumentMasks, lesson }
 ).forEach(([name, object]) => console.log(name, object))
 
-const duration = 2000
+const duration = 2500
 
 class App extends Component {
     constructor(props) {

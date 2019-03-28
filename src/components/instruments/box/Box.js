@@ -10,7 +10,7 @@ const id = randId(10)
 let    i = 0
 
 class Box extends Component {
-    static MASKS = 3
+    static MASKS = 2
     static IDLE  = 'idle'
     static BUSY  = 'busy'
     #list = []
@@ -20,7 +20,7 @@ class Box extends Component {
 
         this.id = `${ id() }-${ ++i }`
 
-        // Minimize DOM io
+        // Minimize DOM writes
         for(let i = 0; i < Box.MASKS; ++i)
             this.#list.push(Box.IDLE)
     }
@@ -58,7 +58,7 @@ class Box extends Component {
                             Component    ={ BoxMask     }
                             length       ={ this.length }
                             active       ={ idle        }
-                            alwaysProps  ={ this.maskAlwaysProps   }
+                            initialProps ={ this.maskInitialProps  }
                             activeProps  ={ this.maskActiveProps   }
                             inactiveProps={ this.maskInactiveProps }
                         />
@@ -67,7 +67,7 @@ class Box extends Component {
                         Component   ={ BoxUnit     }
                         length      ={ this.length }
                         active      ={ idle        }
-                        alwaysProps ={ this.unitAlwaysProps  }
+                        initialProps={ this.unitInitialProps }
                         activeProps ={ this.unitActiveProps  }
                     />
                 </svg>
@@ -75,17 +75,20 @@ class Box extends Component {
         )
     }
 
-    maskAlwaysProps = i => ({
-        id      : type => `${ this.id }-${ i }-${ type }`,
-        shape   : this.props.mask.shape,
-        enter   : this.props.mask.enter,
-        leave   : this.props.mask.leave,
+    maskInitialProps = i => ({
+        id      : `${ this.id }-${ i }`,
         duration: this.props.duration,
+        angle   : this.props.mask.angle,
+        shape   : this.props.mask.shape,
+        enter   : { shape: '', width: 0 },
+        leave   : { shape: '', width: 0 },
         onLeft  : this.remove
     })
 
     maskActiveProps = i => ({
         animate: BoxMask.ENTER,
+        enter  : this.props.mask.enter,
+        leave  : this.props.mask.leave,
         radius : this.props.style.radius
     })
 
@@ -93,7 +96,7 @@ class Box extends Component {
         animate: prev === i ? BoxMask.LEAVE : null
     })
 
-    unitAlwaysProps = i => ({
+    unitInitialProps = i => ({
         clip: `url("#${ this.id }-${ i }-mask")`
     })
 

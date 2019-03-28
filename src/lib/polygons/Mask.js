@@ -99,10 +99,12 @@ const DEFAULTS = {
   transition: 'east'
 }
 
-export default class Mask extends settable({ DEFAULTS }) {
+export default class Mask extends settable({ DEFAULTS, after: '_set' }) {
   static TYPES       = Object.keys(SUBTYPES)
   static SUBTYPES    = SUBTYPES
   static TRANSITIONS = Object.keys(TRANSITIONS)
+  angle
+  _shape
   _size
   _type
   _subtype
@@ -112,30 +114,38 @@ export default class Mask extends settable({ DEFAULTS }) {
     super({ size, type, subtype, transition })
   }
 
-  get(radius = 0, debug = false) {
-    const shape = this._getShape().crop(new Rectangle({ x: 1, y: 1 }))
-    const angle = this._getAngle()
+  _set() {
+    this._shape = this._getShape().crop(new Rectangle({ x: 1, y: 1 }))
+    this.angle  = this._getAngle()
+  }
 
-    const s        = 2 * radius * (1 - sq2) + sq2
-    const radiused = new Rectangle({ x: s, y: s }).translate(new Point({ x: (1 - s) / 2, y: (1 - s) / 2 }))
-    const center   = new Point({ x: .5, y: .5 })
-    const boxed    = shape.rotate(-angle, center).crop(radiused).boundingBox()
-    const width    = getSize(boxed).x
+  get shape() {
+    return { shape: this._shape }
+  }
 
-    // Screen has -y...
-    const animation = getAnimation(boxed, center, -angle)
+  enter(radius = 0) {
+    return this._get(radius, w => new Point({ x: -w, y: 0 }))
+  }
 
-    const enter = animation(new Point({ x: -width, y: 0 }), new Point()                  )
-    const leave = animation(new Point()                   , new Point({ x: width, y: 0 }))
+  leave(radius = 0) {
+    return this._get(radius)
+  }
 
-    return debug
-      ? { shape, enter, leave }
-      : {
-        shape: { points: shape.toString() },
-        enter: toStrings(enter),
-        leave: toStrings(leave)
-      }
+  _get(radius = 0, start = _ => new Point()) {
+    const s     = 2 * radius * (1 - sq2) + sq2 // css has max radius=.5, hence *2
+    const shape = this._shape
+      .rotate(-this.angle, new Point({ x: .5, y: .5 }))
+      .crop(
+        new Rectangle({ x: s, y: s })
+          .translate(new Point({ x: (1 - s) / 2, y: (1 - s) / 2 }))
+      )
+      .boundingBox()
+    const width = getSize(shape).x
 
+    return {
+      shape: shape.translate(start(width)),
+      width
+    }
   }
 
   _getShape() {

@@ -1,14 +1,14 @@
 @value _easing from "../variables.css";
 
 .transition {
-    transform: var(--from);
-    transform-origin: var(--origin);
+    transform: rotate(var(--angle)) translateX(0);
+    transform-origin: .5px .5px;
 
     /* will-change: transform; */
 }
 
 .to {
-    transform: var(--to);
+    transform: rotate(var(--angle)) translateX(var(--width));
     transition: transform var(--duration) _easing;
 }
 

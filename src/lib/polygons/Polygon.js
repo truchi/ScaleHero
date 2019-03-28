@@ -61,7 +61,7 @@ export default class Polygon {
 
     return points.reduce(
       (polygon, I, i) => polygon.cropLine(I, points[(i + 1) % length]),
-      this.clone()
+      this
     )
   }
 

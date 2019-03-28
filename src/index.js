@@ -10,4 +10,4 @@ setTimeout(() => {
         <App />,
         document.getElementById('root'))
     registerServiceWorker()
-}, 500)
+}, 50)
