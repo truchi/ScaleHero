@@ -1,17 +1,8 @@
 import React, { Component } from 'react'
 
-const sanitized = i => ({
-    i,
-    key: i
-})
-
 export default class ActivationList extends Component {
     #components = []
     prev = false
-
-    constructor(props) {
-        super(props)
-    }
 
     get components() {
         const prevLength = this.#components.length

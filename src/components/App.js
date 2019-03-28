@@ -64,9 +64,8 @@ const boxMasks = Object.fromEntries(
 
 const instruments = Object.fromEntries(
     Object.entries({
-        /* guitarStandard: ['E', 'A', 'D', 'G', 'B', 'E'] */
-        guitarStandard: ['E']
-    }).map(([name, tuning]) => [name, new Instrument({ to: 0, tuning: tuning.reverse().map(name => new Note({ name })) })])
+        guitarStandard: ['E', 'A', 'D', 'G', 'B', 'E']
+    }).map(([name, tuning]) => [name, new Instrument({ tuning: tuning.reverse().map(name => new Note({ name })) })])
 )
 
 const instrumentMasks = [
@@ -102,24 +101,36 @@ const lesson = new Lesson({
             { root: 'C', boxMask: boxMasks.brTriangle, palette: palettes.sBlue, scale: scales.chromatic, instrumentMasks: [m] },
         ],
         [
-            { root: 'C', boxMask: boxMasks.tlTriangle, palette: palettes.rBlue, scale: scales.chromatic, instrumentMasks: [m] },
-            { root: 'C', boxMask: boxMasks.brTriangle, palette: palettes.sGreen, scale: scales.chromatic, instrumentMasks: [m] },
-        ],
-        [
-            { root: 'C', boxMask: boxMasks.tlTriangle, palette: palettes.sGreen, scale: scales.empty, instrumentMasks: [m] },
-            { root: 'C', boxMask: boxMasks.brTriangle, palette: palettes.sBlue, scale: scales.chromatic, instrumentMasks: [m] },
-        ],
-        [
             { root: 'C', boxMask: boxMasks.tlTriangle, palette: palettes.sBlue, scale: scales.chromatic, instrumentMasks: [m] },
             { root: 'C', boxMask: boxMasks.brTriangle, palette: palettes.sGreen, scale: scales.chromatic, instrumentMasks: [m] },
         ],
         [
-            { root: 'C', boxMask: boxMasks.tlTriangle, palette: palettes.rGreen, scale: scales.empty, instrumentMasks: [m] },
+            { root: 'C', boxMask: boxMasks.tlTriangle, palette: palettes.rGreen, scale: scales.chromatic, instrumentMasks: [m] },
             { root: 'C', boxMask: boxMasks.brTriangle, palette: palettes.sBlue, scale: scales.chromatic, instrumentMasks: [m] },
         ],
         [
-            { root: 'C', boxMask: boxMasks.tlTriangle, palette: palettes.rBlue, scale: scales.chromatic, instrumentMasks: [m] },
+            { root: 'C', boxMask: boxMasks.tlTriangle, palette: palettes.sBlue, scale: scales.empty, instrumentMasks: [m] },
             { root: 'C', boxMask: boxMasks.brTriangle, palette: palettes.sGreen, scale: scales.chromatic, instrumentMasks: [m] },
+        ],
+        [
+            { root: 'C', boxMask: boxMasks.tlTriangle, palette: palettes.sGreen, scale: scales.chromatic, instrumentMasks: [m] },
+            { root: 'C', boxMask: boxMasks.brTriangle, palette: palettes.sBlue, scale: scales.chromatic, instrumentMasks: [m] },
+        ],
+        [
+            { root: 'C', boxMask: boxMasks.tlTriangle, palette: palettes.rBlue, scale: scales.empty, instrumentMasks: [m] },
+            { root: 'C', boxMask: boxMasks.brTriangle, palette: palettes.sGreen, scale: scales.chromatic, instrumentMasks: [m] },
+        ],
+        [
+            { root: 'C', boxMask: boxMasks.tlTriangle, palette: palettes.rGreen, scale: scales.chromatic, instrumentMasks: [m] },
+            { root: 'C', boxMask: boxMasks.brTriangle, palette: palettes.sBlue, scale: scales.chromatic, instrumentMasks: [m] },
+        ],
+        [
+            { root: 'C', boxMask: boxMasks.tlTriangle, palette: palettes.rBlue, scale: scales.empty, instrumentMasks: [m] },
+            { root: 'C', boxMask: boxMasks.brTriangle, palette: palettes.sGreen, scale: scales.chromatic, instrumentMasks: [m] },
+        ],
+        [
+            { root: 'C', boxMask: boxMasks.tlTriangle, palette: palettes.rGreen, scale: scales.chromatic, instrumentMasks: [m] },
+            { root: 'C', boxMask: boxMasks.brTriangle, palette: palettes.sBlue, scale: scales.chromatic, instrumentMasks: [m] },
         ],
     ].map(layers => layers.map(layer => ({ ...layer, root: new Note({ name: layer.root }) })))
 })

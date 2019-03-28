@@ -54,34 +54,6 @@ const getSize = polygon => {
   return new Point({ x: br.x - tl.x, y: br.y - tl.y })
 }
 
-const getAnimation = (points, origin, rotate) =>
-  (start, end) => ({
-    points,
-    animation: {
-      origin,
-      from: {
-        rotate,
-        translate: start
-      },
-      to: {
-        rotate,
-        translate: end
-      }
-    }
-  })
-
-const animationToString = data => `rotate(${ data.rotate }deg) translate(${ data.translate.toString('px') })`
-const toStrings = data => {
-  return {
-    points: data.points.toString(),
-    animation: {
-      origin: data.animation.origin.toString('px', ' '),
-      from  : animationToString(data.animation.from),
-      to    : animationToString(data.animation.to  ),
-    }
-  }
-}
-
 const SUBTYPES = Object.fromEntries(
   Object.entries(SHAPES)
     .map(

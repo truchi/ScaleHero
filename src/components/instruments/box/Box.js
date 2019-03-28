@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import rcv from '../../../lib/rcv/rcv'
 import randId from '../../../utils/randId'
 import BoxMask from '../boxmask/BoxMask'
 import BoxUnit from '../boxunit/BoxUnit'

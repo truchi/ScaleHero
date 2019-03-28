@@ -60,9 +60,9 @@ export default class Lesson extends settable({ DEFAULTS, after: 'states' }) {
         const ind = i => Math.max(Math.min(i, max), min)
         const get = i => this
           ._states[ind(i)]
-          .layers [layerIndex]
+          .layers[layerIndex]
           .strings[stringIndex]
-          .boxes  [boxIndex]
+          .boxes[boxIndex]
 
         const radius = box.style.radius
         const { empty: prevEmpty, style: { radius: prevRadius } } = get(stateIndex - 1)
