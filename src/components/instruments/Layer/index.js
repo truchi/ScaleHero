@@ -6,22 +6,19 @@ import String from '../String'
 import * as R from 'ramda'
 
 export default connect(
-    R.applySpec({
-        range: getStringRange
-    })
+  R.applySpec({
+    range: getStringRange
+  })
 )(
-    ({ range, layerIndex }) => (
-        <layer className={ styles.layer }>
-            {
-                R.map(stringIndex => (
-                    <String
-                        key={ stringIndex }
-                        layerIndex={ layerIndex }
-                        stringIndex={ stringIndex }
-                    />
-                ))(range)
-            }
-        </layer>
-
-    )
+  ({ range, layerIndex }) => (
+    <layer className={ styles.layer }>
+      { R.map(stringIndex => (
+        <String
+          key={ stringIndex }
+          layerIndex={ layerIndex }
+          stringIndex={ stringIndex }
+        />
+      ))(range) }
+    </layer>
+  )
 )

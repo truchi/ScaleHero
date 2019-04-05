@@ -6,22 +6,20 @@ import Box from '../Box'
 import * as R from 'ramda'
 
 export default connect(
-    R.applySpec({
-        range: getBoxRange
-    })
+  R.applySpec({
+    range: getBoxRange
+  })
 )(
-    ({ range, layerIndex, stringIndex }) => (
-        <string className={ styles.string }>
-            {
-                R.map(boxIndex => (
-                    <Box
-                        key={ boxIndex }
-                        layerIndex={ layerIndex }
-                        stringIndex={ stringIndex }
-                        boxIndex={ boxIndex }
-                    />
-                ))(range)
-            }
-        </string>
-    )
+  ({ range, layerIndex, stringIndex }) => (
+    <string className={ styles.string }>
+      { R.map(boxIndex => (
+        <Box
+          key={ boxIndex }
+          layerIndex={ layerIndex }
+          stringIndex={ stringIndex }
+          boxIndex={ boxIndex }
+        />
+      ))(range) }
+    </string>
+  )
 )

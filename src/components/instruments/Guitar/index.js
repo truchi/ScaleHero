@@ -6,21 +6,19 @@ import Layer from '../Layer'
 import * as R from 'ramda'
 
 export default connect(
-    R.applySpec({
-        range: getLayerRange
-    })
+  R.applySpec({
+    range: getLayerRange
+  })
 )(
-    ({ range }) => (
-        <guitar>
-            {
-                R.map(layerIndex => (
-                    <Layer
-                        key={ layerIndex }
-                        className={ styles.guitar }
-                        layerIndex={ layerIndex }
-                    />
-                ))(range)
-            }
-        </guitar>
-    )
+  ({ range }) => (
+    <guitar>
+      { R.map(layerIndex => (
+        <Layer
+          key={ layerIndex }
+          className={ styles.guitar }
+          layerIndex={ layerIndex }
+        />
+      ))(range) }
+    </guitar>
+  )
 )

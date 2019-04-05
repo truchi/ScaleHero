@@ -1,7 +1,7 @@
 @value _box-height, _string-gap from "../variables.css";
 
 .string {
-    display: block;
-    height: _box-height; /* Removes auto margin with inline-block children */
-    padding: _string-gap 0;
+  display: block;
+  height: _box-height; /* Removes auto margin with inline-block children */
+  padding: _string-gap 0;
 }
