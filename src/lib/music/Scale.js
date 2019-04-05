@@ -25,14 +25,14 @@ const notes =
 const get =
   root =>
     note =>
-        find(                         // first interval where
-          compose(
-            equals(Note.value(note)), // note's value equals
-            Note.value,               // value of
-            Note.add(__, root),       // root plus
-            Interval.value            // interval's value
-          )
+      find(                         // first interval where
+        compose(
+          equals(Note.value(note)), // note's value equals
+          Note.value,               // value of
+          Note.add(__, root),       // root plus
+          Interval.value            // interval's value
         )
+      )
 
 export default {
   notes,
