@@ -4,6 +4,10 @@ import {
   Interval,
   Scale,
 } from './lib/music'
+import {
+  Instrument,
+  Mask
+} from './lib/instrument'
 import * as R from 'ramda'
 
 export const getLayerRange  = ({ layers   }) => R.range(0, layers.length)
@@ -26,10 +30,13 @@ export const getLayer = ({ layers, masks, palettes, scales }, { layerIndex }) =>
 window.Note = Note
 window.Interval = Interval
 window.Scale = Scale
+// window.Instrument = Instrument
+// window.Mask = Mask
 window.R = R
 
 const intervals = [
-  '1', 'b2', '2', '#2', 'b3', '3', 'b4', '4', '#4', 'b5', '5', '#5', 'b6', '6', 'bb7', 'b7', '7'
+  '1', 'b2', '2', '#2', 'b3', '3', 'b4', '4',
+  '#4', 'b5', '5', '#5', 'b6', '6', 'bb7', 'b7', '7'
 ]
 
 const palettes = [
