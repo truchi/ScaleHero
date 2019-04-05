@@ -1,46 +1,55 @@
-import settable from '../../utils/settable'
+import {
+  add as plus,
+  compose,
+  curry,
+  invertObj,
+  mathMod,
+  uncurryN,
+} from 'ramda'
 
-export default (VALUES) => {
-  const NAMES = {
-    0: [], 1: [], 2: [], 3: [],  4: [],  5: [],
-    6: [], 7: [], 8: [], 9: [], 10: [], 11: []
-  }
-  Object.entries(VALUES).forEach(([name, value]) => NAMES[value].push(name))
+//** Number of notes in octave
+//:: Number
+const N = 12
 
-  const DEFAULTS = {
-    name: NAMES[0][0]
-  }
+export default VALUES => {
+  //** Name to value mapping
+  //:: Object Number
+  // VALUES
 
-  return class Base extends settable({ DEFAULTS }) {
-    static N      = 12
-    static VALUES = VALUES
-    static NAMES  = NAMES
-    _name
+  //** Value to name mapping
+  //   (last name found in VALUES for value)
+  //:: Array String
+  const NAMES = invertObj(VALUES)
 
-    constructor({ name } = {}) {
-      super({ name })
-    }
+  //** Returns name of value
+  //:: Number value -> String name
+  const name =
+    value =>
+      NAMES[mathMod(value, N)]
 
-    get name() {
-      return this._name
-    }
+  //** Returns value of name
+  //:: String name -> Number value
+  const value =
+    name =>
+      VALUES[name]
 
-    get value() {
-      return VALUES[this._name]
-    }
+  //** Returns name of name + value
+  //:: Number value -> String name -> String newName
+  const add = curry(uncurryN(2,
+    v =>
+      compose(
+        name,    // get name of
+        plus(v), // value plus
+        value    // name's value
+      )
+  ))
 
-    add(other = new Base()) {
-      return Base.value(this.value + other.value, this.constructor)
-    }
-
-    equals(other = new Base()) {
-      return this.value === other.value
-    }
-
-    static value(value = VALUES[DEFAULTS.name], Class = Base) {
-      return new Class({
-        name: NAMES[value % Base.N][0]
-      })
-    }
+  return {
+    VALUES,
+    NAMES,
+    name,
+    value,
+    add,
   }
 }
+

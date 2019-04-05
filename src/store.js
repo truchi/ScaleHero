@@ -1,5 +1,7 @@
 import { createStore } from 'redux'
-import * as Note from './lib/music/Note'
+import Note from './lib/music/Note'
+import Interval from './lib/music/Interval'
+import Scale from './lib/music/Scale'
 import * as R from 'ramda'
 
 export const getLayerRange  = ({ layers   }) => R.range(0, layers.length)
@@ -7,7 +9,7 @@ export const getStringRange = ({ tuning   }) => R.range(0, tuning.length)
 export const getBoxRange    = ({ from, to }) => R.range(from, to)
 
 export const getNote = ({ tuning }, { stringIndex, boxIndex }) =>
-  Note.add(tuning[stringIndex], boxIndex)
+  Note.add(boxIndex)(tuning[stringIndex])
 
 export const getLayer = ({ layers, masks, palettes, scales }, { layerIndex }) =>
   R.evolve({
@@ -19,6 +21,11 @@ export const getLayer = ({ layers, masks, palettes, scales }, { layerIndex }) =>
   )
 
 /* SHIT start */
+window.Note = Note
+window.Interval = Interval
+window.Scale = Scale
+window.R = R
+
 const intervals = [
   '1', 'b2', '2', '#2', 'b3', '3', 'b4', '4', '#4', 'b5', '5', '#5', 'b6', '6', 'bb7', 'b7', '7'
 ]
