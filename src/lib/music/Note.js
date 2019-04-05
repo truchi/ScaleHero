@@ -1,6 +1,6 @@
 import base from './base'
 
-export default base({
+const Note = base({
   'Cb': 11, 'C':  0, 'C#':  1,
   'Db':  1, 'D':  2, 'D#':  3,
   'Eb':  3, 'E':  4, 'E#':  5,
@@ -10,4 +10,21 @@ export default base({
   'Bb': 10, 'B': 11, 'B#':  0,
 })
 
+const {
+  VALUES,
+  NAMES,
+  name,
+  value,
+  add,
+} = Note
 
+
+export {
+  VALUES,
+  NAMES,
+  name,
+  value,
+  add,
+}
+
+export default Note

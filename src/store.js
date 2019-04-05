@@ -1,7 +1,9 @@
 import { createStore } from 'redux'
-import Note from './lib/music/Note'
-import Interval from './lib/music/Interval'
-import Scale from './lib/music/Scale'
+import {
+  Note,
+  Interval,
+  Scale,
+} from './lib/music'
 import * as R from 'ramda'
 
 export const getLayerRange  = ({ layers   }) => R.range(0, layers.length)

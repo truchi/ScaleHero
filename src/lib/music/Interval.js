@@ -1,6 +1,6 @@
 import base from './base'
 
-export default base({
+const Interval = base({
                       '1':  0,
             'b2':  1, '2':  2, '#2': 3,
             'b3':  3, '3':  4,
@@ -9,3 +9,22 @@ export default base({
             'b6':  8, '6':  9,
   'bb7': 9, 'b7': 10, '7': 11,
 })
+
+const {
+  VALUES,
+  NAMES,
+  name,
+  value,
+  add,
+} = Interval
+
+
+export {
+  VALUES,
+  NAMES,
+  name,
+  value,
+  add,
+}
+
+export default Interval
