@@ -10,21 +10,4 @@ const Interval = base({
   'bb7': 9, 'b7': 10, '7': 11,
 })
 
-const {
-  VALUES,
-  NAMES,
-  name,
-  value,
-  add,
-} = Interval
-
-
-export {
-  VALUES,
-  NAMES,
-  name,
-  value,
-  add,
-}
-
 export default Interval

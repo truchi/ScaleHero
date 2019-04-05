@@ -10,21 +10,4 @@ const Note = base({
   'Bb': 10, 'B': 11, 'B#':  0,
 })
 
-const {
-  VALUES,
-  NAMES,
-  name,
-  value,
-  add,
-} = Note
-
-
-export {
-  VALUES,
-  NAMES,
-  name,
-  value,
-  add,
-}
-
 export default Note
