@@ -6,10 +6,9 @@ import Layer from '../Layer'
 import * as R from 'ramda'
 
 export default connect(
-    R.compose(
-        R.objOf('range'),
-        getLayerRange
-    )
+    R.applySpec({
+        range: getLayerRange
+    })
 )(
     ({ range }) => (
         <guitar>

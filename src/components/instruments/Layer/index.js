@@ -6,10 +6,9 @@ import String from '../String'
 import * as R from 'ramda'
 
 export default connect(
-    R.compose(
-        R.objOf('range'),
-        getStringRange
-    )
+    R.applySpec({
+        range: getStringRange
+    })
 )(
     ({ range, layerIndex }) => (
         <layer className={ styles.layer }>

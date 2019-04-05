@@ -6,10 +6,9 @@ import Box from '../Box'
 import * as R from 'ramda'
 
 export default connect(
-    R.compose(
-        R.objOf('range'),
-        getBoxRange
-    )
+    R.applySpec({
+        range: getBoxRange
+    })
 )(
     ({ range, layerIndex, stringIndex }) => (
         <string className={ styles.string }>

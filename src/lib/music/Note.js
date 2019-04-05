@@ -10,9 +10,11 @@ export const VALUES = {
   'Bb': 10, 'B': 11, 'B#':  0,
 }
 
+// Array name
 export const NAMES = R.map(R.head, R.values(R.invert(VALUES)))
 
-export const N = NAMES.length
+// Number of notes in octave
+export const N = 12
 
 // Number value -> String name
 export const name = name => NAMES[R.mathMod(name, N)]
@@ -20,5 +22,5 @@ export const name = name => NAMES[R.mathMod(name, N)]
 // String name -> Number value
 export const value = value => VALUES[value]
 
-// (Number value, String name) -> String newName
-export const add = (v, n) => name(value(n) + v)
+// (String name, Number value) -> String newName
+export const add = (n, v) => name(value(n) + v)

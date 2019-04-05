@@ -1,18 +1,19 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { getBoxNote } from '../../../store'
+import { getNote, getLayer } from '../../../store'
 import styles from './styles.module.css'
-import * as R from 'ramda'
 
 export default connect(
-    R.compose(
-        R.objOf('note'),
-        getBoxNote
-    )
+    (state, props) => {
+        const note  = getNote (state, props)
+        const layer = getLayer(state, props)
+
+        return { note, root: layer.root }
+    }
 )(
-    ({ note, layerIndex, stringIndex, boxIndex }) => (
+    ({ note, layerIndex, stringIndex, boxIndex, root }) => (
         <box className={ styles.box }>
-            { console.log(note, layerIndex, stringIndex, boxIndex) }
+            { console.log(root, note, layerIndex, stringIndex, boxIndex) }
         </box>
     )
 )
