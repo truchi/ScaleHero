@@ -1,5 +1,17 @@
 import base from './base'
 
+//--
+//   A note is a String denoting its name
+//   in the form: A|B|C|D|E|F|G[b|#]
+//
+//   Its value is the corresponding number
+//   of semitone(s) for name
+//
+//   @examples 'C', 'G#', 'Bb'
+//
+//   @see ./base.js
+//--
+
 const Note = base({
   'Cb': 11, 'C':  0, 'C#':  1,
   'Db':  1, 'D':  2, 'D#':  3,

@@ -7,6 +7,12 @@ import {
   uncurryN,
 } from 'ramda'
 
+//--
+//   Mixin for Note and Interval
+//
+//   @see ./Note.js, ./Interval.js
+//--
+
 //** Number of notes in octave
 //:: Number
 const N = 12
@@ -17,7 +23,7 @@ export default VALUES => {
   // VALUES
 
   //** Value to name mapping
-  //   (last name found in VALUES for value)
+  //   (last name found in VALUES for value is prefered)
   //:: Array String
   const NAMES = invertObj(VALUES)
 

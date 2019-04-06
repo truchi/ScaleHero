@@ -8,6 +8,14 @@ import {
   map,
 } from 'ramda'
 
+//--
+//   A scale is an Array Interval
+//
+//   @example ['1', '2', 'b3', '4', '5', 'b6', 'b7']
+//
+//   @see ./Interval.js
+//--
+
 //** Returns notes of intervals to root
 //:: String root -> Array String intervals -> Array String notes
 const notes =
