@@ -1,44 +1,7 @@
 import { createStore } from 'redux'
-import {
-  Interval,
-  Note,
-  Scale,
-} from './lib/music'
-import {
-  Mask,
-} from './lib/instrument'
-import {
-  __,
-  evolve,
-  map,
-  nth,
-  range,
-} from 'ramda'
-
-export const getLayerRange  = ({ layers   }) => range(0, layers.length)
-export const getStringRange = ({ tuning   }) => range(0, tuning.length)
-export const getBoxRange    = ({ from, to }) => range(from, to)
-
-export const getFrom = ({ from }) => from
-
-export const getNote = ({ tuning }, { string, box }) =>
-  Note.add(box)(tuning[string])
-
-export const getLayer = ({ layers, masks, palettes, scales }, { layer }) =>
-  evolve({
-    masks  : map(nth(__, masks)),
-    palette: nth(__, palettes),
-    scale  : nth(__, scales  ),
-  },
-    layers[layer]
-  )
+import reducer         from './reducer'
 
 /* SHIT start */
-window.Note     = Note
-window.Interval = Interval
-window.Scale    = Scale
-window.Mask     = Mask
-
 const intervals = [
   '1', 'b2', '2', '#2', 'b3', '3', 'b4', '4',
   '#4', 'b5', '5', '#5', 'b6', '6', 'bb7', 'b7', '7'
@@ -66,7 +29,7 @@ const masks = [
 ]
 /* SHIT end */
 
-const initialState = {
+const initial = {
   tuning: ['E', 'A', 'D', 'G', 'B', 'E'],
   from  : 0,
   to    : 12,
@@ -90,11 +53,10 @@ const initialState = {
 }
 
 const store = createStore(
-  state => console.log('haha') || state,
-  initialState,
+  reducer,
+  initial,
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 )
 
 window.store = store
-
 export default store

@@ -4,7 +4,7 @@ import {
   getFrom,
   getNote,
   getLayer,
-} from '../../../store'
+} from '../../../store/selectors'
 import { Scale } from '../../../lib/music'
 import { Mask  } from '../../../lib/instrument'
 import styles from './styles.module.css'

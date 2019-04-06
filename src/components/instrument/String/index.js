@@ -2,7 +2,7 @@ import React           from 'react'
 import { connect }     from 'react-redux'
 import {
   getBoxRange,
-} from '../../../store'
+} from '../../../store/selectors'
 import styles          from './styles.module.css'
 import Box             from '../Box'
 import {

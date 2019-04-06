@@ -2,7 +2,7 @@ import React        from 'react'
 import { connect }  from 'react-redux'
 import {
   getStringRange,
-} from '../../../store'
+} from '../../../store/selectors'
 import styles       from './styles.module.css'
 import String       from '../String'
 import {
