@@ -29,7 +29,7 @@ const notes =
 
 //** Returns interval from intervals which gives note to root
 //   or undefined when note is not in scale with root
-//:: String root -> String note -> Array String intervals -> String? interval
+//:: String root -> String note -> Scale scale -> String? interval
 const get =
   root =>
     note =>
