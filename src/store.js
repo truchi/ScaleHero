@@ -1,38 +1,43 @@
 import { createStore } from 'redux'
 import {
-  Note,
   Interval,
+  Note,
   Scale,
 } from './lib/music'
 import {
-  Instrument,
-  Mask
+  Mask,
 } from './lib/instrument'
-import * as R from 'ramda'
+import {
+  __,
+  evolve,
+  map,
+  nth,
+  range,
+} from 'ramda'
 
-export const getLayerRange  = ({ layers   }) => R.range(0, layers.length)
-export const getStringRange = ({ tuning   }) => R.range(0, tuning.length)
-export const getBoxRange    = ({ from, to }) => R.range(from, to)
+export const getLayerRange  = ({ layers   }) => range(0, layers.length)
+export const getStringRange = ({ tuning   }) => range(0, tuning.length)
+export const getBoxRange    = ({ from, to }) => range(from, to)
 
-export const getNote = ({ tuning }, { stringIndex, boxIndex }) =>
-  Note.add(boxIndex)(tuning[stringIndex])
+export const getFrom = ({ from }) => from
 
-export const getLayer = ({ layers, masks, palettes, scales }, { layerIndex }) =>
-  R.evolve({
-    masks  : R.map(R.nth(R.__, masks)),
-    palette: R.nth(R.__, palettes),
-    scale  : R.nth(R.__, scales  ),
+export const getNote = ({ tuning }, { string, box }) =>
+  Note.add(box)(tuning[string])
+
+export const getLayer = ({ layers, masks, palettes, scales }, { layer }) =>
+  evolve({
+    masks  : map(nth(__, masks)),
+    palette: nth(__, palettes),
+    scale  : nth(__, scales  ),
   },
-    layers[layerIndex]
+    layers[layer]
   )
 
 /* SHIT start */
-window.Note = Note
+window.Note     = Note
 window.Interval = Interval
-window.Scale = Scale
-// window.Instrument = Instrument
-// window.Mask = Mask
-window.R = R
+window.Scale    = Scale
+window.Mask     = Mask
 
 const intervals = [
   '1', 'b2', '2', '#2', 'b3', '3', 'b4', '4',
@@ -84,8 +89,12 @@ const initialState = {
   scales
 }
 
-export default createStore(
-  state => state,
+const store = createStore(
+  state => console.log('haha') || state,
   initialState,
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 )
+
+window.store = store
+
+export default store

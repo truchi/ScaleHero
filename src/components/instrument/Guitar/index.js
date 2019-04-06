@@ -1,22 +1,26 @@
-import React from 'react'
+import React       from 'react'
 import { connect } from 'react-redux'
-import { getLayerRange } from '../../../store'
+import {
+  getLayerRange,
+} from '../../../store'
 import styles from './styles.module.css'
-import Layer from '../Layer'
-import * as R from 'ramda'
+import Layer  from '../Layer'
+import {
+  applySpec,
+  map,
+} from 'ramda'
 
 export default connect(
-  R.applySpec({
-    range: getLayerRange
+  applySpec({
+    range: getLayerRange,
   })
 )(
   ({ range }) => (
-    <guitar>
-      { R.map(layerIndex => (
+    <guitar className={ styles.guitar }>
+      { map(i => (
         <Layer
-          key={ layerIndex }
-          className={ styles.guitar }
-          layerIndex={ layerIndex }
+          key  ={ i }
+          layer={ i }
         />
       ))(range) }
     </guitar>

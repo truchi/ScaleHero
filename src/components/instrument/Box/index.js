@@ -1,19 +1,36 @@
-import React from 'react'
+import React       from 'react'
 import { connect } from 'react-redux'
-import { getNote, getLayer } from '../../../store'
+import {
+  getFrom,
+  getNote,
+  getLayer,
+} from '../../../store'
+import { Scale } from '../../../lib/music'
+import { Mask  } from '../../../lib/instrument'
 import styles from './styles.module.css'
 
 export default connect(
   (state, props) => {
-    const note  = getNote (state, props)
-    const layer = getLayer(state, props)
+    const { string, box } = props
+    const from = getFrom(state)
+    const note = getNote(state, props)
+    const {
+      masks,
+      palette,
+      root,
+      scale
+    } = getLayer(state, props)
 
-    return { note, root: layer.root }
+    const interval = Scale.get(root)(note)(scale)
+    const inside   = Mask.insideAny(string)(from + box)(masks)
+    const style    = inside ? palette[interval] : null
+
+    return { style }
   }
 )(
-  ({ note, layerIndex, stringIndex, boxIndex, root }) => (
+  ({ style, layer, string, box }) => (
     <box className={ styles.box }>
-      { console.log(root, note, layerIndex, stringIndex, boxIndex) }
+      { console.log(style, layer, string, box) }
     </box>
   )
 )

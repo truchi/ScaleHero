@@ -1,22 +1,27 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { getStringRange } from '../../../store'
-import styles from './styles.module.css'
-import String from '../String'
-import * as R from 'ramda'
+import React        from 'react'
+import { connect }  from 'react-redux'
+import {
+  getStringRange,
+} from '../../../store'
+import styles       from './styles.module.css'
+import String       from '../String'
+import {
+  applySpec,
+  map,
+} from 'ramda'
 
 export default connect(
-  R.applySpec({
+  applySpec({
     range: getStringRange
   })
 )(
-  ({ range, layerIndex }) => (
+  ({ range, layer }) => (
     <layer className={ styles.layer }>
-      { R.map(stringIndex => (
+      { map(i => (
         <String
-          key={ stringIndex }
-          layerIndex={ layerIndex }
-          stringIndex={ stringIndex }
+          key    ={ i     }
+          string ={ i     }
+          layer  ={ layer }
         />
       ))(range) }
     </layer>
