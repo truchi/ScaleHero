@@ -3,8 +3,8 @@ import { connect }  from 'react-redux'
 import {
   getStringRange,
 } from '../../../store/selectors'
-import styles       from './styles.module.scss'
-import String       from '../String'
+import styles from './styles.module.scss'
+import String from '../String'
 import {
   applySpec,
   map,
