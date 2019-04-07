@@ -7,7 +7,7 @@ import {
 } from '../../../store/selectors'
 import { Scale } from '../../../lib/music'
 import { Mask  } from '../../../lib/instrument'
-import styles from './styles.module.css'
+import styles    from './styles.module.scss'
 
 export default connect(
   (state, props) => {
@@ -30,7 +30,7 @@ export default connect(
 )(
   ({ style, layer, string, box }) => (
     <box className={ styles.box }>
-      { console.log(style, layer, string, box) }
+      {/* { console.log(style, layer, string, box) } */}
     </box>
   )
 )

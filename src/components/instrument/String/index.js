@@ -3,7 +3,7 @@ import { connect }     from 'react-redux'
 import {
   getBoxRange,
 } from '../../../store/selectors'
-import styles          from './styles.module.css'
+import styles          from './styles.module.scss'
 import Box             from '../Box'
 import {
   applySpec,

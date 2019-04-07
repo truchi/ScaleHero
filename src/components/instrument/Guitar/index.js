@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import {
   getLayerRange,
 } from '../../../store/selectors'
-import styles from './styles.module.css'
+import styles from './styles.module.scss'
 import Layer  from '../Layer'
 import {
   applySpec,
