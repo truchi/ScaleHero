@@ -1,4 +1,4 @@
-import settable from '../../utils/settable'
+import settable from '../utils/settable'
 import { Note } from '../music'
 import Mask from './Mask'
 
