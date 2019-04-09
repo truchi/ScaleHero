@@ -37,14 +37,12 @@ const initial = {
     {
       masks: [0],
       palette: 0,
-      scale: 0,
-      root: 'C'
+      units: [{ scale: 0, root: 'C', animate: 'enter' }]
     },
     {
       masks: [0],
       palette: 0,
-      scale: 0,
-      root: 'C'
+      units: [{ scale: 0, root: 'C', animate: 'enter' }]
     },
   ],
   masks,
@@ -56,6 +54,25 @@ const store = createStore(
   reducer,
   initial,
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+)
+
+setTimeout(
+  () =>
+    store.dispatch({
+      type: 'next',
+      payload: [
+        { path: ['from'], value: 3 },
+        { path: ['tuning', 2], value: null },
+        { path: ['layers', 1], value: null },
+        { path: ['layers', 0, 'masks', 0], value: null },
+        { path: ['layers', 0, 'masks', 1], value: 1 },
+        {
+          path: ['layers', 0, 'units', 1],
+          value: { scale: 0, root: 'D', animate: 'enter' }
+        },
+      ]
+    }),
+  500
 )
 
 window.store = store
