@@ -16,43 +16,44 @@ export default connect(
   }
 )(
   ({ duration, id, mask, animate, radius }) => {
+    duration    = duration + 'ms'
     const _id   = type => `${ id }-${ type }`
     const url   = type => `url("#${ _id(type) }")`
-    const angle = mask.angle
+    const angle = mask.angle + 'deg'
     const masks = ['shape', 'enter','leave'].map(type => mask[type](0)) // FIXME
     const cpu   =
       { clipPathUnits: 'objectBoundingBox' }
 
     return (
       <G rcv={{ duration, angle }}>
-        <clippath id={ _id('mask') } clipPath={ url('shape') } { ...cpu }>
+        <clipPath id={ _id('mask') } clipPath={ url('shape') } { ...cpu }>
           <Rect
             className={ styles.mask }
             rcv      ={{ radius }}
             x="0" width ="1"
             y="0" height="1"
           />
-        </clippath>
-        <clippath id={ _id('shape') } clipPath={ url('enter') } { ...cpu }>
+        </clipPath>
+        <clipPath id={ _id('shape') } clipPath={ url('enter') } { ...cpu }>
           <Polygon
             className={ styles.shape   }
             points   ={ masks[0].shape }
           />
-        </clippath>
-        <clippath id={ _id('enter') } clipPath={ url('leave') } { ...cpu }>
+        </clipPath>
+        <clipPath id={ _id('enter') } clipPath={ url('leave') } { ...cpu }>
           <Polygon
             className={ styles.enter   }
             points   ={ masks[1].shape }
             rcv      ={{ width: `${ masks[1].width }px` }}
           />
-        </clippath>
-        <clippath id={ _id('leave') } { ...cpu }>
+        </clipPath>
+        <clipPath id={ _id('leave') } { ...cpu }>
           <Polygon
             className={ styles.leave   }
             points   ={ masks[2].shape }
             rcv      ={{ width: `${ masks[2].width }px` }}
           />
-        </clippath>
+        </clipPath>
       </G>
     )
   }

@@ -38,17 +38,15 @@ const initial = {
   tuning  : ['E', 'A', 'D', 'G', 'B', 'E'],
   from    : 0,
   to      : 12,
-  duration: 1,
+  duration: 1000,
   layers: [
     {
-      id: 'A',
       boxMask: 0,
       layerMasks: [0],
       palette: 0,
       units: [{ scale: 0, root: 'C', animate: 'enter' }]
     },
     {
-      id: 'B',
       boxMask: 0,
       layerMasks: [0],
       palette: 0,

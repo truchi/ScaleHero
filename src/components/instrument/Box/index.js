@@ -13,11 +13,10 @@ import BoxUnit   from '../BoxUnit'
 
 export default connect(
   (state, props) => {
-    const { string, box } = props
+    const { layer, string, box } = props
     const from = getFrom(state)
     const note = getNote(state, props)
     const {
-      id,
       boxMask,
       layerMasks,
       palette,
@@ -25,7 +24,7 @@ export default connect(
     } = getLayer(state, props)
 
     return {
-      id,
+      id   : `clip-${ layer }-${ string }-${ box }`,
       mask : boxMask,
       units: units.map(({ root, scale, animate }) => ({
         animate,
