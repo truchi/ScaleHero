@@ -25,6 +25,10 @@ export const getFrom =
   ({ from }) =>
     from
 
+export const getDuration =
+  ({ duration }) =>
+    duration
+
 export const getNote =
   ({ tuning }, { string, box }) =>
     Note.add(box)(tuning[string])

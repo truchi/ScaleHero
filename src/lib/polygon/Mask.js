@@ -91,7 +91,7 @@ export default class Mask extends settable({ DEFAULTS, after: '_set' }) {
     this.angle  = this._getAngle()
   }
 
-  get shape() {
+  shape() {
     return { shape: this._shape }
   }
 
