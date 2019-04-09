@@ -9,6 +9,7 @@ import { Scale } from '../../../lib/music'
 import { Mask  } from '../../../lib/instrument'
 import styles    from './styles.module.scss'
 import BoxMask   from '../BoxMask'
+import BoxUnit   from '../BoxUnit'
 
 export default connect(
   (state, props) => {
@@ -37,20 +38,26 @@ export default connect(
 )(
   ({ id, mask, units, layer, string, box }) => (
     <box className={ styles.box }>
-      { console.log(layer, string, box, mask, units) }
-        <svg>
-          <defs>
-            {units.map(({ animate, style }, key) => (
-              <BoxMask
-                key     ={ key     }
-                id      ={ id      }
-                mask    ={ mask    }
-                animate ={ animate }
-                radius  ={ style ? style.radius : 0 }
-              />
-            ))}
-          </defs>
-        </svg>
+      <svg className={ styles.svg }>
+        <defs>
+          { units.map(({ animate, style }, key) => (
+            <BoxMask
+              key     ={ key                }
+              id      ={ `${ id }-${ key }` }
+              mask    ={ mask               }
+              animate ={ animate            }
+              radius  ={ style ? style.radius : 0 }
+            />
+          )) }
+        </defs>
+        { units.map(({ animate, style }, key) => (
+          <BoxUnit
+            key  ={ key   }
+            style={ style }
+            clip ={ `url("#${ id }-${ key }-mask")` }
+          />
+        )) }
+      </svg>
     </box>
   )
 )
