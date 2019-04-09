@@ -33,7 +33,7 @@ const notes =
 const get =
   root =>
     note =>
-      find(                         // first interval where
+      find(                         // first scale's interval where
         compose(
           equals(Note.value(note)), // note's value equals
           Note.value,               // value of
