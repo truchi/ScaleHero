@@ -19,7 +19,7 @@ export const getStringRange =
 
 export const getBoxRange =
   ({ from, to }) =>
-    range(from, to)
+    range(from, to + 1)
 
 export const getFrom =
   ({ from }) =>
