@@ -28,7 +28,7 @@ export default connect(
         return {
           animate,
           style: Mask.insideAny(string)(from + box)(masks)
-            ? palette[Scale.get(root)(note)(scale)]
+            ? palette[Scale.getInterval(root)(note)(scale)]
             : null
         }
       })

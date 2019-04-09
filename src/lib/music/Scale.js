@@ -30,7 +30,7 @@ const notes =
 //** Returns interval from intervals which gives note to root
 //   or undefined when note is not in scale with root
 //:: String root -> String note -> Scale scale -> String? interval
-const get =
+const getInterval =
   root =>
     note =>
       find(                         // first scale's interval where
@@ -44,5 +44,5 @@ const get =
 
 export default {
   notes,
-  get,
+  getInterval,
 }
