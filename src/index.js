@@ -3,7 +3,7 @@ import ReactDOM              from 'react-dom'
 import { Provider }          from 'react-redux'
 import registerServiceWorker from './registerServiceWorker'
 
-import            './lib/utils/polyfills'
+import            './polyfills'
 import App   from './components/App'
 import store from './store/'
 
