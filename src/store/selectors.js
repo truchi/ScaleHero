@@ -39,3 +39,7 @@ export const getLayer =
       },
       layers[layer]
     )
+
+export const getScale =
+  ({ scales }, scale) =>
+    scales[scale]

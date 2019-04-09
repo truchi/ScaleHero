@@ -2,8 +2,9 @@ import React       from 'react'
 import { connect } from 'react-redux'
 import {
   getFrom,
-  getNote,
   getLayer,
+  getNote,
+  getScale,
 } from '../../../store/selectors'
 import { Scale } from '../../../lib/music'
 import { Mask  } from '../../../lib/instrument'
@@ -17,20 +18,26 @@ export default connect(
     const {
       masks,
       palette,
-      root,
-      scale
+      units
     } = getLayer(state, props)
 
-    const interval = Scale.get(root)(note)(scale)
-    const inside   = Mask.insideAny(string)(from + box)(masks)
-    const style    = inside ? palette[interval] : null
+    return {
+      units: units.map(({ root, scale, animate }) => {
+        scale = getScale(state, scale)
 
-    return { style }
+        return {
+          animate,
+          style: Mask.insideAny(string)(from + box)(masks)
+            ? palette[Scale.get(root)(note)(scale)]
+            : null
+        }
+      })
+    }
   }
 )(
-  ({ style, layer, string, box }) => (
+  ({ units, layer, string, box }) => (
     <box className={ styles.box }>
-      {/* { console.log(style, layer, string, box) } */}
+      { console.log(layer, string, box, units) }
     </box>
   )
 )
