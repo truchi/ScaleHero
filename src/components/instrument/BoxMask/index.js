@@ -10,60 +10,6 @@ const G       = rcv(<g />)
 const Rect    = rcv(<rect />)
 const Polygon = rcv(<polygon />)
 
-const renderData = (id, mask, radius, duration)=> {
-  const angle  = mask.angle
-  const getId  = type => type ? `${ id }-${ type }` : null
-  const getUrl = id   => id   ? `url("#${ id }")`   : null
-  const clip  = Object.fromEntries(
-    [['shape', 'enter'], ['enter', 'leave']]
-      .map(([o, clip]) => [o, getUrl(getId(clip))])
-  )
-
-  const g = {
-    rcv: {
-      angle: `${ -angle }deg`,
-      duration
-    }
-  }
-
-  const maskData = {
-    clipPath: {
-      id           : getId('mask'),
-      clipPath     : getUrl(getId('shape')),
-      clipPathUnits: 'objectBoundingBox'
-    },
-    rect: {
-      className: styles.ellipse,
-      x     : '0',
-      y     : '0',
-      width : '1',
-      height: '1',
-      rcv   : { radius }
-    }
-  }
-
-  const data = ['shape', 'enter', 'leave']
-    // FIXME radius should be prev/next radius...
-    .map(key => [key, mask[key](0)])
-    .map(([key, mask]) => ({
-      clipPath: {
-        key,
-        id           : getId(key),
-        clipPath     : clip[key],
-        clipPathUnits: 'objectBoundingBox'
-      },
-      polygon: {
-        className: styles[key],
-        points   : mask.shape.toString(),
-        rcv      : mask.width
-          ? { width: `${ mask.width }px` }
-          : {}
-      },
-    }))
-
-  return { g, mask: maskData, data }
-}
-
 export default connect(
   (state, props) => {
     return { duration: getDuration(state) }
