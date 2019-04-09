@@ -39,18 +39,18 @@ export default connect(
             points   ={ masks[0].shape }
           />
         </clippath>
-        <clippath id={ _id('shape') } clipPath={ url('leave') } { ...cpu }>
+        <clippath id={ _id('enter') } clipPath={ url('leave') } { ...cpu }>
           <Polygon
             className={ styles.enter   }
             points   ={ masks[1].shape }
-            rcv      ={{ width: `${ mask.enter.width }px` }}
+            rcv      ={{ width: `${ masks[1].width }px` }}
           />
         </clippath>
         <clippath id={ _id('leave') } { ...cpu }>
           <Polygon
             className={ styles.leave   }
             points   ={ masks[2].shape }
-            rcv      ={{ width: `${ mask.leave.width }px` }}
+            rcv      ={{ width: `${ masks[2].width }px` }}
           />
         </clippath>
       </G>
