@@ -35,7 +35,7 @@ const layerMasks = [
 /* SHIT end */
 
 const initial = {
-  tuning  : ['E', 'A', 'D', 'G', 'B', 'E'].reverse(),
+  tuning  : ['E', 'A', 'D', 'G', 'B', 'E'],
   from    : 0,
   to      : 12,
   duration: 1,

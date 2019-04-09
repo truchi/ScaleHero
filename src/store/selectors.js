@@ -31,7 +31,7 @@ export const getDuration =
 
 export const getNote =
   ({ tuning }, { string, box }) =>
-    Note.add(box)(tuning[string])
+    Note.add(box)(tuning[tuning.length - 1 - string])
 
 export const getLayer =
   ({ layers, boxMasks, layerMasks, palettes, scales }, { layer }) =>
