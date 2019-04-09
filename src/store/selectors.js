@@ -30,16 +30,13 @@ export const getNote =
     Note.add(box)(tuning[string])
 
 export const getLayer =
-  ({ layers, masks, palettes, scales }, { layer }) =>
+  ({ layers, boxMasks, layerMasks, palettes, scales }, { layer }) =>
     evolve(
       {
-        masks  : map(nth(__, masks)),
-        palette: nth(__, palettes),
-        scale  : nth(__, scales  ),
+        boxMask   : nth(__, boxMasks),
+        layerMasks: map(nth(__, layerMasks)),
+        palette   : nth(__, palettes),
+        units     : map(evolve({ scale: nth(__, scales) }))
       },
       layers[layer]
     )
-
-export const getScale =
-  ({ scales }, scale) =>
-    scales[scale]

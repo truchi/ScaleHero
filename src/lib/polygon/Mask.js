@@ -1,4 +1,4 @@
-import settable from '../../utils/settable'
+import settable from '../utils/settable'
 import Point from './Point.js'
 import Rectangle from './Rectangle.js'
 import Triangle from './Triangle.js'

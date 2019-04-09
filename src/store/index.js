@@ -1,5 +1,6 @@
 import { createStore } from 'redux'
 import reducer         from './reducer'
+import { Mask }        from '../lib/polygon'
 
 /* SHIT start */
 const intervals = [
@@ -17,7 +18,11 @@ const scales = [
   ['1', '2', '3', '4', '5', '6', '7']
 ]
 
-const masks = [
+const boxMasks = [
+  new Mask()
+]
+
+const layerMasks = [
   [
     [[-Infinity, 5], [8, Infinity]],
     [[-Infinity, 5], [8, Infinity]],
@@ -35,17 +40,20 @@ const initial = {
   to    : 12,
   layers: [
     {
-      masks: [0],
+      boxMask: 0,
+      layerMasks: [0],
       palette: 0,
       units: [{ scale: 0, root: 'C', animate: 'enter' }]
     },
     {
-      masks: [0],
+      boxMask: 0,
+      layerMasks: [0],
       palette: 0,
       units: [{ scale: 0, root: 'C', animate: 'enter' }]
     },
   ],
-  masks,
+  boxMasks,
+  layerMasks,
   palettes,
   scales
 }
