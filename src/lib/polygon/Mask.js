@@ -95,22 +95,26 @@ export default class Mask extends settable({ DEFAULTS, after: '_set' }) {
     return { shape: this._shape }
   }
 
-  enter(radius = 0) {
+  enter(radius) {
     return this._get(radius, w => new Point({ x: -w, y: 0 }))
   }
 
-  leave(radius = 0) {
+  leave(radius) {
     return this._get(radius)
   }
 
-  _get(radius = 0, start = _ => new Point()) {
-    const s     = 2 * radius * (1 - sq2) + sq2 // css has max radius=.5, hence *2
+  _get(radius, start = _ => new Point()) {
+    // css has max radius=.5, hence *2
+    const s     = 2 * (radius || 0) * (1 - sq2) + sq2
+    const clip  = new Rectangle({ x: s, y: s })
+      .translate(new Point({ x: (1 - s) / 2, y: (1 - s) / 2 }))
+
+    if (radius === undefined)
+      return { shape: clip, width: sq2 }
+
     const shape = this._shape
       .rotate(-this.angle, new Point({ x: .5, y: .5 }))
-      .crop(
-        new Rectangle({ x: s, y: s })
-          .translate(new Point({ x: (1 - s) / 2, y: (1 - s) / 2 }))
-      )
+      .crop(clip)
       .boundingBox()
     const width = getSize(shape).x
 

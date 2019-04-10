@@ -10,7 +10,7 @@ const intervals = [
 
 const palettes = [
   Object.fromEntries(
-    intervals.map(i => [i, { color: 'blue', radius: 0 }])
+    intervals.map(i => [i, { color: 'blue', radius: .5 }])
   ),
   Object.fromEntries(
     intervals.map(i => [i, { color: 'red', radius: 0 }])
@@ -22,7 +22,7 @@ const scales = [
 ]
 
 const boxMasks = [
-  new Mask()
+  new Mask({ transition: 'southeast' }),
 ]
 
 const layerMasks = [
@@ -76,9 +76,11 @@ const dispatch =
       })
 
 window.dispatch = dispatch
-setTimeout(dispatch('D', 1), 2000)
-setTimeout(dispatch('E', 0), 4000)
-setTimeout(dispatch('F', 1), 6000)
+setTimeout(dispatch('C#', 1), 2000)
+setTimeout(dispatch('D', 0), 4000)
+setTimeout(dispatch('E', 1), 6000)
+setTimeout(dispatch('F', 0), 8000)
+setTimeout(dispatch('G', 1), 10000)
 
 window.store = store
 export default store

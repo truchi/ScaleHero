@@ -18,11 +18,18 @@ export default connect(
     duration: getDuration(state)
   })
 )(
-  ({ duration, id, mask, animate, radius }) => {
+  ({ duration, id, mask, animate, radiuses = {} }) => {
     const _id   = type => `${ id }-${ type }`
     const url   = type => `url("#${ _id(type) }")`
-    const masks = ['shape', 'enter','leave'].map(type => mask[type](0)) // FIXME
     const cpu   = { clipPathUnits: 'objectBoundingBox' }
+    const masks = Object.fromEntries(
+      ['shape', 'enter', 'leave']
+        .map(type => [type, mask[type](radiuses[type])])
+        .map(([type, mask]) => [type, {
+          points: mask.shape,
+          rcv   : { width: mask.width + 'px' }
+        }])
+    )
 
     let $enter = useRef(null)
     let $leave = useRef(null)
@@ -37,10 +44,7 @@ export default connect(
 
       if (animate === 'leave') {
         $leave.classList.add(styles.to)
-        setTimeout(
-          () => $enter.classList.remove(styles.to),
-          duration
-        )
+        setTimeout(() => $enter.classList.remove(styles.to), duration)
       }
     })
 
@@ -49,31 +53,31 @@ export default connect(
         <clipPath id={ _id('mask') } clipPath={ url('shape') } { ...cpu }>
           <Rect
             className={ styles.mask }
-            rcv      ={{ radius }}
+            rcv      ={{ radius: radiuses.radius }}
             x="0" width ="1"
             y="0" height="1"
           />
         </clipPath>
         <clipPath id={ _id('shape') } clipPath={ url('enter') } { ...cpu }>
           <Polygon
-            className={ styles.shape   }
-            points   ={ masks[0].shape }
+            className={ styles.shape       }
+            points   ={ masks.shape.points }
           />
         </clipPath>
         <clipPath id={ _id('enter') } clipPath={ url('leave') } { ...cpu }>
           <Polygon
-            className={ styles.from    }
-            points   ={ masks[1].shape }
-            rcv      ={{ width: `${ masks[1].width }px` }}
-            ref      ={ $enter }
+            className={ styles.from        }
+            points   ={ masks.enter.points }
+            rcv      ={ masks.enter.rcv    }
+            ref      ={ $enter             }
           />
         </clipPath>
         <clipPath id={ _id('leave') } { ...cpu }>
           <Polygon
-            className={ styles.from    }
-            points   ={ masks[2].shape }
-            rcv      ={{ width: `${ masks[2].width }px` }}
-            ref      ={ $leave }
+            className={ styles.from        }
+            points   ={ masks.leave.points }
+            rcv      ={ masks.leave.rcv    }
+            ref      ={ $leave             }
           />
         </clipPath>
       </G>

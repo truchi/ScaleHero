@@ -43,26 +43,49 @@ export default connect(
   ({ MAX, id, mask, style, layer, string, box }) => {
     const indexRef   = useRef(-1)
     const units      = useRef(Array(MAX).fill({})).current
+    const hasPrevRef = useRef(false)
+    const hasPrev    = hasPrevRef.current
     const prev       = indexRef.current
     indexRef.current = mathMod(indexRef.current + 1, MAX)
     const index      = indexRef.current
 
+    // Syncing radiuses
+    const radius     = style ? style.radius : null
+    const prevRadius = hasPrev
+      ? units[prev].radiuses.radius
+      : null
+    const syncedRadius = Math.min(
+      radius     !== null ? radius     : prevRadius,
+      prevRadius !== null ? prevRadius : radius
+    )
+
+    // Enter current box
     if (style)
-      units[index] = { style, animate: 'enter' }
-    if (prev >= 0)
+      units[index] = {
+        style,
+        animate : 'enter',
+        radiuses: { radius, enter: syncedRadius }
+      }
+
+    // Leave previous box
+    if (hasPrev) {
       units[prev].animate = 'leave'
+      units[prev].radiuses.leave = syncedRadius
+    }
+
+    hasPrevRef.current = !!style
 
     return (
       <box className={ styles.box }>
         <svg className={ styles.svg }>
           <defs>
-            { units.map(({ animate, style }, key) => (
+            { units.map(({ animate, radiuses }, key) => (
               <BoxMask
-                key     ={ key                }
+                key     ={ key }
                 id      ={ `${ id }-${ key }` }
-                mask    ={ mask               }
-                animate ={ animate            }
-                radius  ={ style ? style.radius : 0 }
+                mask    ={ mask     }
+                animate ={ animate  }
+                radiuses={ radiuses }
               />
             )) }
           </defs>
