@@ -45,7 +45,7 @@ export default connect(
     })
 
     return (
-      <G rcv={{ duration: duration + 'ms', angle: mask.angle + 'deg' }}>
+      <G rcv={{ duration: duration + 'ms', angle: -mask.angle + 'deg' }}>
         <clipPath id={ _id('mask') } clipPath={ url('shape') } { ...cpu }>
           <Rect
             className={ styles.mask }
