@@ -105,7 +105,7 @@ export default class Mask extends settable({ DEFAULTS, after: '_set' }) {
 
   _get(radius, start = _ => new Point()) {
     // css has max radius=.5, hence *2
-    const s     = 2 * (radius || 0) * (1 - sq2) + sq2
+    const s     = 2 * (radius || 0) * (1 - sq2) + sq2 // +e?
     const clip  = new Rectangle({ x: s, y: s })
       .translate(new Point({ x: (1 - s) / 2, y: (1 - s) / 2 }))
 

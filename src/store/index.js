@@ -10,7 +10,13 @@ const intervals = [
 
 const palettes = [
   Object.fromEntries(
-    intervals.map(i => [i, { color: 'blue', radius: .5 }])
+    intervals.map(
+      (i, ind) =>
+        [i, {
+          color : `hsl(${ 360 * ind / intervals.length }, 50%, 50%)`,
+          radius: ind % 3 === 0 ? .5 : 0,
+        }]
+    )
   ),
   Object.fromEntries(
     intervals.map(i => [i, { color: 'red', radius: 0 }])
@@ -22,17 +28,21 @@ const scales = [
 ]
 
 const boxMasks = [
-  new Mask({ transition: 'southeast' }),
+  new Mask({ size: 1, type: 'rect', subtype: 'diamond' }),
+  new Mask({ size: .25, type: 'triangle', subtype: 'topleft', transition: 'southeast' }),
+  new Mask({ size: .25, type: 'triangle', subtype: 'topright', transition: 'southwest' }),
+  new Mask({ size: .25, type: 'triangle', subtype: 'bottomleft', transition: 'northeast' }),
+  new Mask({ size: .25, type: 'triangle', subtype: 'bottomright', transition: 'northwest' }),
 ]
 
 const layerMasks = [
   [
-    [[-Infinity, 5], [8, Infinity]],
-    [[-Infinity, 5], [8, Infinity]],
-    [[-Infinity, 5], [8, Infinity]],
-    [[-Infinity, 5], [8, Infinity]],
-    [[-Infinity, 5], [8, Infinity]],
-    [[-Infinity, 5], [8, Infinity]],
+    [[-Infinity, 8], [8, Infinity]],
+    [[-Infinity, 8], [8, Infinity]],
+    [[-Infinity, 8], [8, Infinity]],
+    [[-Infinity, 8], [8, Infinity]],
+    [[-Infinity, 8], [8, Infinity]],
+    [[-Infinity, 8], [8, Infinity]],
   ]
 ]
 /* SHIT end */
@@ -41,7 +51,7 @@ const initial = {
   tuning  : ['E', 'A', 'D', 'G', 'B', 'E'],
   from    : 0,
   to      : 12,
-  duration: 1000,
+  duration: 500,
   layers: [
     {
       MAX: 2,
@@ -49,6 +59,38 @@ const initial = {
       layerMasks: [0],
       palette: 0,
       root: 'C',
+      scale: 0,
+    },
+    {
+      MAX: 2,
+      boxMask: 1,
+      layerMasks: [0],
+      palette: 0,
+      root: 'D',
+      scale: 0,
+    },
+    {
+      MAX: 2,
+      boxMask: 2,
+      layerMasks: [0],
+      palette: 0,
+      root: 'E',
+      scale: 0,
+    },
+    {
+      MAX: 2,
+      boxMask: 3,
+      layerMasks: [0],
+      palette: 0,
+      root: 'F',
+      scale: 0,
+    },
+    {
+      MAX: 2,
+      boxMask: 4,
+      layerMasks: [0],
+      palette: 0,
+      root: 'G',
       scale: 0,
     },
   ],
@@ -65,22 +107,35 @@ const store = createStore(
 )
 
 const dispatch =
-  (root, palette) =>
-    () =>
-      store.dispatch({
-        type: 'next',
-        payload: [
-          { path: ['layers', 0, 'root'], value: root },
-          { path: ['layers', 0, 'palette'], value: palette },
-        ]
-      })
+  (roots, palettes) =>
+    store.dispatch({
+      type: 'next',
+      payload:
+      roots
+        .map((root, i) => ({
+          path: ['layers', i, 'root'],
+          value: root
+        }))
+        .concat(
+          palettes
+            ? palettes.map((palette, i) => ({
+                path: ['layers', i, 'palette'],
+                value: palette
+              }))
+            : []
+        )
+    })
 
 window.dispatch = dispatch
-setTimeout(dispatch('C#', 1), 2000)
-setTimeout(dispatch('D', 0), 4000)
-setTimeout(dispatch('E', 1), 6000)
-setTimeout(dispatch('F', 0), 8000)
-setTimeout(dispatch('G', 1), 10000)
+const cycle = arr => {
+  arr = arr.concat([arr.shift()])
+  arr = arr.concat([arr.shift()])
+  return arr
+}
+let roots = ['C', 'D', 'E', 'F', 'G']
+true && setTimeout(() => {
+  window.intervalID = setInterval(() => dispatch(roots = cycle(roots)), 2000)
+}, 1000)
 
 window.store = store
 export default store
