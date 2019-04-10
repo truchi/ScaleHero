@@ -41,14 +41,14 @@ export default connect(
   }
 )(
   ({ MAX, id, mask, style, layer, string, box }) => {
-    const index   = useRef(-1)
-    const units   = useRef(Array(MAX).fill({})).current
-    const prev    = index.current
-    index.current = mathMod(index.current + 1, MAX)
-    const i       = index.current
+    const indexRef   = useRef(-1)
+    const units      = useRef(Array(MAX).fill({})).current
+    const prev       = indexRef.current
+    indexRef.current = mathMod(indexRef.current + 1, MAX)
+    const index      = indexRef.current
 
     if (style)
-      units[i] = { style, animate: 'enter' }
+      units[index] = { style, animate: 'enter' }
     if (prev >= 0)
       units[prev].animate = 'leave'
 
