@@ -11,7 +11,10 @@ const intervals = [
 const palettes = [
   Object.fromEntries(
     intervals.map(i => [i, { color: 'blue', radius: 0 }])
-  )
+  ),
+  Object.fromEntries(
+    intervals.map(i => [i, { color: 'red', radius: 0 }])
+  ),
 ]
 
 const scales = [
@@ -62,21 +65,20 @@ const store = createStore(
 )
 
 const dispatch =
-  () =>
-    store.dispatch({
-      type: 'next',
-      payload: [
-        // { path: ['from'], value: 3 },
-        // { path: ['tuning', 2], value: null },
-        // { path: ['layers', 1], value: null },
-        // { path: ['layers', 0, 'masks', 0], value: null },
-        // { path: ['layers', 0, 'masks', 1], value: 1 },
-        { path: ['layers', 0, 'root'], value: 'D' },
-      ]
-    })
+  (root, palette) =>
+    () =>
+      store.dispatch({
+        type: 'next',
+        payload: [
+          { path: ['layers', 0, 'root'], value: root },
+          { path: ['layers', 0, 'palette'], value: palette },
+        ]
+      })
 
 window.dispatch = dispatch
-setTimeout(dispatch, 2000)
+setTimeout(dispatch('D', 1), 2000)
+setTimeout(dispatch('E', 0), 4000)
+setTimeout(dispatch('F', 1), 6000)
 
 window.store = store
 export default store

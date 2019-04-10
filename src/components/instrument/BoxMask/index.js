@@ -14,9 +14,9 @@ const Rect    = rcv(<rect />)
 const Polygon = rcv(<polygon />)
 
 export default connect(
-  (state, props) => {
-    return { duration: getDuration(state) }
-  }
+  state => ({
+    duration: getDuration(state)
+  })
 )(
   ({ duration, id, mask, animate, radius }) => {
     const _id   = type => `${ id }-${ type }`
