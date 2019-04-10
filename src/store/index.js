@@ -41,17 +41,13 @@ const initial = {
   duration: 1000,
   layers: [
     {
+      MAX: 2,
       boxMask: 0,
       layerMasks: [0],
       palette: 0,
-      units: [{ scale: 0, root: 'C', animate: 'enter' }]
+      root: 'C',
+      scale: 0,
     },
-    // {
-    //   boxMask: 0,
-    //   layerMasks: [0],
-    //   palette: 0,
-    //   units: [{ scale: 0, root: 'C', animate: 'enter' }]
-    // },
   ],
   boxMasks,
   layerMasks,
@@ -65,28 +61,22 @@ const store = createStore(
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 )
 
-true && setTimeout(
+const dispatch =
   () =>
     store.dispatch({
       type: 'next',
       payload: [
         // { path: ['from'], value: 3 },
         // { path: ['tuning', 2], value: null },
-        { path: ['layers', 1], value: null },
-        { path: ['layers', 0, 'masks', 0], value: null },
-        { path: ['layers', 0, 'masks', 1], value: 1 },
-        {
-          path: ['layers', 0, 'units', 0],
-          value: { scale: 0, root: 'C', animate: 'leave' }
-        },
-        {
-          path: ['layers', 0, 'units', 1],
-          value: { scale: 0, root: 'F', animate: 'enter' }
-        },
+        // { path: ['layers', 1], value: null },
+        // { path: ['layers', 0, 'masks', 0], value: null },
+        // { path: ['layers', 0, 'masks', 1], value: 1 },
+        { path: ['layers', 0, 'root'], value: 'D' },
       ]
-    }),
-  5000
-)
+    })
+
+window.dispatch = dispatch
+setTimeout(dispatch, 2000)
 
 window.store = store
 export default store

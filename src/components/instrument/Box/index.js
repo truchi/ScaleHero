@@ -1,4 +1,6 @@
-import React       from 'react'
+import React, {
+  useRef,
+}from 'react'
 import { connect } from 'react-redux'
 import {
   getFrom,
@@ -7,6 +9,9 @@ import {
 } from '../../../store/selectors'
 import { Scale } from '../../../lib/music'
 import { Mask  } from '../../../lib/instrument'
+import {
+  mathMod,
+} from 'ramda'
 import styles    from './styles.module.scss'
 import BoxMask   from '../BoxMask'
 import BoxUnit   from '../BoxUnit'
@@ -17,47 +22,58 @@ export default connect(
     const from = getFrom(state)
     const note = getNote(state, props)
     const {
+      MAX,
       boxMask,
       layerMasks,
       palette,
-      units
+      root,
+      scale,
     } = getLayer(state, props)
 
     return {
+      MAX,
       id   : `clip-${ layer }-${ string }-${ box }`,
       mask : boxMask,
-      units: units.map(({ root, scale, animate }) => ({
-        animate,
-        style: Mask.insideAny(string)(from + box)(layerMasks)
-          ? palette[Scale.getInterval(root)(note)(scale)]
-          : null
-      }))
+      style: Mask.insideAny(string)(from + box)(layerMasks)
+        ? palette[Scale.getInterval(root)(note)(scale)]
+        : null
     }
   }
 )(
-  ({ id, mask, units, layer, string, box }) => (
-    <box className={ styles.box }>
-      <svg className={ styles.svg }>
-        <defs>
-          { units.map(({ animate, style }, key) => (
-            <BoxMask
-              key     ={ key                }
-              id      ={ `${ id }-${ key }` }
-              mask    ={ mask               }
-              animate ={ animate            }
-              radius  ={ style ? style.radius : 0 }
+  ({ MAX, id, mask, style, layer, string, box }) => {
+    const index   = useRef(-1)
+    const units   = useRef(Array(MAX).fill({})).current
+    const prev    = index.current
+    index.current = mathMod(index.current + 1, MAX)
+    const i       = index.current
+
+    units[i] = { style, animate: 'enter' }
+    if (prev >= 0)
+      units[prev].animate = 'leave'
+
+    return (
+      <box className={ styles.box }>
+        <svg className={ styles.svg }>
+          <defs>
+            { units.map(({ animate, style }, key) => (
+              <BoxMask
+                key     ={ key                }
+                id      ={ `${ id }-${ key }` }
+                mask    ={ mask               }
+                animate ={ animate            }
+                radius  ={ style ? style.radius : 0 }
+              />
+            )) }
+          </defs>
+          { units.map(({ style }, key) => (
+            <BoxUnit
+              key  ={ key   }
+              style={ style }
+              clip ={ `url("#${ id }-${ key }-mask")` }
             />
           )) }
-        </defs>
-        { units.map(({ animate, style }, key) => (
-          <BoxUnit
-            key     ={ key   }
-            style   ={ style }
-            clip    ={ `url("#${ id }-${ key }-mask")` }
-            animate ={ animate }
-          />
-        )) }
-      </svg>
-    </box>
-  )
+        </svg>
+      </box>
+    )
+  }
 )

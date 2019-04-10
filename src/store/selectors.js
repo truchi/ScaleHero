@@ -40,7 +40,7 @@ export const getLayer =
         boxMask   : nth(__, boxMasks),
         layerMasks: map(nth(__, layerMasks)),
         palette   : nth(__, palettes),
-        units     : map(evolve({ scale: nth(__, scales) }))
+        scale     : nth(__, scales),
       },
       layers[layer]
     )
