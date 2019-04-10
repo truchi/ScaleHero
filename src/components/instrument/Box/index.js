@@ -51,9 +51,10 @@ export default connect(
         </defs>
         { units.map(({ animate, style }, key) => (
           <BoxUnit
-            key  ={ key   }
-            style={ style }
-            clip ={ `url("#${ id }-${ key }-mask")` }
+            key     ={ key   }
+            style   ={ style }
+            clip    ={ `url("#${ id }-${ key }-mask")` }
+            animate ={ animate }
           />
         )) }
       </svg>

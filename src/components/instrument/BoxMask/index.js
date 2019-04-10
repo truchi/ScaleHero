@@ -1,4 +1,7 @@
-import React  from 'react'
+import React, {
+  useEffect,
+  useRef,
+} from 'react'
 import { connect } from 'react-redux'
 import {
   getDuration,
@@ -16,16 +19,20 @@ export default connect(
   }
 )(
   ({ duration, id, mask, animate, radius }) => {
-    duration    = duration + 'ms'
     const _id   = type => `${ id }-${ type }`
     const url   = type => `url("#${ _id(type) }")`
-    const angle = mask.angle + 'deg'
     const masks = ['shape', 'enter','leave'].map(type => mask[type](0)) // FIXME
-    const cpu   =
-      { clipPathUnits: 'objectBoundingBox' }
+    const cpu   = { clipPathUnits: 'objectBoundingBox' }
+
+    const $enter = useRef(null)
+    const $leave = useRef(null)
+    useEffect(() => {
+      if (animate === 'enter') $enter.current.$.classList.add(styles.to)
+      if (animate === 'leave') $leave.current.$.classList.add(styles.to)
+    })
 
     return (
-      <G rcv={{ duration, angle }}>
+      <G rcv={{ duration: duration + 'ms', angle: mask.angle + 'deg' }}>
         <clipPath id={ _id('mask') } clipPath={ url('shape') } { ...cpu }>
           <Rect
             className={ styles.mask }
@@ -42,16 +49,18 @@ export default connect(
         </clipPath>
         <clipPath id={ _id('enter') } clipPath={ url('leave') } { ...cpu }>
           <Polygon
-            className={ styles.enter   }
+            className={ styles.from    }
             points   ={ masks[1].shape }
             rcv      ={{ width: `${ masks[1].width }px` }}
+            ref      ={ $enter }
           />
         </clipPath>
         <clipPath id={ _id('leave') } { ...cpu }>
           <Polygon
-            className={ styles.leave   }
+            className={ styles.from    }
             points   ={ masks[2].shape }
             rcv      ={{ width: `${ masks[2].width }px` }}
+            ref      ={ $leave }
           />
         </clipPath>
       </G>

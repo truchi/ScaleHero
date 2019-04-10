@@ -1,6 +1,6 @@
 @value _easing from "../variables.css";
 
-.transition {
+.from {
     transform: rotate(var(--angle)) translateX(0);
     transform-origin: .5px .5px;
 
@@ -16,6 +16,3 @@
     rx: var(--radius);
     ry: var(--radius);
 }
-
-.enter { composes: transition; }
-.leave { composes: transition; }

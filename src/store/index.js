@@ -10,7 +10,7 @@ const intervals = [
 
 const palettes = [
   Object.fromEntries(
-    intervals.map(i => [i, { color: 'red', radius: 0 }])
+    intervals.map(i => [i, { color: 'blue', radius: 0 }])
   )
 ]
 
@@ -46,12 +46,12 @@ const initial = {
       palette: 0,
       units: [{ scale: 0, root: 'C', animate: 'enter' }]
     },
-    {
-      boxMask: 0,
-      layerMasks: [0],
-      palette: 0,
-      units: [{ scale: 0, root: 'C', animate: 'enter' }]
-    },
+    // {
+    //   boxMask: 0,
+    //   layerMasks: [0],
+    //   palette: 0,
+    //   units: [{ scale: 0, root: 'C', animate: 'enter' }]
+    // },
   ],
   boxMasks,
   layerMasks,
@@ -65,23 +65,27 @@ const store = createStore(
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 )
 
-setTimeout(
+true && setTimeout(
   () =>
     store.dispatch({
       type: 'next',
       payload: [
-        { path: ['from'], value: 3 },
-        { path: ['tuning', 2], value: null },
+        // { path: ['from'], value: 3 },
+        // { path: ['tuning', 2], value: null },
         { path: ['layers', 1], value: null },
         { path: ['layers', 0, 'masks', 0], value: null },
         { path: ['layers', 0, 'masks', 1], value: 1 },
         {
+          path: ['layers', 0, 'units', 0],
+          value: { scale: 0, root: 'C', animate: 'leave' }
+        },
+        {
           path: ['layers', 0, 'units', 1],
-          value: { scale: 0, root: 'D', animate: 'enter' }
+          value: { scale: 0, root: 'F', animate: 'enter' }
         },
       ]
     }),
-  500
+  5000
 )
 
 window.store = store
