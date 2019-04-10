@@ -35,7 +35,7 @@ export default connect(
       id   : `clip-${ layer }-${ string }-${ box }`,
       mask : boxMask,
       style: Mask.insideAny(string)(from + box)(layerMasks)
-        ? palette[Scale.getInterval(root)(note)(scale)]
+        ? palette[Scale.getInterval(root)(note)(scale)] || null
         : null
     }
   }
