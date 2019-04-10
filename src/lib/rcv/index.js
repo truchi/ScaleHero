@@ -19,15 +19,6 @@ export default element =>
   class extends Component {
     static displayName = `RCV(${ element.type })`
 
-    constructor(props) {
-      super(props)
-
-      const rcv = this.props.rcv
-      if (Array.isArray(rcv) && typeof rcv[1] === 'function') {
-        rcv[1](this.css)
-      }
-    }
-
     componentDidMount() {
       this.css()
     }
@@ -51,8 +42,8 @@ export default element =>
       const $ = findDOMNode(this)
       if (!$) return
 
-      this.css.$ = $
-      styles     = flatObject(this.getStyles(styles))
+      this.$ = $
+      styles = flatObject(this.getStyles(styles))
 
       Object
         .entries(styles)
