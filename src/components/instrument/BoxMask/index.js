@@ -24,11 +24,24 @@ export default connect(
     const masks = ['shape', 'enter','leave'].map(type => mask[type](0)) // FIXME
     const cpu   = { clipPathUnits: 'objectBoundingBox' }
 
-    const $enter = useRef(null)
-    const $leave = useRef(null)
+    let $enter = useRef(null)
+    let $leave = useRef(null)
     useEffect(() => {
-      if (animate === 'enter') $enter.current.$.classList.add(styles.to)
-      if (animate === 'leave') $leave.current.$.classList.add(styles.to)
+      $enter = $enter.current.$
+      $leave = $leave.current.$
+
+      if (animate === 'enter') {
+        $leave.classList.remove(styles.to)
+        $enter.classList.add   (styles.to)
+      }
+
+      if (animate === 'leave') {
+        $leave.classList.add(styles.to)
+        setTimeout(
+          () => $enter.classList.remove(styles.to),
+          duration
+        )
+      }
     })
 
     return (

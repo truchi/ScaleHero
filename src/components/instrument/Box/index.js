@@ -47,7 +47,8 @@ export default connect(
     index.current = mathMod(index.current + 1, MAX)
     const i       = index.current
 
-    units[i] = { style, animate: 'enter' }
+    if (style)
+      units[i] = { style, animate: 'enter' }
     if (prev >= 0)
       units[prev].animate = 'leave'
 
