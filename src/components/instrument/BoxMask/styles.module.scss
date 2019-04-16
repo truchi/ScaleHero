@@ -11,8 +11,3 @@
     transform: rotate(var(--angle)) translateX(var(--width));
     transition: transform var(--duration) _easing;
 }
-
-.mask {
-    rx: var(--radius);
-    ry: var(--radius);
-}

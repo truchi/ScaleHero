@@ -50,14 +50,6 @@ export default connect(
 
     return (
       <G rcv={{ duration: duration + 'ms', angle: -mask.angle + 'deg' }}>
-        <clipPath id={ _id('mask') } clipPath={ url('shape') } { ...cpu }>
-          <Rect
-            className={ styles.mask }
-            rcv      ={{ radius: radiuses.radius }}
-            x="0" width ="1"
-            y="0" height="1"
-          />
-        </clipPath>
         <clipPath id={ _id('shape') } clipPath={ url('enter') } { ...cpu }>
           <Polygon
             className={ styles.shape       }

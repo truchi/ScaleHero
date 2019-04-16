@@ -32,7 +32,7 @@ export default connect(
 
     return {
       MAX,
-      id   : `clip-${ layer }-${ string }-${ box }`,
+      id   : `layer-${ layer }-string-${ string }-box-${ box }`,
       mask : boxMask,
       style: Mask.insideAny(string)(from + box)(layerMasks)
         ? palette[Scale.getInterval(root)(note)(scale)] || null
@@ -79,21 +79,21 @@ export default connect(
       <box className={ styles.box }>
         <svg className={ styles.svg }>
           <defs>
-            { units.map(({ animate, radiuses }, key) => (
+            { units.map(({ animate, radiuses }, unit) => (
               <BoxMask
-                key     ={ key }
-                id      ={ `${ id }-${ key }` }
+                key     ={ unit }
+                id      ={ `${ id }-unit-${ unit }` }
                 mask    ={ mask     }
                 animate ={ animate  }
                 radiuses={ radiuses }
               />
             )) }
           </defs>
-          { units.map(({ style }, key) => (
+          { units.map(({ style }, unit) => (
             <BoxUnit
-              key  ={ key   }
+              key  ={ unit }
+              id   ={ `${ id }-unit-${ unit }` }
               style={ style }
-              clip ={ `url("#${ id }-${ key }-mask")` }
             />
           )) }
         </svg>
