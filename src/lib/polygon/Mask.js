@@ -76,6 +76,9 @@ export default class Mask extends settable({ DEFAULTS, after: '_set' }) {
   static SUBTYPES    = SUBTYPES
   static TRANSITIONS = Object.keys(TRANSITIONS)
   angle
+  shape
+  enter
+  leave
   _shape
   _size
   _type
@@ -87,34 +90,18 @@ export default class Mask extends settable({ DEFAULTS, after: '_set' }) {
   }
 
   _set() {
-    this._shape = this._getShape().crop(new Rectangle({ x: 1, y: 1 }))
-    this.angle  = this._getAngle()
+    const shape = this._getShape().crop(new Rectangle({ x: 1, y: 1 }))
+    this._shape = shape
+
+    this.angle = this._getAngle()
+    this.shape = { shape }
+    this.enter = this._get(w => new Point({ x: -w, y: 0 }))
+    this.leave = this._get(w => new Point())
   }
 
-  shape() {
-    return { shape: this._shape }
-  }
-
-  enter(radius) {
-    return this._get(radius, w => new Point({ x: -w, y: 0 }))
-  }
-
-  leave(radius) {
-    return this._get(radius)
-  }
-
-  _get(radius, start = _ => new Point()) {
-    // css has max radius=.5, hence *2
-    const s     = 2 * (radius || 0) * (1 - sq2) + sq2 // +e?
-    const clip  = new Rectangle({ x: s, y: s })
-      .translate(new Point({ x: (1 - s) / 2, y: (1 - s) / 2 }))
-
-    if (radius === undefined)
-      return { shape: clip, width: sq2 }
-
+  _get(start) {
     const shape = this._shape
       .rotate(-this.angle, new Point({ x: .5, y: .5 }))
-      .crop(clip)
       .boundingBox()
     const width = getSize(shape).x
 

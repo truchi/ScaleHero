@@ -1,29 +1,71 @@
-import React        from 'react'
+import React, {
+  useRef,
+} from 'react'
 import { connect }  from 'react-redux'
 import {
+  getLayer,
   getStringRange,
 } from '../../../store/selectors'
 import styles from './styles.module.scss'
+import BoxMask from '../BoxMask'
 import String from '../String'
 import {
-  applySpec,
   map,
+  mathMod,
 } from 'ramda'
 
 export default connect(
-  applySpec({
-    range: getStringRange
-  })
+  (state, props) => {
+    const {
+      MAX,
+      boxMask: mask,
+    } = getLayer(state, props)
+
+    return {
+      MAX,
+      mask,
+      range: getStringRange(state),
+    }
+  }
 )(
-  ({ range, layer }) => (
-    <layer className={ styles.layer }>
-      { map(i => (
-        <String
-          key    ={ i     }
-          string ={ i     }
-          layer  ={ layer }
-        />
-      ))(range) }
-    </layer>
-  )
+  ({ MAX, mask, range, layer }) => {
+    const indexRef   = useRef(-1)
+    const units      = useRef(Array(MAX).fill({})).current
+    const prev       = indexRef.current
+    indexRef.current = mathMod(indexRef.current + 1, MAX)
+    const index      = indexRef.current
+
+    // Enter current box
+    units[index] = { animate: 'enter' }
+
+    // Leave previous box
+    if (prev !== -1)
+      units[prev] = { animate: 'leave' }
+
+    return (
+      <layer className={ styles.layer }>
+        <svg className={ styles.svg }>
+          <defs>
+            { units.map(({ animate }, unit) => (
+              <BoxMask
+                key    ={ unit    }
+                unit   ={ unit    }
+                layer  ={ layer   }
+                mask   ={ mask    }
+                animate={ animate }
+              />
+            )) }
+          </defs>
+        </svg>
+        { map(i => (
+          <String
+            key   ={ i     }
+            string={ i     }
+            layer ={ layer }
+            index ={ index }
+          />
+        ))(range) }
+      </layer>
+    )
+  }
 )

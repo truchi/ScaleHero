@@ -15,14 +15,15 @@ export default connect(
     range: getBoxRange
   })
 )(
-  ({ range, string, layer }) => (
+  ({ range, string, layer, index }) => (
     <string className={ styles.string }>
       { map(i => (
         <Box
-          key    ={ i      }
-          box    ={ i      }
-          string ={ string }
-          layer  ={ layer  }
+          key   ={ i      }
+          box   ={ i      }
+          string={ string }
+          layer ={ layer  }
+          index ={ index  }
         />
       ))(range) }
     </string>

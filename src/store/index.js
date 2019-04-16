@@ -50,7 +50,7 @@ const layerMasks = [
 const initial = {
   tuning  : ['E', 'A', 'D', 'G', 'B', 'E'],
   from    : 0,
-  to      : 12,
+  to      : 15,
   duration: 500,
   layers: [
     {

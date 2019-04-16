@@ -6,15 +6,20 @@ const defaults = {
   radius: 0,
 }
 
-export default ({ id, style }) => {
+export default ({ unit, box, string, layer, style }) => {
   style     = { ...defaults, ...style }
   const r1  = style.radius
   const rpc = r1 * 100 + '%'
   const cpu = { clipPathUnits: 'objectBoundingBox' }
 
+  const idU  = type => `layer-${ layer }-string-${ string }-box-${ box }-unit-${ unit }-${ type }`
+  const idM  = type => `layer-${ layer }-unit-${ unit }-${ type }`
+  const urlU = type => `url("#${ idU(type) }")`
+  const urlM = type => `url("#${ idM(type) }")`
+
   return (
     <>
-      <clipPath id={ `${ id }-mask` } clipPath={ `url("#${ id }-shape")` } { ...cpu }>
+      <clipPath id={ idU('mask') } clipPath={ urlM('shape') } { ...cpu }>
         <rect
           rx   ={ r1 } ry    ={ r1 }
           x    ="0"    y     ="0"
@@ -24,7 +29,7 @@ export default ({ id, style }) => {
       </clipPath>
       <rect
         className ={ styles.unit }
-        clipPath  ={ `url("#${ id }-mask")` }
+        clipPath  ={ urlU('mask') }
         fill      ={ style.color }
         rx ={ rpc } ry={ rpc }
       />

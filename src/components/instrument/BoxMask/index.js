@@ -10,7 +10,6 @@ import rcv    from '../../../lib/rcv'
 import styles from './styles.module.scss'
 
 const G       = rcv(<g />)
-const Rect    = rcv(<rect />)
 const Polygon = rcv(<polygon />)
 
 export default connect(
@@ -18,13 +17,13 @@ export default connect(
     duration: getDuration(state)
   })
 )(
-  ({ duration, id, mask, animate, radiuses = {} }) => {
-    const _id   = type => `${ id }-${ type }`
-    const url   = type => `url("#${ _id(type) }")`
+  ({ duration, unit, layer, mask, animate }) => {
+    const id    = type => `layer-${ layer }-unit-${ unit }-${ type }`
+    const url   = type => `url("#${ id(type) }")`
     const cpu   = { clipPathUnits: 'objectBoundingBox' }
     const masks = Object.fromEntries(
       ['shape', 'enter', 'leave']
-        .map(type => [type, mask[type](radiuses[type])])
+        .map(type => [type, mask[type]])
         .map(([type, mask]) => [type, {
           points: mask.shape,
           rcv   : { width: mask.width + 'px' }
@@ -50,13 +49,13 @@ export default connect(
 
     return (
       <G rcv={{ duration: duration + 'ms', angle: -mask.angle + 'deg' }}>
-        <clipPath id={ _id('shape') } clipPath={ url('enter') } { ...cpu }>
+        <clipPath id={ id('shape') } clipPath={ url('enter') } { ...cpu }>
           <Polygon
             className={ styles.shape       }
             points   ={ masks.shape.points }
           />
         </clipPath>
-        <clipPath id={ _id('enter') } clipPath={ url('leave') } { ...cpu }>
+        <clipPath id={ id('enter') } clipPath={ url('leave') } { ...cpu }>
           <Polygon
             className={ styles.from        }
             points   ={ masks.enter.points }
@@ -64,7 +63,7 @@ export default connect(
             ref      ={ $enter             }
           />
         </clipPath>
-        <clipPath id={ _id('leave') } { ...cpu }>
+        <clipPath id={ id('leave') } { ...cpu }>
           <Polygon
             className={ styles.from        }
             points   ={ masks.leave.points }
