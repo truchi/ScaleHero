@@ -1,8 +1,5 @@
 import React  from 'react'
-import rcv    from '../../../lib/rcv'
 import styles from './styles.module.scss'
-
-const Rect = rcv(<rect />)
 
 const defaults = {
   color : 'transparent',
@@ -10,23 +7,26 @@ const defaults = {
 }
 
 export default ({ id, style }) => {
-  const cpu = { clipPathUnits: 'objectBoundingBox' }
   style     = { ...defaults, ...style }
+  const r1  = style.radius
+  const rpc = r1 * 100 + '%'
+  const cpu = { clipPathUnits: 'objectBoundingBox' }
 
   return (
     <>
       <clipPath id={ `${ id }-mask` } clipPath={ `url("#${ id }-shape")` } { ...cpu }>
-        <Rect
-          className={ styles.mask }
-          rcv      ={{ radius: style.radius }}
-          x="0" width ="1"
-          y="0" height="1"
+        <rect
+          rx   ={ r1 } ry    ={ r1 }
+          x    ="0"    y     ="0"
+          width="1"    height="1"
+
         />
       </clipPath>
-      <Rect
-        className={ styles.unit }
-        clipPath={ `url("#${ id }-mask")` }
-        rcv={ style }
+      <rect
+        className ={ styles.unit }
+        clipPath  ={ `url("#${ id }-mask")` }
+        fill      ={ style.color }
+        rx ={ rpc } ry={ rpc }
       />
     </>
   )

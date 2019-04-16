@@ -1,16 +1,4 @@
-.mask {
-    rx: var(--radius);
-    ry: var(--radius);
-}
-
 .unit {
     width: 100%;
     height: 100%;
-
-
-    fill: var(--color);
-    stroke: var(--strokeColor);
-    stroke-width: var(--strokeWidth);
-    rx: var(--radius);
-    ry: var(--radius);
 }
