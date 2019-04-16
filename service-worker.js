@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/ScaleHero/precache-manifest.443dad985f42cbfc8bd1c077e85abd5c.js"
+  "/ScaleHero/precache-manifest.d91763250d623780568cdf6399c1f4a2.js"
 );
 
 workbox.clientsClaim();
