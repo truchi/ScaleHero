@@ -1,13 +1,16 @@
 import React  from 'react'
 import styles from './styles.module.scss'
+import Textures from '../../../lib/textures'
 
 const defaults = {
-  color : 'transparent',
+  fill  : 'transparent',
   radius: 0,
 }
 
 export default ({ unit, box, string, layer, style }) => {
-  style     = { ...defaults, ...style }
+  style = { ...defaults, ...style }
+
+  let texture
   const r1  = style.radius
   const rpc = r1 * 100 + '%'
   const cpu = { clipPathUnits: 'objectBoundingBox' }
@@ -17,8 +20,15 @@ export default ({ unit, box, string, layer, style }) => {
   const urlU = type => `url("#${ idU(type) }")`
   const urlM = type => `url("#${ idM(type) }")`
 
+  if (typeof style.fill === 'object') {
+    texture = (<Textures id={ idU('texture') } { ...style.fill } />)
+    style.fill = urlU('texture')
+  }
+
   return (
     <>
+      { texture && texture }
+      <Textures id={ idU('texture') } type="circles" />
       <clipPath id={ idU('mask') } clipPath={ urlM('shape') } { ...cpu }>
         <rect
           rx   ={ r1 } ry    ={ r1 }
@@ -28,9 +38,9 @@ export default ({ unit, box, string, layer, style }) => {
         />
       </clipPath>
       <rect
-        className ={ styles.unit }
-        clipPath  ={ urlU('mask') }
-        fill      ={ style.color }
+        className={ styles.unit }
+        clipPath ={ urlU('mask') }
+        fill     ={ style.fill }
         rx ={ rpc } ry={ rpc }
       />
     </>

@@ -13,7 +13,15 @@ const palettes = [
     intervals.map(
       (i, ind) =>
         [i, {
-          color : `hsl(${ 360 * ind / intervals.length }, 50%, 50%)`,
+          fill: {
+            type: ['lines', 'circles', 'paths'][ind % 3],
+            d: 'crosses',
+            stroke: `hsl(${ 360 * (ind + intervals.length / 2) / intervals.length }, 100%, 50%)`,
+            fill  : `hsl(${ 360 * (ind + intervals.length / 2) / intervals.length }, 100%, 50%)`,
+            lighter: true,
+            thicker: true,
+            background: `hsl(${ 360 * ind / intervals.length }, 50%, 50%)`,
+          },
           radius: ind % 3 === 0 ? .5 : 0,
         }]
     )
@@ -50,11 +58,11 @@ const layerMasks = [
 const initial = {
   tuning  : ['E', 'A', 'D', 'G', 'B', 'E'],
   from    : 0,
-  to      : 15,
+  to      : 12,
   duration: 500,
   layers: [
     {
-      MAX: 2,
+      MAX: 3,
       boxMask: 0,
       layerMasks: [0],
       palette: 0,
@@ -62,7 +70,7 @@ const initial = {
       scale: 0,
     },
     {
-      MAX: 2,
+      MAX: 3,
       boxMask: 1,
       layerMasks: [0],
       palette: 0,
@@ -70,7 +78,7 @@ const initial = {
       scale: 0,
     },
     {
-      MAX: 2,
+      MAX: 3,
       boxMask: 2,
       layerMasks: [0],
       palette: 0,
@@ -78,7 +86,7 @@ const initial = {
       scale: 0,
     },
     {
-      MAX: 2,
+      MAX: 3,
       boxMask: 3,
       layerMasks: [0],
       palette: 0,
@@ -86,7 +94,7 @@ const initial = {
       scale: 0,
     },
     {
-      MAX: 2,
+      MAX: 3,
       boxMask: 4,
       layerMasks: [0],
       palette: 0,

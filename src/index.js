@@ -15,4 +15,4 @@ setTimeout(() => {
   ),
     document.getElementById('root'))
   registerServiceWorker()
-}, 500)
+}, 100)
