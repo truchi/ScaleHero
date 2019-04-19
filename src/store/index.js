@@ -53,13 +53,16 @@ const layerMasks = [
     [[-Infinity, 8], [8, Infinity]],
   ]
 ]
+
+const duration = 1000
 /* SHIT end */
 
 const initial = {
-  tuning  : ['E', 'A', 'D', 'G', 'B', 'E'],
+  tuning  : ['E'],
+  // tuning  : ['E', 'A', 'D', 'G', 'B', 'E'],
   from    : 0,
-  to      : 12,
-  duration: 500,
+  to      : 0,
+  duration: duration,
   layers: [
     {
       MAX: 3,
@@ -134,27 +137,17 @@ const dispatch =
         )
     })
 
-window.dispatch = dispatch
-const cycle = arr => {
-  arr = arr.concat([arr.shift()])
-  arr = arr.concat([arr.shift()])
-  return arr
-}
-let roots = ['C', 'D', 'E', 'F', 'G']
+let roots   = ['C', 'D', 'E', 'F', 'G']
+const cycle = arr => arr = arr.concat([arr.shift()])
+const disp  = () => dispatch(roots = (cycle(roots)))
+// const go    = () => roots.map((v, i) => setTimeout(disp, i * duration))
+const go    = () => window.intervalID = setInterval(disp, duration)
 
-const disp = () => dispatch(roots = cycle(roots))
-const go   = () => {
-  disp()
-  roots.map((v, i) => {
-    window.intervalID = setTimeout(disp, i * 2000)
-  })
-}
-const stop = () => clearInterval(window.intervalID)
-
-false && setTimeout(go, 500)
+true && setTimeout(go, 500)
 
 window.go    = go
-window.stop  = stop
 window.store = store
+window.disp = disp
+window.dispatch = dispatch
 
 export default store
