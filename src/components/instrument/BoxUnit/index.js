@@ -28,7 +28,6 @@ export default ({ unit, box, string, layer, style }) => {
   return (
     <>
       { texture && texture }
-      <Textures id={ idU('texture') } type="circles" />
       <clipPath id={ idU('mask') } clipPath={ urlM('shape') } { ...cpu }>
         <rect
           rx   ={ r1 } ry    ={ r1 }
