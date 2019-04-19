@@ -30,23 +30,19 @@ export default connect(
 )(
   ({ MAX, mask, range, layer }) => {
     const indexRef   = useRef(-1)
-    const units      = useRef(Array(MAX).fill({})).current
     const prev       = indexRef.current
     indexRef.current = mathMod(indexRef.current + 1, MAX)
     const index      = indexRef.current
 
-    // Enter current box
-    units[index] = { animate: 'enter' }
-
-    // Leave previous box
-    if (prev !== -1)
-      units[prev] = { animate: 'leave' }
+    const units = Array(MAX).fill('')
+    units[index] = 'enter'
+    if (prev !== -1) units[prev] = 'leave'
 
     return (
       <layer className={ styles.layer }>
         <svg className={ styles.svg }>
           <defs>
-            { units.map(({ animate }, unit) => (
+            { units.map((animate, unit) => (
               <BoxMask
                 key    ={ unit    }
                 unit   ={ unit    }

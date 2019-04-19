@@ -1,7 +1,4 @@
-import React, {
-  useEffect,
-  useRef,
-} from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import {
   getDuration,
@@ -30,22 +27,10 @@ export default connect(
         }])
     )
 
-    let $enter = useRef(null)
-    let $leave = useRef(null)
-    useEffect(() => {
-      $enter = $enter.current.$
-      $leave = $leave.current.$
-
-      if (animate === 'enter') {
-        $leave.classList.remove(styles.to)
-        $enter.classList.add   (styles.to)
-      }
-
-      if (animate === 'leave') {
-        $leave.classList.add(styles.to)
-        setTimeout(() => $enter.classList.remove(styles.to), duration)
-      }
-    })
+    const entering = animate === 'enter'
+    const leaving  = animate === 'leave'
+    const enterCN  = styles.from + (entering || leaving ? ' ' + styles.to : '')
+    const leaveCN  = styles.from + (            leaving ? ' ' + styles.to : '')
 
     return (
       <G rcv={{ duration: duration + 'ms', angle: -mask.angle + 'deg' }}>
@@ -57,18 +42,16 @@ export default connect(
         </clipPath>
         <clipPath id={ id('enter') } clipPath={ url('leave') } { ...cpu }>
           <Polygon
-            className={ styles.from        }
+            className={ enterCN        }
             points   ={ masks.enter.points }
             rcv      ={ masks.enter.rcv    }
-            ref      ={ $enter             }
           />
         </clipPath>
         <clipPath id={ id('leave') } { ...cpu }>
           <Polygon
-            className={ styles.from        }
+            className={ leaveCN        }
             points   ={ masks.leave.points }
             rcv      ={ masks.leave.rcv    }
-            ref      ={ $leave             }
           />
         </clipPath>
       </G>
