@@ -141,9 +141,20 @@ const cycle = arr => {
   return arr
 }
 let roots = ['C', 'D', 'E', 'F', 'G']
-true && setTimeout(() => {
-  window.intervalID = setInterval(() => dispatch(roots = cycle(roots)), 2000)
-}, 1000)
 
+const disp = () => dispatch(roots = cycle(roots))
+const go   = () => {
+  disp()
+  roots.map((v, i) => {
+    window.intervalID = setTimeout(disp, i * 2000)
+  })
+}
+const stop = () => clearInterval(window.intervalID)
+
+false && setTimeout(go, 500)
+
+window.go    = go
+window.stop  = stop
 window.store = store
+
 export default store
