@@ -7,7 +7,7 @@ import            './polyfills'
 import App   from './components/App'
 import store from './store/'
 
-setTimeout(() => {
+/* setTimeout(() => { */
   ReactDOM.render((
     <Provider store={ store }>
       <App />
@@ -15,4 +15,4 @@ setTimeout(() => {
   ),
     document.getElementById('root'))
   registerServiceWorker()
-}, 100)
+  /* }, 100) */

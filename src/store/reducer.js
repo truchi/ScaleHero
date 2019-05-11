@@ -55,8 +55,8 @@ const reducers = {
 export default
   (state, { type, payload }) =>
     // defaultTo(identity, reducers[type])(state, payload)
-    console.log('reducing', type, payload, state) ||
+    // console.log('reducing', type, payload, state) ||
     compose(
-      window.__D('-> state'),
+      // window.__D('-> state'),
       defaultTo(identity, reducers[type])
     )(state, payload)

@@ -135,8 +135,7 @@ const dispatch =
 let roots   = ['C', 'D', 'E', 'F', 'G']
 const cycle = arr => arr = arr.concat([arr.shift()])
 const disp  = () => dispatch(roots = (cycle(roots)))
-// const go    = () => roots.map((v, i) => setTimeout(disp, i * duration))
-const go    = () => window.intervalID = setInterval(disp, duration)
+const go    = () => roots.map((v, i) => setTimeout(disp, i * 1000))
 
 true && setTimeout(go, 500)
 

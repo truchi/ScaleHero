@@ -44,6 +44,7 @@ const defaultStyle = {
   borderStyle    : 'solid',
   borderWidth    : 0
 }
+
 const Box = ({ style }) => {
   let {
     backgroundColor,
