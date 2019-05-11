@@ -13,16 +13,20 @@ const palettes = [
     intervals.map(
       (i, ind) =>
         [i, {
-          fill: {
+          backgroundImage: {
             type: ['lines', 'circles', 'paths'][ind % 3],
             d: 'crosses',
             stroke: `hsl(${ 360 * (ind + intervals.length / 2) / intervals.length }, 100%, 50%)`,
             fill  : `hsl(${ 360 * (ind + intervals.length / 2) / intervals.length }, 100%, 50%)`,
             lighter: true,
             thicker: true,
-            background: `hsl(${ 360 * ind / intervals.length }, 50%, 50%)`,
+            opacity: .6,
           },
-          radius: ind % 3 === 0 ? .5 : 0,
+          backgroundColor: `hsl(${ 360 * ind / intervals.length }, 50%, 50%)`,
+          borderRadius: ind % 3 === 0 ? .5 : 0,
+          borderColor: 'red',
+          borderStyle: 'dotted',
+          borderWidth: 1,
         }]
     )
   ),
@@ -45,27 +49,22 @@ const boxMasks = [
 
 const layerMasks = [
   [
-    [[-Infinity, 8], [8, Infinity]],
-    [[-Infinity, 8], [8, Infinity]],
-    [[-Infinity, 8], [8, Infinity]],
-    [[-Infinity, 8], [8, Infinity]],
-    [[-Infinity, 8], [8, Infinity]],
-    [[-Infinity, 8], [8, Infinity]],
+    [[-Infinity, 5], [8, Infinity]],
+    [[-Infinity, 5], [8, Infinity]],
+    [[-Infinity, 5], [8, Infinity]],
+    [[-Infinity, 5], [8, Infinity]],
+    [[-Infinity, 5], [8, Infinity]],
+    [[-Infinity, 5], [8, Infinity]],
   ]
 ]
-
-const duration = 1000
 /* SHIT end */
 
 const initial = {
-  tuning  : ['E'],
-  // tuning  : ['E', 'A', 'D', 'G', 'B', 'E'],
-  from    : 0,
-  to      : 0,
-  duration: duration,
+  tuning: ['E', 'A', 'D', 'G', 'B', 'E'],
+  from  : 0,
+  to    : 12,
   layers: [
     {
-      MAX: 3,
       boxMask: 0,
       layerMasks: [0],
       palette: 0,
@@ -73,7 +72,6 @@ const initial = {
       scale: 0,
     },
     {
-      MAX: 3,
       boxMask: 1,
       layerMasks: [0],
       palette: 0,
@@ -81,7 +79,6 @@ const initial = {
       scale: 0,
     },
     {
-      MAX: 3,
       boxMask: 2,
       layerMasks: [0],
       palette: 0,
@@ -89,7 +86,6 @@ const initial = {
       scale: 0,
     },
     {
-      MAX: 3,
       boxMask: 3,
       layerMasks: [0],
       palette: 0,
@@ -97,7 +93,6 @@ const initial = {
       scale: 0,
     },
     {
-      MAX: 3,
       boxMask: 4,
       layerMasks: [0],
       palette: 0,
