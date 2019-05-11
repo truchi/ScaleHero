@@ -5,9 +5,7 @@ import {
   Note,
   Scale,
 } from '../../../lib/music'
-import {
-  Mask,
-} from '../../../lib/instrument'
+import Mask     from '../../../lib/mask'
 import textures from '../../../lib/textures'
 import {
   __,
