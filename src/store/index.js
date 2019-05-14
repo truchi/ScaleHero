@@ -32,13 +32,14 @@ const palettes = [
     )
   ),
   Object.fromEntries(
-    intervals.map(i => [i, { color: 'red', radius: 0 }])
+    intervals.map(i => [i, { backgroundColor: 'grey', borderRadius: '25%' }])
   ),
 ]
 
 const scales = [
   ['1', '2', '3', '4', '5', '6', '7'],
   ['1', '2', 'b3', '4', '5', 'b6', 'b7'],
+  ['1', 'b2', '2', 'b3', '3', '4', '#4', '5', 'b6', '6', 'b7', '7'],
 ]
 
 const clipPaths = [
@@ -67,6 +68,11 @@ const initial = {
   from  : 0,
   to    : 12,
   layers: [
+    {
+      palette: 1,
+      root: 'C',
+      scale: 2,
+    },
     {
       clipPath: 0,
       masks: [0],
