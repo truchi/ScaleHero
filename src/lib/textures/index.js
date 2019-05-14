@@ -68,10 +68,13 @@ export default ({ id, type, opacity = 1, ...props }) => {
   const width   = texture.attrs.width
   const height  = texture.attrs.height
   const viewBox = `0 0 ${ width } ${ height }`
+  const toUrl   = t => `url("data:image/svg+xml,${ encodeURI(t.toString()) }")`
 
-  return new DOM(
-    'svg',
-    { width, height, viewBox, xmlns, opacity },
-    texture.children
+  return toUrl(
+    new DOM(
+      'svg',
+      { width, height, viewBox, xmlns, opacity },
+      texture.children
+    )
   )
 }

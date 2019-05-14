@@ -5,8 +5,7 @@ import {
   Note,
   Scale,
 } from '../../../lib/music'
-import Mask     from '../../../lib/mask'
-import textures from '../../../lib/textures'
+import Mask from '../../../lib/mask'
 import {
   __,
   evolve,
@@ -26,55 +25,27 @@ const getLayer  =
         layerMasks: map(nth(__, layerMasks)),
         palette   : nth(__, palettes),
         scale     : nth(__, scales),
-      },
-        layer
-      )
-const getStyle = ({ palette, open, root, scale, string, box, from, layerMasks }) =>
-  Mask.insideAny(string)(from + box)(layerMasks)
-    ? palette[Scale.getInterval(root) (Note.add(box) (open)) (scale)] || null
-    : null
-
-const defaultBox = {
-  clipPath       : null,
-  backgroundColor: 'transparent',
-  backgroundImage: null,
-  borderRadius   : 0,
-  borderColor    : 'transparent',
-  borderStyle    : 'solid',
-  borderWidth    : 0
-}
-
-const Box = ({ clipPath, style }) => {
-  style = evolve({
-    backgroundImage: _ => _ != null
-      ? `url("data:image/svg+xml,${ encodeURI(textures(_).toString()) }")`
-      : null
-  })({ ...defaultBox, ...style, clipPath })
-
-  return (
-    <box
-      className={ styles.box }
-      style={ style }
-    />
-  )
-}
+      }, layer)
 
 export default connect(
   state => {
-    let { layers, from } = state
-    const tuning         = getTuning(state)
-    const boxes          = getBoxes (state)
+    const { layers, from } = state
+    const tuning           = getTuning(state)
+    const boxes            = getBoxes (state)
 
     return {
       layers: layers
         .map(getLayer(state))
         .map(({ clipPath, layerMasks, palette, root, scale }) =>
           tuning.map((open, string) =>
-            boxes.map(box => ({
-                clipPath,
-                style: getStyle({ palette, open, root, scale, string, box, from, layerMasks })
-              })
-            )
+            boxes.map(box => {
+              if (!Mask.insideAny(string)(from + box)(layerMasks)) return {}
+
+              const note  = Note.add(box)(open)
+              const style = palette[Scale.getInterval(root)(note)(scale)]
+
+              return style ? { clipPath, ...style } : {}
+            })
           )
         )
     }
@@ -86,8 +57,8 @@ export default connect(
         <layer className={ styles.layer } key={ key }>
           { string.map((boxes, key) => (
             <string className={ styles.string } key={ key }>
-              { boxes.map(({ clipPath, style }, key) => (
-                <Box key={ key } clipPath={ clipPath } style={ style } />
+              { boxes.map((style, key) => (
+                <box key={ key } className={ styles.box } style={ style } />
               )) }
             </string>
           )) }

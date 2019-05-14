@@ -1,6 +1,7 @@
 import { createStore } from 'redux'
 import reducer         from './reducer'
 import Clip            from '../lib/clip'
+import textures        from '../lib/textures'
 
 /* SHIT start */
 const intervals = [
@@ -13,7 +14,7 @@ const palettes = [
     intervals.map(
       (i, ind) =>
         [i, {
-          backgroundImage: {
+          backgroundImage: textures({
             type: ['lines', 'circles', 'paths'][ind % 3],
             d: 'crosses',
             stroke: `hsl(${ 360 * (ind + intervals.length / 2) / intervals.length }, 100%, 50%)`,
@@ -21,7 +22,7 @@ const palettes = [
             lighter: true,
             thicker: true,
             opacity: .6,
-          },
+          }),
           backgroundColor: `hsl(${ 360 * ind / intervals.length }, 50%, 50%)`,
           borderRadius: ind % 3 === 0 ? '25%' : 0,
           borderColor: 'black',
