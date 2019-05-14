@@ -25,14 +25,14 @@ const palettes = [
           }),
           backgroundColor: `hsl(${ 360 * ind / intervals.length }, 50%, 50%)`,
           borderRadius: ind % 3 === 0 ? '25%' : 0,
-          borderColor: '#DDD',
+          borderColor: '#EEE',
           borderStyle: 'solid',
           borderWidth: '1px',
         }]
     )
   ),
   Object.fromEntries(
-    intervals.map(i => [i, { backgroundColor: '#222', borderRadius: '25%' }])
+    intervals.map(i => [i, { backgroundColor: '#111', borderRadius: '25%' }])
   ),
 ]
 
@@ -66,7 +66,7 @@ const initial = {
   instrument: 'piano',
   tuning: ['C'],//['E', 'A', 'D', 'G', 'B', 'E'],
   from  : 0,
-  to    : 12,
+  to    : 24,
   layers: [
     {
       palette: 1,
@@ -141,13 +141,13 @@ const dispatch =
         )
     })
 
-let roots   = ['C', 'D', 'E', 'F', 'G']
+let roots   = ['C', 'C', 'D', 'E', 'F', 'G']
 const cycle = arr => arr = arr.concat([arr.shift()])
 const disp  = () => dispatch(roots = (cycle(roots)))
 const go    = () => roots.map((v, i) => setTimeout(disp, i * 1000))
 // const go    = () => window.intervalID = setInterval(disp, 500)
 
-0 && setTimeout(go, 500)
+1 && setTimeout(go, 500)
 
 window.go    = go
 window.store = store
