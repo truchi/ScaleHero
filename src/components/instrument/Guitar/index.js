@@ -45,7 +45,7 @@ export default connect(
         .map(({ clipPath, masks, palette, root, scale }) =>
           tuning.map((open, string) =>
             boxes.map(box => {
-              if (!Mask.insideAny(string)(from + box)(masks)) return {}
+              if (masks && !Mask.insideAny(string)(from + box)(masks)) return {}
 
               const note  = Note.add(box)(open)
               const style = palette[Scale.getInterval(root)(note)(scale)]
