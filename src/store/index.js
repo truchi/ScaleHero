@@ -1,6 +1,6 @@
 import { createStore } from 'redux'
 import reducer         from './reducer'
-import { Mask }        from '../lib/polygon'
+import Clip            from '../lib/clip'
 
 /* SHIT start */
 const intervals = [
@@ -23,10 +23,10 @@ const palettes = [
             opacity: .6,
           },
           backgroundColor: `hsl(${ 360 * ind / intervals.length }, 50%, 50%)`,
-          borderRadius: ind % 3 === 0 ? .5 : 0,
-          borderColor: 'red',
-          borderStyle: 'dotted',
-          borderWidth: 1,
+          borderRadius: ind % 3 === 0 ? '25%' : 0,
+          borderColor: 'black',
+          borderStyle: 'solid',
+          borderWidth: '2px',
         }]
     )
   ),
@@ -39,12 +39,12 @@ const scales = [
   ['1', '2', '3', '4', '5', '6', '7']
 ]
 
-const boxMasks = [
-  new Mask({ size: 1, type: 'rect', subtype: 'diamond' }),
-  new Mask({ size: .25, type: 'triangle', subtype: 'topleft', transition: 'southeast' }),
-  new Mask({ size: .25, type: 'triangle', subtype: 'topright', transition: 'southwest' }),
-  new Mask({ size: .25, type: 'triangle', subtype: 'bottomleft', transition: 'northeast' }),
-  new Mask({ size: .25, type: 'triangle', subtype: 'bottomright', transition: 'northwest' }),
+const clipPaths = [
+  Clip.topLeft    (.5),
+  Clip.topRight   (.5),
+  Clip.bottomLeft (.5),
+  Clip.bottomRight(.5),
+  Clip.diamond    (.5),
 ]
 
 const layerMasks = [
@@ -65,42 +65,42 @@ const initial = {
   to    : 12,
   layers: [
     {
-      boxMask: 0,
+      clipPath: 0,
       layerMasks: [0],
       palette: 0,
       root: 'C',
       scale: 0,
     },
     {
-      boxMask: 1,
+      clipPath: 1,
       layerMasks: [0],
       palette: 0,
       root: 'D',
       scale: 0,
     },
     {
-      boxMask: 2,
+      clipPath: 2,
       layerMasks: [0],
       palette: 0,
       root: 'E',
       scale: 0,
     },
     {
-      boxMask: 3,
+      clipPath: 3,
       layerMasks: [0],
       palette: 0,
       root: 'F',
       scale: 0,
     },
     {
-      boxMask: 4,
+      clipPath: 4,
       layerMasks: [0],
       palette: 0,
       root: 'G',
       scale: 0,
     },
   ],
-  boxMasks,
+  clipPaths,
   layerMasks,
   palettes,
   scales
@@ -136,8 +136,9 @@ let roots   = ['C', 'D', 'E', 'F', 'G']
 const cycle = arr => arr = arr.concat([arr.shift()])
 const disp  = () => dispatch(roots = (cycle(roots)))
 const go    = () => roots.map((v, i) => setTimeout(disp, i * 1000))
+// const go    = () => window.intervalID = setInterval(disp, 500)
 
-true && setTimeout(go, 500)
+1 && setTimeout(go, 500)
 
 window.go    = go
 window.store = store
