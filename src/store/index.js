@@ -37,7 +37,8 @@ const palettes = [
 ]
 
 const scales = [
-  ['1', '2', '3', '4', '5', '6', '7']
+  ['1', '2', '3', '4', '5', '6', '7'],
+  ['1', '2', 'b3', '4', '5', 'b6', 'b7'],
 ]
 
 const clipPaths = [
@@ -50,18 +51,19 @@ const clipPaths = [
 
 const masks = [
   [
-    [[-Infinity, 5], [8, Infinity]],
-    [[-Infinity, 5], [8, Infinity]],
-    [[-Infinity, 5], [8, Infinity]],
-    [[-Infinity, 5], [8, Infinity]],
-    [[-Infinity, 5], [8, Infinity]],
-    [[-Infinity, 5], [8, Infinity]],
+    [[-Infinity, 8], [8, Infinity]],
+    [[-Infinity, 8], [8, Infinity]],
+    [[-Infinity, 8], [8, Infinity]],
+    [[-Infinity, 8], [8, Infinity]],
+    [[-Infinity, 8], [8, Infinity]],
+    [[-Infinity, 8], [8, Infinity]],
   ]
 ]
 /* SHIT end */
 
 const initial = {
-  tuning: ['E', 'A', 'D', 'G', 'B', 'E'],
+  instrument: 'piano',
+  tuning: ['C'],//['E', 'A', 'D', 'G', 'B', 'E'],
   from  : 0,
   to    : 12,
   layers: [
@@ -70,34 +72,34 @@ const initial = {
       masks: [0],
       palette: 0,
       root: 'C',
-      scale: 0,
+      scale: 1,
     },
     {
       clipPath: 1,
       masks: [0],
       palette: 0,
-      root: 'D',
-      scale: 0,
+      root: 'C',
+      scale: 1,
     },
     {
       clipPath: 2,
       masks: [0],
       palette: 0,
-      root: 'E',
-      scale: 0,
+      root: 'C',
+      scale: 1,
     },
     {
       clipPath: 3,
       masks: [0],
       palette: 0,
-      root: 'F',
-      scale: 0,
+      root: 'C',
+      scale: 1,
     },
     {
       clipPath: 4,
       masks: [0],
       palette: 0,
-      root: 'G',
+      root: 'C',
       scale: 0,
     },
   ],
@@ -139,7 +141,7 @@ const disp  = () => dispatch(roots = (cycle(roots)))
 const go    = () => roots.map((v, i) => setTimeout(disp, i * 1000))
 // const go    = () => window.intervalID = setInterval(disp, 500)
 
-1 && setTimeout(go, 500)
+0 && setTimeout(go, 500)
 
 window.go    = go
 window.store = store

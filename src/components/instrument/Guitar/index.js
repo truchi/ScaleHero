@@ -29,12 +29,17 @@ const getLayer  =
 
 export default connect(
   state => {
-    const { layers, from } = state
-    const tuning           = getTuning(state)
-    const boxes            = getBoxes (state)
+    const {
+      instrument,
+      from,
+      layers,
+    } = state
+    const tuning = getTuning(state)
+    const boxes  = getBoxes (state)
 
     return {
-      open: !from,
+      instrument,
+      open  : instrument === 'guitar' && !from,
       layers: layers
         .map(getLayer(state))
         .map(({ clipPath, masks, palette, root, scale }) =>
@@ -52,8 +57,8 @@ export default connect(
     }
   }
 )(
-  ({ open, layers }) => (
-    <guitar className={ [styles.guitar, open ? styles.open : ''].join(' ') }>
+  ({ instrument, open, layers }) => (
+    <instrument className={ [styles[instrument], open ? styles.open : ''].join(' ') }>
       { layers.map((string, key) => (
         <layer className={ styles.layer } key={ key }>
           { string.map((boxes, key) => (
@@ -65,6 +70,6 @@ export default connect(
           )) }
         </layer>
       )) }
-    </guitar>
+    </instrument>
   )
 )
