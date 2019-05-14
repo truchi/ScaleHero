@@ -25,14 +25,14 @@ const palettes = [
           }),
           backgroundColor: `hsl(${ 360 * ind / intervals.length }, 50%, 50%)`,
           borderRadius: ind % 3 === 0 ? '25%' : 0,
-          borderColor: 'black',
+          borderColor: '#DDD',
           borderStyle: 'solid',
-          borderWidth: '2px',
+          borderWidth: '1px',
         }]
     )
   ),
   Object.fromEntries(
-    intervals.map(i => [i, { backgroundColor: 'grey', borderRadius: '25%' }])
+    intervals.map(i => [i, { backgroundColor: '#222', borderRadius: '25%' }])
   ),
 ]
 

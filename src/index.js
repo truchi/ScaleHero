@@ -6,6 +6,7 @@ import registerServiceWorker from './registerServiceWorker'
 import            './polyfills'
 import App   from './components/App'
 import store from './store/'
+import './styles.scss'
 
 /* setTimeout(() => { */
   ReactDOM.render((
