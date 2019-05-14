@@ -34,6 +34,7 @@ export default connect(
     const boxes            = getBoxes (state)
 
     return {
+      open: !from,
       layers: layers
         .map(getLayer(state))
         .map(({ clipPath, masks, palette, root, scale }) =>
@@ -51,8 +52,8 @@ export default connect(
     }
   }
 )(
-  ({ layers }) => (
-    <guitar className={ styles.guitar }>
+  ({ open, layers }) => (
+    <guitar className={ [styles.guitar, open ? styles.open : ''].join(' ') }>
       { layers.map((string, key) => (
         <layer className={ styles.layer } key={ key }>
           { string.map((boxes, key) => (

@@ -1,8 +1,14 @@
-@value _box-width, _box-height, _box-gap, _string-gap from "../variables.css";
+@import '../variables.scss';
 
 .guitar {
   display: grid;
-  grid-template-areas: "layers";
+  grid-template-areas: 'layers';
+
+  &.open {
+    .box:first-child {
+      width: $boxWidth / 3;
+    }
+  }
 }
 
 .layer {
@@ -12,14 +18,14 @@
 
 .string {
   display: block;
-  height: _box-height; /* Removes auto margin with inline-block children */
-  padding: _string-gap 0;
+  height: $boxHeight; /* Removes auto margin with inline-block children */
+  padding: $stringGap 0;
 }
 
 .box {
   display: inline-block;
   box-sizing: border-box;
-  width: _box-width;
-  height: _box-height;
-  margin: 0 _box-gap;
+  width: $boxWidth;
+  height: $boxHeight;
+  margin: 0 $boxGap;
 }
