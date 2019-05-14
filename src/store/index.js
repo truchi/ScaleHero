@@ -48,7 +48,7 @@ const clipPaths = [
   Clip.diamond    (.5),
 ]
 
-const layerMasks = [
+const masks = [
   [
     [[-Infinity, 5], [8, Infinity]],
     [[-Infinity, 5], [8, Infinity]],
@@ -67,42 +67,42 @@ const initial = {
   layers: [
     {
       clipPath: 0,
-      layerMasks: [0],
+      masks: [0],
       palette: 0,
       root: 'C',
       scale: 0,
     },
     {
       clipPath: 1,
-      layerMasks: [0],
+      masks: [0],
       palette: 0,
       root: 'D',
       scale: 0,
     },
     {
       clipPath: 2,
-      layerMasks: [0],
+      masks: [0],
       palette: 0,
       root: 'E',
       scale: 0,
     },
     {
       clipPath: 3,
-      layerMasks: [0],
+      masks: [0],
       palette: 0,
       root: 'F',
       scale: 0,
     },
     {
       clipPath: 4,
-      layerMasks: [0],
+      masks: [0],
       palette: 0,
       root: 'G',
       scale: 0,
     },
   ],
   clipPaths,
-  layerMasks,
+  masks,
   palettes,
   scales
 }

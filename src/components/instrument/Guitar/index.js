@@ -18,13 +18,13 @@ import {
 const getTuning = ({ tuning    }) => reverse(tuning)
 const getBoxes  = ({ from, to  }) => range(from, to + 1)
 const getLayer  =
-  ({ layers, clipPaths, layerMasks, palettes, scales }) =>
+  ({ layers, clipPaths, masks, palettes, scales }) =>
     layer =>
       evolve({
-        clipPath  : nth(__, clipPaths),
-        layerMasks: map(nth(__, layerMasks)),
-        palette   : nth(__, palettes),
-        scale     : nth(__, scales),
+        clipPath: nth(__, clipPaths),
+        masks   : map(nth(__, masks)),
+        palette : nth(__, palettes),
+        scale   : nth(__, scales),
       }, layer)
 
 export default connect(
@@ -36,10 +36,10 @@ export default connect(
     return {
       layers: layers
         .map(getLayer(state))
-        .map(({ clipPath, layerMasks, palette, root, scale }) =>
+        .map(({ clipPath, masks, palette, root, scale }) =>
           tuning.map((open, string) =>
             boxes.map(box => {
-              if (!Mask.insideAny(string)(from + box)(layerMasks)) return {}
+              if (!Mask.insideAny(string)(from + box)(masks)) return {}
 
               const note  = Note.add(box)(open)
               const style = palette[Scale.getInterval(root)(note)(scale)]
