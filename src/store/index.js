@@ -1,7 +1,117 @@
 import { createStore } from 'redux'
 import reducer         from './reducer'
 import Clip            from '../lib/clip'
-import textures        from '../lib/textures'
+import Textures        from '../lib/textures'
+import Timeline        from '../lib/timeline'
+
+// [1],
+// [2, [
+//   {
+//     path: ['from'],
+//     value: 2,
+//   },
+//   {
+//     path: ['layers', 0, 'root'],
+//     value: 'D',
+//   },
+// ]],
+// [1],
+// {
+//   start: true,
+// },
+// [1],
+// [2, [
+//   {
+//     path: ['from'],
+//     value: 2,
+//   },
+//   {
+//     path: ['layers', 0, 'root'],
+//     value: 'D',
+//   },
+// ]],
+// [1],
+// {
+//   bar: true,
+//   repeat: true,
+// },
+// [1],
+// [1, [
+//   {
+//     path: ['from'],
+//     value: 0,
+//   },
+//   {
+//     path: ['layers', 0, 'root'],
+//     value: 'C',
+//   },
+//   {
+//     path: ['layers', 1],
+//     value: null,
+//   },
+// ]],
+// [1],
+// {
+//   doubleBar: true,
+//   repeat: 4,
+// },
+// [ [duration, changes], ... ]
+const timeline = [
+  {
+    repeat: true,
+  },
+  [1, [
+    {
+      path: ['from'],
+      value: 'B',
+    },
+  ]],
+  {
+    repeat: true,
+  },
+  [1, [
+    {
+      path: ['from'],
+      value: 'C',
+    },
+  ]],
+  {
+    repeat: 4,
+  },
+  [1, [
+    {
+      path: ['from'],
+      value: 'D',
+    },
+  ]],
+  {
+    repeat: 2,
+  },
+]
+
+const i = {
+  from: 'A',
+  // layers: [
+  //   { root: 'F' },
+  //   { root: 'B' },
+  // ]
+}
+
+console.log(timeline)
+const exped = Timeline.expand(i, timeline)
+console.log(
+  JSON.stringify(
+    []
+      .concat
+      .apply(
+        [],
+        exped.timeline.map(([t, { from }]) => `${t}, ${from}`)
+      ),
+    null,
+    4
+  )
+)
+console.log('expand', exped)
 
 /* SHIT start */
 const intervals = [
@@ -14,7 +124,7 @@ const palettes = [
     intervals.map(
       (i, ind) =>
         [i, {
-          backgroundImage: textures({
+          backgroundImage: Textures({
             type: ['lines', 'circles', 'paths'][ind % 3],
             d: 'crosses',
             stroke: `hsl(${ 360 * (ind + intervals.length / 2) / intervals.length }, 100%, 50%)`,
@@ -147,7 +257,7 @@ const disp  = () => dispatch(roots = (cycle(roots)))
 const go    = () => roots.map((v, i) => setTimeout(disp, i * 1000))
 // const go    = () => window.intervalID = setInterval(disp, 500)
 
-1 && setTimeout(go, 500)
+0 && setTimeout(go, 500)
 
 window.go    = go
 window.store = store
