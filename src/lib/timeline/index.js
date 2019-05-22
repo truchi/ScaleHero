@@ -1,156 +1,190 @@
 import {
+  multiply,
+  update,
+  isNil,
+  repeat,
+  T,
+  nthArg,
+  equals,
+  prop,
+  cond,
   __,
-  converge,
-  juxt,
-  when,
-  merge,
-  unnest,
-  times,
-  nth,
-  map,
+  curry,
   add,
-  slice,
   adjust,
   append,
   assocPath,
-  last,
-  tail,
-  compose,
-  length as len,
-  reduce,
-  init,
   concat,
+  converge,
+  init,
+  juxt,
+  last,
+  length,
+  map,
+  merge,
+  compose as c,
+  nth,
+  reduce,
+  slice,
+  tail,
+  times,
+  unnest,
+  when,
+  findLast,
+  tap,
+  is,
+  allPass,
+  not,
+  complement
 } from 'ramda'
 
-//--
-//   Timeline
-//
-//   Functions to expand timelines
-//   into temporal sequences of state
-//   provided the initial state
-//
-//   Timeline example:
-//     [
-//       [2],                                     // Nothing happening for some duration
-//       [1, [{ path: [...], value: ... }, ...]], // Changes for some duration
-//       [0, { ... }],                            // Ignored
-//       [1],                                     // Continues last changes for some duration
-//       ...
-//     ]
-//
-//   Expansion example:
-//     [
-//       [0, { ... }]  // Initial state
-//       [2, { ... }], // State for some duration
-//       ...
-//     ]
-//--
+//-------------------//
+//-- Apply changes --//
+//-------------------//
 
-//** Reduces state with changes
-//:: Object state, Array changes -> Object newState
-export const stateReducer=
-  (state, changes) =>
-    reduce(
-      (state, { path, value }) => assocPath(path, value, state),
-      state,
-      changes,
-    )
+// // TODO inline?
+// const hasChanges =
+//   allPass([is(Array), c(is(Array), nth(1))])
 
-const repeatStart =
-  ({ timeline, length, repeats }) =>
-    ({
-      repeats: append(
-        {
-          from: len(timeline),
-          length,
-        },
-        repeats
-      )
-    })
+// const hasState =
+//   allPass([is(Array), nth(1)]) // TODO array???
 
-//** Repeats from tip of repeats to tip of timeline, repeat times
-//:: Object Array timeline Number length Array repeats, Object Number repeat
-//::   -> Object Array repeat
-const repeatEnd =
-  ({ timeline, length, repeats }, { repeat }) => {
-    const { from, length: fromLength } = last(repeats)
+// const getLastState =
+//   c(nth(1), findLast(hasState))
 
-    const size     = length - fromLength                  // duration of slice
-    const sliced   = slice(from, len(timeline), timeline) // slice to repeat
-    const repeated = compose(
-      unnest,
-      tail,                          // Ignore first repeat (already in timeline)
-      times(
-        n =>
-          map(                       // for each moment
-            adjust(0, add(size * n)) // add size * repeatition to its time
-          )(sliced)                  // of the slice
-      )
-    )(+repeat)                       // repeat times
+// //** Reduces state with changes
+// //:: Object state -> Array changes -> Object newState
+// export const stateReducer = curry(
+//   (state, changes) =>
+//     reduce(
+//       (state, { path, value }) => assocPath(path, value, state),
+//       state,
+//       changes,
+//     )
+// )
 
-    return {
-      timeline: concat(timeline, repeated),
-      length  : length + size * --repeat,
-      repeats : init(repeats),
-    }
-  }
+// //** Appends next moment in timeline given current event
+// //:: Array timeline -> Object|Array event -> Array timeline
+// export const changesReducer = curry(
+//   (timeline, event) =>
+//     append(
+//       when( // TODO adjust when is better ?
+//         hasChanges,
+//         adjust(1, stateReducer(getLastState(timeline))),
+//         event
+//       ),
+//       timeline
+//     )
+// )
 
-//** Pushes changes to timeline
-//:: Object Array timeline Number length, Array Number duration Array changes, Function stateTransformer
-//::   -> Object Array timeline Number length
-const handleEvent =
-  ({ timeline, length }, [duration, changes], stateTransformer) =>
-    ({
-      length  : length + duration,       // Add event's duration to length
-      timeline: when(                    // If
-        _ => len(changes),               // event has changes
-        converge(append, [               // append
-          juxt([                         // [
-            _ => length,                 //   length,
-            compose(                     //
-              stateTransformer,          //   transformed
-              stateReducer(__, changes), //   reduced
-              nth(1),                    //   state
-              last,                      //   from previous timeline moment
+// //** Applies changes in timeline when events have changes, given initial state
+// //:: Object state, Array timeline -> Array timeline
+// export const applyChanges = curry(
+//   (state, timeline) =>
+//     reduce(
+//       changesReducer,
+//       [[0, state]],
+//       timeline
+//     )
+// )
+
+//--------------------//
+//-- Expand repeats --//
+//--------------------//
+
+const isRepeatStart =
+ c(equals(true), prop('repeat'), nthArg(1))
+
+const isRepeatEnd =
+ c(is(Number), prop('repeat'), nthArg(1))
+
+//** Appends timeline length and last state to repeats
+//:: Object Array repeats Array timeline -> Object Array repeats Array timeline
+const startRepeat =
+  ({ repeats, timeline }) => ({ repeats: append(length(timeline), repeats), timeline })
+
+//** Appends repeated section to timeline
+//:: Object Array repeats Array timeline, Object Number repeat -> Object Array repeats Array timeline
+const endRepeat =
+  ({ repeats, timeline }, { repeat: count }) =>
+    ((from, to) =>
+      ({
+        repeats : init(repeats),
+        timeline: from === to - 1
+          ? adjust(
+            to - 1,
+            adjust(0, multiply(count)),
+            timeline
+          )
+          : concat(
+            timeline,
+            unnest(
+              repeat(
+                slice(from, to, timeline),
+                count - 1
+              )
             )
-          ]),                            // ]
-          _ => _                         // to timeline
-        ]),
-        timeline
-      )
-    })
+          )
+      })
+    )(last(repeats), length(timeline))
 
-//** Reduces timed state with timeline event
-//:: Function stateTransformer -> Object acc, Array timelineEvent -> Object acc
-export const timelineReducer =
-  (stateTransformer = _ => _) =>
-    (acc, event) =>
-      merge(
-        acc,
-        Array.isArray(event)
-          ? handleEvent(acc, event, stateTransformer) // event = [duration, changes]
-          : event.repeat === true
-            ? repeatStart(acc)
-            : repeatEnd(acc, event)                   // event = (int)repeat
-      )
+//** Appends moment to timeline
+//:: Object Array repeats Array timeline, Array moment -> Object Array repeats Array timeline
+const noRepeat =
+  ({ repeats, timeline }, moment) => ({ repeats, timeline: append(moment, timeline) })
 
-//** Expands (scans) timeline to timed state
-//:: Object initialState, Array timeline -> Array timedState
-export const expand =
-  (state, timeline, stateTransformer = _ => _) => {
-    return reduce(
-      timelineReducer(stateTransformer),
-      {
-        timeline: [[0, state]],
-        length: 0,
-        repeats: []
-      },
-      timeline,
+//** Expands repeated sections
+//:: Array timeline -> Array timeline
+export const expandRepeats =
+  c(
+    prop('timeline'),
+    reduce(
+      cond([
+        [isRepeatStart, startRepeat],
+        [isRepeatEnd  , endRepeat  ],
+        [T            , noRepeat   ],
+      ]),
+      { repeats: [], timeline: [] }
     )
-  }
+  )
+
+//-----------------//
+//-- Squish time --//
+//-----------------//
+
+//** Squishes timeline in time
+//:: Array timeline -> Array timeline
+export const squishTime =
+  c(
+    when(
+      c(equals(0), nth(0), nth(1)),
+      tail
+    ),
+    prop('timeline'),
+    reduce(
+      ({ timeline, offset }, [duration, state]) =>
+        ({
+          offset  : offset + duration,
+          timeline: when(
+            _ => !isNil(state),
+            append([offset, state]),
+            timeline
+          )
+        }),
+      { offset: 0, timeline: [] }
+    )
+  )
+
+//---------------------//
+//-- Merge timelines --//
+//---------------------//
+
+// export const mergeTimelines =
 
 export default {
-  stateReducer,
-  timelineReducer,
-  expand,
+  // stateReducer,
+  // changesReducer,
+  // applyChanges,
+  expandRepeats,
+  squishTime,
 }

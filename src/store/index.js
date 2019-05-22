@@ -57,9 +57,11 @@ import Timeline        from '../lib/timeline'
 // },
 // [ [duration, changes], ... ]
 const timeline = [
-  {
-    repeat: true,
-  },
+  // // [1],
+  // {
+  //   repeat: true,
+  // },
+  // // [1],
   [1, [
     {
       path: ['from'],
@@ -69,6 +71,7 @@ const timeline = [
   {
     repeat: true,
   },
+  [1],
   [1, [
     {
       path: ['from'],
@@ -76,7 +79,7 @@ const timeline = [
     },
   ]],
   {
-    repeat: 4,
+    repeat: 2,
   },
   [1, [
     {
@@ -84,9 +87,9 @@ const timeline = [
       value: 'D',
     },
   ]],
-  {
-    repeat: 2,
-  },
+  // {
+  //   repeat: 2,
+  // },
 ]
 
 const i = {
@@ -97,21 +100,20 @@ const i = {
   // ]
 }
 
+console.log('timeline')
 console.log(timeline)
-const exped = Timeline.expand(i, timeline)
-console.log(
-  JSON.stringify(
-    []
-      .concat
-      .apply(
-        [],
-        exped.timeline.map(([t, { from }]) => `${t}, ${from}`)
-      ),
-    null,
-    4
-  )
-)
-console.log('expand', exped)
+// const changed = Timeline.applyChanges(i, timeline)
+// console.log('applyChanges')
+// console.log(changed)
+const exped = Timeline.expandRepeats(timeline)
+console.log('expandRepeats')
+console.log(exped)
+const sqed = Timeline.squishTime(exped)
+console.log('sqed')
+console.log(sqed)
+const simple = (arr => arr.map(([d, s]) => `${ d } ${ s.from }`))(sqed)
+console.log('simple')
+console.log(simple)
 
 /* SHIT start */
 const intervals = [
