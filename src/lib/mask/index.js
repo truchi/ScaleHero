@@ -1,4 +1,5 @@
 import {
+  T,
   and,
   any,
   apply,
@@ -6,8 +7,10 @@ import {
   compose,
   defaultTo,
   gte,
+  length,
   lte,
   prop,
+  ifElse,
   zipWith,
 } from 'ramda'
 
@@ -68,7 +71,7 @@ const inside =
 const insideAny =
   i =>
     j =>
-      compose(any(inside(i)(j)), defaultTo([]))
+      compose(ifElse(length, any(inside(i)(j)), T), defaultTo([]))
 
 export default {
   inside,

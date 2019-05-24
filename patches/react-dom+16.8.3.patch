@@ -1,8 +1,8 @@
 diff --git a/node_modules/react-dom/cjs/react-dom.development.js b/node_modules/react-dom/cjs/react-dom.development.js
-index 13bea1e..540bc70 100644
+index 13bea1e..7435078 100644
 --- a/node_modules/react-dom/cjs/react-dom.development.js
 +++ b/node_modules/react-dom/cjs/react-dom.development.js
-@@ -7408,7 +7408,12 @@ var normalizeHTML = void 0;
+@@ -7408,7 +7408,13 @@ var normalizeHTML = void 0;
      // This tag is not present in non Electron environments such as JSDom which
      // is often used for testing purposes.
      // @see https://electronjs.org/docs/api/webview-tag
@@ -12,6 +12,7 @@ index 13bea1e..540bc70 100644
 +    instrument: true,
 +    layer     : true,
 +    string    : true,
++    boxes     : true,
 +    box       : true,
    };
  

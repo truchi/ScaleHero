@@ -4,80 +4,7 @@ import Clip            from '../lib/clip'
 import Textures        from '../lib/textures'
 import Timeline        from '../lib/timeline'
 
-// [1],
-// [2, [
-//   {
-//     path: ['from'],
-//     value: 2,
-//   },
-//   {
-//     path: ['layers', 0, 'root'],
-//     value: 'D',
-//   },
-// ]],
-// [1],
-// {
-//   start: true,
-// },
-// [1],
-// [2, [
-//   {
-//     path: ['from'],
-//     value: 2,
-//   },
-//   {
-//     path: ['layers', 0, 'root'],
-//     value: 'D',
-//   },
-// ]],
-// [1],
-// {
-//   bar: true,
-//   repeat: true,
-// },
-// [1],
-// [1, [
-//   {
-//     path: ['from'],
-//     value: 0,
-//   },
-//   {
-//     path: ['layers', 0, 'root'],
-//     value: 'C',
-//   },
-//   {
-//     path: ['layers', 1],
-//     value: null,
-//   },
-// ]],
-// [1],
-// {
-//   doubleBar: true,
-//   repeat: 4,
-// },
-// [ [duration, changes], ... ]
-const timeline = [
-  [1, [
-    {
-      path: ['from'],
-      value: 'B',
-    },
-  ]],
-  [1],
-  [1, [
-    {
-      path: ['from'],
-      value: 'C',
-    },
-  ]],
-  [1, [
-    {
-      path: ['from'],
-      value: 'D',
-    },
-  ]],
-]
-
+/* SHIT start */
 const t1 = [
   [4, [
     {
@@ -108,14 +35,6 @@ const t3 = [
   [2],
 ]
 
-const i = {
-  from: 'A',
-  // layers: [
-  //   { root: 'F' },
-  //   { root: 'B' },
-  // ]
-}
-
 const simpleLog = arr =>
   arr
     .map(
@@ -131,16 +50,6 @@ const merged = Timeline.merge(ts)
 console.log(ts.map(simpleLog).join('\n---\n'))
 console.log(simpleLog(merged))
 
-// console.log('timeline')
-// console.log(timeline)
-// const exped = Timeline.expand(timeline)
-// console.log('expand')
-// console.log(exped)
-// const abs = Timeline.toAbsolute(exped)
-// console.log('abs')
-// console.log(abs)
-
-/* SHIT start */
 const intervals = [
   '1', 'b2', '2', '#2', 'b3', '3', 'b4', '4',
   '#4', 'b5', '5', '#5', 'b6', '6', 'bb7', 'b7', '7'
@@ -211,35 +120,14 @@ const initial = {
       scale: 2,
     },
     {
-      clipPath: 0,
+      clipPaths: [0, 1, 2, 3],
       masks: [0],
       palette: 0,
       root: 'C',
       scale: 1,
     },
     {
-      clipPath: 1,
-      masks: [0],
-      palette: 0,
-      root: 'C',
-      scale: 1,
-    },
-    {
-      clipPath: 2,
-      masks: [0],
-      palette: 0,
-      root: 'C',
-      scale: 1,
-    },
-    {
-      clipPath: 3,
-      masks: [0],
-      palette: 0,
-      root: 'C',
-      scale: 1,
-    },
-    {
-      clipPath: 4,
+      clipPaths: [4],
       masks: [0],
       palette: 0,
       root: 'C',

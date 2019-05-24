@@ -10,6 +10,7 @@ import {
   __,
   evolve,
   map,
+  merge,
   nth,
   range,
   reverse,
@@ -20,12 +21,15 @@ const getBoxes  = ({ from, to  }) => range(from, to + 1)
 const getLayer  =
   ({ layers, clipPaths, masks, palettes, scales }) =>
     layer =>
-      evolve({
-        clipPath: nth(__, clipPaths),
-        masks   : map(nth(__, masks)),
-        palette : nth(__, palettes),
-        scale   : nth(__, scales),
-      }, layer)
+      merge({
+        clipPaths: [null],
+      }, evolve({
+          clipPaths: map(nth(__, clipPaths)),
+          masks    : map(nth(__, masks)),
+          palette  : nth(__, palettes),
+          scale    : nth(__, scales),
+        }, layer)
+      )
 
 export default connect(
   state => {
@@ -42,16 +46,16 @@ export default connect(
       open  : instrument === 'guitar' && !from,
       layers: layers
         .map(getLayer(state))
-        .map(({ clipPath, masks, palette, root, scale }) =>
+        .map(({ clipPaths, masks, palette, root, scale }) =>
           tuning.map((open, string) =>
-            boxes.map(box => {
-              if (masks && !Mask.insideAny(string)(from + box)(masks)) return {}
-
-              const note  = Note.add(box)(open)
-              const style = palette[Scale.getInterval(root)(note)(scale)]
-
-              return style ? { clipPath, ...style } : {}
-            })
+            boxes.map(box =>
+              !Mask.insideAny(string)(from + box)(masks)
+                ? { clipPaths: [] }
+                : {
+                  clipPaths,
+                  style: palette[Scale.getInterval(root)(Note.add(box)(open))(scale)] || {}
+                }
+            )
           )
         )
     }
@@ -63,8 +67,12 @@ export default connect(
         <layer className={ styles.layer } key={ key }>
           { string.map((boxes, key) => (
             <string className={ styles.string } key={ key }>
-              { boxes.map((style, key) => (
-                <box key={ key } className={ styles.box } style={ style } />
+              { boxes.map(({ clipPaths, style }, key) => (
+                <boxes className={ styles.boxes } key={ key }>
+                  { clipPaths.map((clipPath, key) => (
+                    <box key={ key } className={ styles.box } style={{ clipPath, ...style }} />
+                  )) }
+                </boxes>
               )) }
             </string>
           )) }
