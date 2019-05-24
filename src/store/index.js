@@ -57,20 +57,12 @@ import Timeline        from '../lib/timeline'
 // },
 // [ [duration, changes], ... ]
 const timeline = [
-  // // [1],
-  // {
-  //   repeat: true,
-  // },
-  // // [1],
   [1, [
     {
       path: ['from'],
       value: 'B',
     },
   ]],
-  {
-    repeat: true,
-  },
   [1],
   [1, [
     {
@@ -78,18 +70,42 @@ const timeline = [
       value: 'C',
     },
   ]],
-  {
-    repeat: 2,
-  },
   [1, [
     {
       path: ['from'],
       value: 'D',
     },
   ]],
-  // {
-  //   repeat: 2,
-  // },
+]
+
+const t1 = [
+  [4, [
+    {
+      path: ['from'],
+      value: 'A',
+    },
+  ]],
+]
+
+const t2 = [
+  [1],
+  [2, [
+    {
+      path: ['from'],
+      value: 'B',
+    },
+  ]],
+  [1],
+]
+
+const t3 = [
+  [2, [
+    {
+      path: ['from'],
+      value: 'C',
+    },
+  ]],
+  [2],
 ]
 
 const i = {
@@ -100,20 +116,29 @@ const i = {
   // ]
 }
 
-console.log('timeline')
-console.log(timeline)
-// const changed = Timeline.applyChanges(i, timeline)
-// console.log('applyChanges')
-// console.log(changed)
-const exped = Timeline.expandRepeats(timeline)
-console.log('expandRepeats')
-console.log(exped)
-const sqed = Timeline.squishTime(exped)
-console.log('sqed')
-console.log(sqed)
-const simple = (arr => arr.map(([d, s]) => `${ d } ${ s.from }`))(sqed)
-console.log('simple')
-console.log(simple)
+const simpleLog = arr =>
+  arr
+    .map(
+      ([start, end, changes]) =>
+        `${ start } ${ end } ${
+          changes == null ? '-' : changes.length ? changes.map(({ value }) => value).join(', ') : ''
+        }`
+    )
+    .join('\n')
+
+const ts = [t1, t2, t3].map(t => Timeline.toAbsolute(Timeline.expand(t)))
+const merged = Timeline.merge(ts)
+console.log(ts.map(simpleLog).join('\n---\n'))
+console.log(simpleLog(merged))
+
+// console.log('timeline')
+// console.log(timeline)
+// const exped = Timeline.expand(timeline)
+// console.log('expand')
+// console.log(exped)
+// const abs = Timeline.toAbsolute(exped)
+// console.log('abs')
+// console.log(abs)
 
 /* SHIT start */
 const intervals = [

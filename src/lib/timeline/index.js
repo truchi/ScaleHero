@@ -1,177 +1,161 @@
 import {
-  multiply,
-  update,
-  isNil,
-  repeat,
   T,
-  nthArg,
-  equals,
-  prop,
-  cond,
   __,
-  curry,
-  add,
   adjust,
   append,
-  assocPath,
+  apply,
+  compose as c,
   concat,
+  cond,
   converge,
+  equals,
+  filter,
+  flip,
+  head,
+  identity,
+  ifElse,
   init,
+  is,
+  isNil,
   juxt,
   last,
   length,
   map,
-  merge,
-  compose as c,
+  min,
+  multiply,
+  not,
   nth,
+  nthArg,
+  prepend,
+  prop,
   reduce,
+  repeat,
   slice,
   tail,
-  times,
   unnest,
-  when,
-  findLast,
-  tap,
-  is,
-  allPass,
-  not,
-  complement
+  until,
+  zip,
 } from 'ramda'
 
-//-------------------//
-//-- Apply changes --//
-//-------------------//
-
-// // TODO inline?
-// const hasChanges =
-//   allPass([is(Array), c(is(Array), nth(1))])
-
-// const hasState =
-//   allPass([is(Array), nth(1)]) // TODO array???
-
-// const getLastState =
-//   c(nth(1), findLast(hasState))
-
-// //** Reduces state with changes
-// //:: Object state -> Array changes -> Object newState
-// export const stateReducer = curry(
-//   (state, changes) =>
-//     reduce(
-//       (state, { path, value }) => assocPath(path, value, state),
-//       state,
-//       changes,
-//     )
-// )
-
-// //** Appends next moment in timeline given current event
-// //:: Array timeline -> Object|Array event -> Array timeline
-// export const changesReducer = curry(
-//   (timeline, event) =>
-//     append(
-//       when( // TODO adjust when is better ?
-//         hasChanges,
-//         adjust(1, stateReducer(getLastState(timeline))),
-//         event
-//       ),
-//       timeline
-//     )
-// )
-
-// //** Applies changes in timeline when events have changes, given initial state
-// //:: Object state, Array timeline -> Array timeline
-// export const applyChanges = curry(
-//   (state, timeline) =>
-//     reduce(
-//       changesReducer,
-//       [[0, state]],
-//       timeline
-//     )
-// )
+//--
+//   Timeline
+//
+//   Deals with timeline in 3 stages:
+//   Repeat expansion
+//   Absolute time conversion
+//   Merging
+//
+//   Timeline:
+//   [
+//     ...
+//     { repeat: true }, // indicates start of repeating section
+//     [duration, data], // event: data with duration
+//     ...
+//     { repeat: 4 },    // indicates end of repeating section
+//     ...
+//   ]
+//   Expanded:
+//   [
+//     [duration, data], // event in repeating section are duplicated
+//     [duration, data],
+//     ...
+//   ]
+//   Absolute time: (from expanded)
+//   [                     // begin starts at 0
+//     [begin, end, data], // begin time, end time, data
+//     ...                 // next begin is prev end
+//   ]
+//   Merge: (from absolute expanded)
+//   Takes multiples timelines and merges into a single timeline
+//--
 
 //--------------------//
 //-- Expand repeats --//
 //--------------------//
 
+//** Checks wheter arg 2 has prop repeat equals to true
+//:: , Object Any repeat -> Boolean isRepeat
 const isRepeatStart =
  c(equals(true), prop('repeat'), nthArg(1))
 
+//** Checks wheter arg 2 has prop repeat which is a Number
+//:: , Object Any repeat -> Boolean isRepeat
 const isRepeatEnd =
  c(is(Number), prop('repeat'), nthArg(1))
 
-//** Appends timeline length and last state to repeats
-//:: Object Array repeats Array timeline -> Object Array repeats Array timeline
+//** Appends timeline length to starts
+//:: Object Array starts Array timeline -> Object Array starts Array timeline
 const startRepeat =
-  ({ repeats, timeline }) => ({ repeats: append(length(timeline), repeats), timeline })
+  ({ starts, timeline }) => ({ starts: append(length(timeline), starts), timeline })
 
 //** Appends repeated section to timeline
-//:: Object Array repeats Array timeline, Object Number repeat -> Object Array repeats Array timeline
+//:: Object Array starts Array timeline, Object Number repeat -> Object Array starts Array timeline
 const endRepeat =
-  ({ repeats, timeline }, { repeat: count }) =>
+  ({ starts, timeline }, { repeat: count }) =>
     ((from, to) =>
       ({
-        repeats : init(repeats),
-        timeline: from === to - 1
-          ? adjust(
-            to - 1,
-            adjust(0, multiply(count)),
+        starts  : init(starts),            // remove last starting index
+        timeline: from === to - 1          // repeating only 1 event?
+          ? adjust(                        // change
+            to - 1,                        // last event
+            adjust(0, multiply(count)),    // by multiplying its duration by count
             timeline
           )
-          : concat(
+          : concat(                        // append
             timeline,
             unnest(
               repeat(
-                slice(from, to, timeline),
-                count - 1
+                slice(from, to, timeline), // slice to repeat
+                count - 1                  // count - 1 times
               )
             )
           )
       })
-    )(last(repeats), length(timeline))
+    )(last(starts), length(timeline))
 
-//** Appends moment to timeline
-//:: Object Array repeats Array timeline, Array moment -> Object Array repeats Array timeline
+//** Appends event to timeline
+//:: Object Array starts Array timeline, Array event -> Object Array starts Array timeline
 const noRepeat =
-  ({ repeats, timeline }, moment) => ({ repeats, timeline: append(moment, timeline) })
+  ({ starts, timeline }, event) => ({ starts, timeline: append(event, timeline) })
 
 //** Expands repeated sections
 //:: Array timeline -> Array timeline
-export const expandRepeats =
+export const expand =
   c(
     prop('timeline'),
     reduce(
-      cond([
-        [isRepeatStart, startRepeat],
-        [isRepeatEnd  , endRepeat  ],
-        [T            , noRepeat   ],
+      cond([                          // switch
+        [isRepeatStart, startRepeat], // { repeat: true   } remember start
+        [isRepeatEnd  ,   endRepeat], // { repeat: Number } repeat section
+        [T            ,    noRepeat], // default            append event
       ]),
-      { repeats: [], timeline: [] }
+      { starts: [], timeline: [] }
     )
   )
 
-//-----------------//
-//-- Squish time --//
-//-----------------//
+//-------------------//
+//-- Absolute time --//
+//-------------------//
 
 //** Squishes timeline in time
 //:: Array timeline -> Array timeline
-export const squishTime =
+export const toAbsolute =
   c(
-    when(
-      c(equals(0), nth(0), nth(1)),
-      tail
-    ),
     prop('timeline'),
     reduce(
-      ({ timeline, offset }, [duration, state]) =>
+      ({ time, timeline }, [duration, data]) =>
         ({
-          offset  : offset + duration,
-          timeline: when(
-            _ => !isNil(state),
-            append([offset, state]),
+          time    : time + duration, // increment time by current duration
+          timeline: append(          // absolute time event:
+            [
+              time,                  // begin time
+              time + duration,       // end time
+              data || []             // data
+            ],
             timeline
-          )
+          ),
         }),
-      { offset: 0, timeline: [] }
+      { time: 0, timeline: [] }
     )
   )
 
@@ -179,12 +163,88 @@ export const squishTime =
 //-- Merge timelines --//
 //---------------------//
 
-// export const mergeTimelines =
+//** Splits an event at time at
+//** Returns 2 events if begin < at < end, 1 otherwise
+//:: Number at, Array Number begin Number end Array data
+//::   -> Array split
+const splitEvent =
+  at =>
+    ([begin, end, data]) =>
+      (begin < at && at < end)
+        ? [[begin, at, data], [at, end, data]]
+        : [[begin, end, data]]
+
+//** Returns minimun of 2nd elements of array
+//:: Array array -> Number minimum
+const minEnd = c(reduce(min, Infinity), map(nth(1)))
+
+//** Concats toghether last heads of array
+//:: Array array -> Array array
+const concatData = c(reduce(concat, []), map(c(last, head)))
+
+//** Concats pairs when 2nd is not nil
+//:: Array pairs -> Array array
+const prependNotNil = ifElse(
+  c(isNil, nth(1)),
+  nth(0),
+  apply(flip(prepend)),
+)
+
+//** Returns a pair of:
+//**   the merged head data from from to to
+//**   the tails from to
+//:: Array Array heads Array tails, Array Number from Number to
+//::   -> Array Array mergedHead, Array newTails
+const _mergeHeads =
+  ([heads, tails], [from, to]) =>
+    c(
+      juxt([
+        _ => [from, to, concatData(_)], // merged head
+        c(
+          filter(length),               // remove empty new tails
+          map(prependNotNil),           // [[end, tail], ...] or [[tail], ...]
+          zip(tails),                   // append with resp. tail
+          map(nth(1))                   // take 2nd elem (from to to end)
+        )
+      ]),
+      map(splitEvent(to))               // split each head at to
+    )(heads)
+
+//** Merges head events into a single event
+//:: Array timelines -> Array Array mergedHead, Array newTails
+const mergeHeads =
+  c(
+    converge(
+      _mergeHeads,                       // call _mergeHeads with
+      [
+        identity,                        // [heads, tails]
+        c(                               // [from, to]:
+          juxt([c(head, head), minEnd]), // [begin of first in, min of ends in]
+          head                           // heads
+        )
+      ]
+    ),
+    juxt([map(head), map(tail)])         // [heads, tails]
+  )
+
+//** Merges timelines
+//:: Array timelines -> Array timeline
+export const merge =
+  c(
+    head,
+    until(                            // repeat until
+      c(not, length, last),           // tails are empty
+      ([heads, tails]) =>
+        juxt([
+          c(append(__, heads), head), // merge head goes in heads
+          nth(1)                      // new tails
+        ])(mergeHeads(tails))         // tails -> merged head, new tails
+    ),
+    _ => [[], _]                      // [heads, tails]
+  )
 
 export default {
-  // stateReducer,
-  // changesReducer,
-  // applyChanges,
-  expandRepeats,
-  squishTime,
+  expand,
+  toAbsolute,
+  merge,
 }
