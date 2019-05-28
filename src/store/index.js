@@ -11,36 +11,17 @@ const state = {
   lol: 0
 }
 const t1 = [
-  [1, [
-    {
-      path: ['lol'],
-      value: 1
-    },
-  ]],
-  [1, [
-    {
-      path: ['lol'],
-      value: 1
-    },
-    {
-      path: ['lol'],
-      value: 2
-    },
-  ]],
+  [4, [{ path: ['lol'], value: 1 }]],
 ]
 const t2 = [
   [1, []],
-  [1, []],
+  [2, [{ path: ['lol'], value: 2 }]],
 ]
 const t3 = [
-  [1, []],
-  [1, []],
+  [2, []],
+  [2, [{ path: ['lol'], value: 3 }]],
 ]
-const ts = [t1, t2, t3].map(t => Timeline.toAbsolute(Timeline.expand(t)))
-const timeline = Timeline.merge(ts)
-console.log(ts)
-console.log(timeline)
-console.log(Timeline.reduce((60 * 1000) / bpm)(timeline, state))
+console.log(Timeline.make((60 * 1000) / bpm, state, [t1, t2, t3]))
 
 const intervals = [
   '1', 'b2', '2', '#2', 'b3', '3', 'b4', '4',

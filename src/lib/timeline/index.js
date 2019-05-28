@@ -46,6 +46,7 @@ import {
 //   Absolute time conversion
 //   Merging
 //   Reducing
+//   Making
 //
 //   Timeline:
 //   [
@@ -56,21 +57,30 @@ import {
 //     { repeat: 4 },    // indicates end of repeating section
 //     ...
 //   ]
+//
 //   Expanded:
 //   [
 //     [duration, data], // event in repeating section are duplicated
 //     [duration, data],
 //     ...
 //   ]
+//
 //   Absolute time: (from expanded)
 //   [                   // from starts at 0
 //     [from, to, data], // begin time, end time, data
 //     ...               // next from is prev to
 //   ]
+//
 //   Merge: (from absolute expanded)
 //   Takes multiples timelines and merges into a single timeline
+//
 //   Reduce: (from merged)
 //   Reduces with initial state and time multiplier
+//
+//   Make:
+//   General operation:
+//   Expands, absolutes, merges and reduce timelines
+//   given multiplier and initial state
 //--
 
 //--------------------//
@@ -271,24 +281,39 @@ const reducer =
       )(timeline)
 
 //** Reduces timeline given from/to multiplier and initial state
-//:: Number multiplier
-//::   -> Array timeline, Object state, Number multiplier
-//::     -> Array timeline
+//:: Number multiplier, Object state, Array timeline -> Array timeline
 const _reduce =
-  multiplier =>
-    (timeline, state) =>
-      tail(
-        reduce(
-          reducer(multiplier),
-          [[0, 0, state]],
-          timeline
-        )
+  (multiplier, state, timeline) =>
+    tail(
+      reduce(
+        reducer(multiplier),
+        [[0, 0, state]],
+        timeline
       )
+    )
 export { _reduce as reduce }
+
+//------------//
+//-- Making --//
+//------------//
+
+//** Expands, absolutes, merges and reduce timelines
+//** given multiplier and initial state
+//:: Number multiplier, Object state, Array timelines -> Array timeline
+export const make =
+  (multiplier, state, timelines) =>
+    _reduce(
+      multiplier,
+      state,
+      merge(
+        map(c(toAbsolute, expand), timelines)
+      )
+    )
 
 export default {
   expand,
   toAbsolute,
   merge,
   reduce: _reduce,
+  make,
 }
