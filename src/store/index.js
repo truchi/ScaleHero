@@ -3,52 +3,44 @@ import reducer         from './reducer'
 import Clip            from '../lib/clip'
 import Textures        from '../lib/textures'
 import Timeline        from '../lib/timeline'
+import * as R from 'ramda'
 
 /* SHIT start */
+const bpm = 60
+const state = {
+  lol: 0
+}
 const t1 = [
-  [4, [
+  [1, [
     {
-      path: ['from'],
-      value: 'A',
+      path: ['lol'],
+      value: 1
+    },
+  ]],
+  [1, [
+    {
+      path: ['lol'],
+      value: 1
+    },
+    {
+      path: ['lol'],
+      value: 2
     },
   ]],
 ]
-
 const t2 = [
-  [1],
-  [2, [
-    {
-      path: ['from'],
-      value: 'B',
-    },
-  ]],
-  [1],
+  [1, []],
+  [1, []],
 ]
-
 const t3 = [
-  [2, [
-    {
-      path: ['from'],
-      value: 'C',
-    },
-  ]],
-  [2],
+  [1, []],
+  [1, []],
 ]
-
-const simpleLog = arr =>
-  arr
-    .map(
-      ([start, end, changes]) =>
-        `${ start } ${ end } ${
-          changes == null ? '-' : changes.length ? changes.map(({ value }) => value).join(', ') : ''
-        }`
-    )
-    .join('\n')
-
 const ts = [t1, t2, t3].map(t => Timeline.toAbsolute(Timeline.expand(t)))
-const merged = Timeline.merge(ts)
-console.log(ts.map(simpleLog).join('\n---\n'))
-console.log(simpleLog(merged))
+const timeline = Timeline.merge(ts)
+console.log(ts)
+console.log(timeline)
+console.log(Timeline.reduce((60 * 1000) / bpm)(timeline, state))
 
 const intervals = [
   '1', 'b2', '2', '#2', 'b3', '3', 'b4', '4',

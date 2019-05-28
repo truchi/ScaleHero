@@ -4,6 +4,7 @@ import {
   adjust,
   append,
   apply,
+  assocPath,
   compose as c,
   concat,
   cond,
@@ -243,8 +244,48 @@ export const merge =
     _ => [[], _]                      // [heads, tails]
   )
 
+//---------------------//
+//-- Merge timelines --//
+//---------------------//
+
+//** Reduces timeline with event
+//:: Number multiplier
+//::   -> Array timeline, Array Number from Number to Array changes
+//::     -> Array timeline
+const reducer =
+  multiplier =>
+    (timeline, [from, to, changes]) =>
+      append(
+        [
+          from * (multiplier || 1),
+          to   * (multiplier || 1),
+          reduce(
+            (state, { path, value }) => assocPath(path, value, state),
+            c(nth(2), last)(timeline),
+            changes
+          )
+        ]
+      )(timeline)
+
+//** Reduces timeline given from/to multiplier and initial state
+//:: Number multiplier
+//::   -> Array timeline, Object state, Number multiplier
+//::     -> Array timeline
+const _reduce =
+  multiplier =>
+    (timeline, state) =>
+      tail(
+        reduce(
+          reducer(multiplier),
+          [[0, 0, state]],
+          timeline
+        )
+      )
+export { _reduce as reduce }
+
 export default {
   expand,
   toAbsolute,
   merge,
+  reduce: _reduce,
 }
