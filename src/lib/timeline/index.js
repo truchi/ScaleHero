@@ -62,9 +62,9 @@ import {
 //     ...
 //   ]
 //   Absolute time: (from expanded)
-//   [                     // begin starts at 0
-//     [begin, end, data], // begin time, end time, data
-//     ...                 // next begin is prev end
+//   [                   // from starts at 0
+//     [from, to, data], // begin time, end time, data
+//     ...               // next from is prev to
 //   ]
 //   Merge: (from absolute expanded)
 //   Takes multiples timelines and merges into a single timeline
@@ -165,15 +165,15 @@ export const toAbsolute =
 //---------------------//
 
 //** Splits an event at time at
-//** Returns 2 events if begin < at < end, 1 otherwise
-//:: Number at, Array Number begin Number end Array data
+//** Returns 2 events if from < at < to, 1 otherwise
+//:: Number at, Array Number from Number to Array data
 //::   -> Array split
 const splitEvent =
   at =>
-    ([begin, end, data]) =>
-      (begin < at && at < end)
-        ? [[begin, at, data], [at, end, data]]
-        : [[begin, end, data]]
+    ([from, to, data]) =>
+      (from < at && at < to)
+        ? [[from, at, data], [at, to, data]]
+        : [[from, to, data]]
 
 //** Returns minimun of 2nd elements of array
 //:: Array array -> Number minimum
