@@ -45,6 +45,7 @@ import {
 //   Repeat expansion
 //   Absolute time conversion
 //   Merging
+//   Reducing
 //
 //   Timeline:
 //   [
@@ -68,6 +69,8 @@ import {
 //   ]
 //   Merge: (from absolute expanded)
 //   Takes multiples timelines and merges into a single timeline
+//   Reduce: (from merged)
+//   Reduces with initial state and time multiplier
 //--
 
 //--------------------//
@@ -244,9 +247,9 @@ export const merge =
     _ => [[], _]                      // [heads, tails]
   )
 
-//---------------------//
-//-- Merge timelines --//
-//---------------------//
+//--------------//
+//-- Reducing --//
+//--------------//
 
 //** Reduces timeline with event
 //:: Number multiplier
