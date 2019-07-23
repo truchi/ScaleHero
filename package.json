@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://truchi.github.io/ScaleHero",
   "dependencies": {
+    "mongorito": "^3.0.4",
     "node-sass-chokidar": "0.0.3",
     "npm-run-all": "^4.1.5",
     "ramda": "^0.26.1",
@@ -15,6 +16,8 @@
     "textures": "^1.2.0"
   },
   "scripts": {
+    "server": "node server/main.js",
+    "server-dev": "nodemon server/main.js",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "start": "react-scripts start",
