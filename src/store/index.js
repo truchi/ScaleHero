@@ -3,13 +3,136 @@ import reducer         from './reducer'
 import Clip            from '../lib/clip'
 import Textures        from '../lib/textures'
 import Timeline        from '../lib/timeline'
+import Grid            from '../lib/grid'
 import * as R from 'ramda'
 
 /* SHIT start */
 const bpm = 60
-const state = {
-  lol: 0
+const grid = {
+  repeat: true,
+  count: 2,
+  name: 'Awesome song',
+  sections: [
+    {
+      repeat: true,
+      count: 4,
+      section: 'A',
+      lines: [
+        {
+          bars: [
+            // { repeat: true          , elems: [{ data: { duration: 1, chord: 'A' } }, { data: { duration: 1, chord: 'Abis' } }] },
+            // { repeat: true          , elems: [{ data: { duration: 4, chord: 'B' } }] },
+            {                         elems: [{ data: { duration: 4, chord: 'G' } }] },
+            // {               count: 2, elems: [{ data: { duration: 4, chord: 'E' } }] },
+            // { repeat: true, count: 4, elems: [{ data: { duration: 4, chord: 'D' } }] },
+            // { repeat: true, count: 4, elems: [{ data: { duration: 4, chord: 'DD' } }] },
+            // {                         elems: [{ data: { duration: 1, chord: 'C' } }, { data: { duration: 1, chord: 'Cbis' } }] },
+            // { repeat: true, count: 4, elems: [{ data: { duration: 2, chord: 'A' } }] },
+            // {               count: 2, elems: [{ data: { duration: 4, chord: 'F' } }] },
+            // {                         elems: [{ data: { duration: 1, chord: 'F' } }] },
+          ]
+        },
+      ]
+    },
+  ]
 }
+
+const g1 = {
+  // repeat: true,
+  // count: 2,
+  name: 'Awesome song',
+  sections: [
+    {
+      // repeat: true,
+      // count: 4,
+      section: 'A',
+      lines: [
+        {
+          bars: [
+            {                         elems: [{ data: { duration: 4, changes: [{ path: ['lol'], value: 'pipi12' }] } }] },
+            { repeat: true, count: 4, elems: [{ data: { duration: 4, changes: [{ path: ['lol'], value: 'pipiXX' }] } }] },
+            {                         elems: [{ data: { duration: 4, changes: [{ path: ['lol'], value: 'pipi34' }] } }] },
+          ]
+        },
+      ]
+    },
+  ]
+}
+
+const g2 = {
+  // repeat: true,
+  // count: 2,
+  name: 'Awesome song',
+  sections: [
+    {
+      repeat: true,
+      count: 2,
+      section: 'A',
+      lines: [
+        {
+          bars: [
+            { elems: [{ data: { duration: 2, changes: [{ path: ['lol'], value: 'caca1'  }] } }] },
+            { elems: [{ data: { duration: 2, changes: [{ path: ['lol'], value: 'prou2' }] } }] },
+            { elems: [{ data: { duration: 2, changes: [{ path: ['lol'], value: 'caca3'  }] } }] },
+            { elems: [{ data: { duration: 2, changes: [{ path: ['lol'], value: 'prou4' }] } }] },
+          ]
+        },
+      ]
+    },
+  ]
+}
+
+const g = new Grid({ grid })
+window.grid = g
+console.log(g)
+window.i = g.iterator()
+const it = Grid.iterator([g1, g2])
+window.it = it
+
+const print = () => {
+  let next
+
+  while(!(next = it.next()).done) {
+    const { data: { duration, changes }, elapsed } = next.value
+    console.log(duration, changes.map(({ value }) => value).join('-'), elapsed)
+  }
+}
+window.print = print
+
+// for (let c of g) {
+//   // console.log(c.chord)
+//   console.log('YIELD', c)
+// }
+
+const instruments = [
+  {
+    instrument: 'piano',
+    tuning: ['C'],//['E', 'A', 'D', 'G', 'B', 'E'],
+    from  : 0,
+    to    : 24,
+    layers: [
+      {
+        palette: 1,
+        root: 'C',
+        scale: 2,
+      },
+      {
+        clipPaths: [0, 1, 2, 3],
+        masks: [0],
+        palette: 0,
+        root: 'C',
+        scale: 1,
+      },
+      {
+        clipPaths: [4],
+        masks: [0],
+        palette: 0,
+        root: 'C',
+        scale: 0,
+      },
+    ],
+  },
+]
 const t1 = [
   [4, [{ path: ['lol'], value: 1 }]],
 ]
@@ -21,7 +144,8 @@ const t3 = [
   [2, []],
   [2, [{ path: ['lol'], value: 3 }]],
 ]
-console.log(Timeline.make((60 * 1000) / bpm, state, [t1, t2, t3]))
+const timeline = Timeline.make((60 * 1000) / bpm, instruments, [t1, t2, t3])
+// console.log(timeline)
 
 const intervals = [
   '1', 'b2', '2', '#2', 'b3', '3', 'b4', '4',
@@ -82,31 +206,10 @@ const masks = [
 /* SHIT end */
 
 const initial = {
-  instrument: 'piano',
-  tuning: ['C'],//['E', 'A', 'D', 'G', 'B', 'E'],
-  from  : 0,
-  to    : 24,
-  layers: [
-    {
-      palette: 1,
-      root: 'C',
-      scale: 2,
-    },
-    {
-      clipPaths: [0, 1, 2, 3],
-      masks: [0],
-      palette: 0,
-      root: 'C',
-      scale: 1,
-    },
-    {
-      clipPaths: [4],
-      masks: [0],
-      palette: 0,
-      root: 'C',
-      scale: 0,
-    },
-  ],
+  index: 0,
+  grid,
+  timeline,
+  instruments,
   clipPaths,
   masks,
   palettes,
