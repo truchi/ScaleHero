@@ -16,8 +16,8 @@ import {
   reverse,
 } from 'ramda'
 
-const getTuning = ({ tuning    }) => reverse(tuning)
-const getBoxes  = ({ from, to  }) => range(from, to + 1)
+const getTuning = ({ tuning   }) => reverse(tuning)
+const getBoxes  = ({ from, to }) => range(from, to + 1)
 const getLayer  =
   ({ layers, clipPaths, masks, palettes, scales }) =>
     layer =>
@@ -33,6 +33,7 @@ const getLayer  =
 
 export default connect(
   state => {
+    state = { ...state, ...state.instruments[0] } // FIXME hack
     const {
       instrument,
       from,

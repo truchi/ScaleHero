@@ -12,6 +12,9 @@ src/styles/**/*.css
 # production
 /build
 
+# stuff
+/flow-typed
+
 # misc
 .DS_Store
 .env.local

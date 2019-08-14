@@ -1,4 +1,4 @@
-import { recursiveReduce } from './utils'
+import recursiveReduce from './utils/recursiveReduce'
 import {
   always,
   append,
@@ -18,20 +18,33 @@ import {
   splitAt,
 } from 'ramda'
 
+//** Provides iterator for a single grid
+//** Provides iterator for multiple grids
 export default class Grid {
+  //** Contructor
+  //:: Object Object grid -> grid
   constructor({ grid }) {
     this._grid = grid
-
-    this._init()
+    this._flat = this._flatten(grid)
   }
 
-  _init() {
+  //** Returns the flattened representation of the grid
+  //:: Object grid -> Array flat
+  _flatten(grid) {
+    //** Accumulator
+    //:: Object Array flat, Number elapsed, Array repeats
+    const acc = { flat: [], elapsed: 0, repeats: [] }
+
+    //** Handles opening repeats & data
+    //:: Accumulator acc, Object item -> Accumulator acc
     const before =
       ({ flat, elapsed, repeats }, item) => {
         const data     = item.data
         const duration = data && data.duration
         const repeat   = item.repeat
 
+        // Will hold, when applicable:
+        // data, duration, repeat, at
         let elem = {}
 
         if (data  ) elem = merge(elem, { data, duration })
@@ -39,12 +52,16 @@ export default class Grid {
 
         if (!isEmpty(elem)) flat = append(merge(elem, { at: always(elapsed) }), flat)
 
+        // Remember opening repeating sections (as index in flat)
+        // and elapsed time
         if (repeat  ) repeats  = append(flat.length - 1, repeats)
         if (duration) elapsed += duration
 
         return { flat, elapsed, repeats }
       }
 
+    //** Handles closing repeats
+    //:: Accumulator acc, Object item -> Accumulator acc
     const after =
       ({ flat, elapsed, repeats }, item) => {
         const count = item.count
@@ -54,7 +71,9 @@ export default class Grid {
           let   elem     = flat[from]
           const duration = elapsed - elem.at()
           const to       = flat.length
-          flat[from]     = merge(elem, { to, count, duration })
+
+          // Add to, count & duration fields to the opening element
+          flat[from] = merge(elem, { to, count, duration })
 
           let [before, after] = splitAt(from, flat)
           after = map(
@@ -72,10 +91,7 @@ export default class Grid {
 
     const get = item => item.elems || item.bars || item.lines || item.sections
 
-    this._flat =
-      recursiveReduce(before, after, get)({ flat: [], elapsed: 0, repeats: [] }, this._grid).flat
-
-    return this
+    return recursiveReduce(before, after, get)(acc, grid).flat
   }
 
   iterator() {

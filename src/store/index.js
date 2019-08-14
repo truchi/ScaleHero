@@ -3,78 +3,24 @@ import reducer         from './reducer'
 import Clip            from '../lib/clip'
 import Textures        from '../lib/textures'
 import Timeline        from '../lib/timeline'
-import Grid            from '../lib/grid'
-import * as R from 'ramda'
+import { doStuff }    from '../lib/grid/index3'
+// import * as R from 'ramda'
 
 /* SHIT start */
 const bpm = 60
 const grid = {
-  repeat: true,
   count: 2,
-  name: 'Awesome song',
   sections: [
     {
-      repeat: true,
-      count: 4,
-      section: 'A',
-      lines: [
-        {
-          bars: [
-            // { repeat: true          , elems: [{ data: { duration: 1, chord: 'A' } }, { data: { duration: 1, chord: 'Abis' } }] },
-            // { repeat: true          , elems: [{ data: { duration: 4, chord: 'B' } }] },
-            {                         elems: [{ data: { duration: 4, chord: 'G' } }] },
-            // {               count: 2, elems: [{ data: { duration: 4, chord: 'E' } }] },
-            // { repeat: true, count: 4, elems: [{ data: { duration: 4, chord: 'D' } }] },
-            // { repeat: true, count: 4, elems: [{ data: { duration: 4, chord: 'DD' } }] },
-            // {                         elems: [{ data: { duration: 1, chord: 'C' } }, { data: { duration: 1, chord: 'Cbis' } }] },
-            // { repeat: true, count: 4, elems: [{ data: { duration: 2, chord: 'A' } }] },
-            // {               count: 2, elems: [{ data: { duration: 4, chord: 'F' } }] },
-            // {                         elems: [{ data: { duration: 1, chord: 'F' } }] },
-          ]
-        },
-      ]
-    },
-  ]
-}
-
-const g1 = {
-  // repeat: true,
-  // count: 2,
-  name: 'Awesome song',
-  sections: [
-    {
-      // repeat: true,
-      // count: 4,
-      section: 'A',
-      lines: [
-        {
-          bars: [
-            {                         elems: [{ data: { duration: 4, changes: [{ path: ['lol'], value: 'pipi12' }] } }] },
-            { repeat: true, count: 4, elems: [{ data: { duration: 4, changes: [{ path: ['lol'], value: 'pipiXX' }] } }] },
-            {                         elems: [{ data: { duration: 4, changes: [{ path: ['lol'], value: 'pipi34' }] } }] },
-          ]
-        },
-      ]
-    },
-  ]
-}
-
-const g2 = {
-  // repeat: true,
-  // count: 2,
-  name: 'Awesome song',
-  sections: [
-    {
-      repeat: true,
       count: 2,
-      section: 'A',
       lines: [
         {
           bars: [
-            { elems: [{ data: { duration: 2, changes: [{ path: ['lol'], value: 'caca1'  }] } }] },
-            { elems: [{ data: { duration: 2, changes: [{ path: ['lol'], value: 'prou2' }] } }] },
-            { elems: [{ data: { duration: 2, changes: [{ path: ['lol'], value: 'caca3'  }] } }] },
-            { elems: [{ data: { duration: 2, changes: [{ path: ['lol'], value: 'prou4' }] } }] },
+            { repeat: true          , items: [{ duration: 1, chord: 'A' }, { duration: 1, chord: 'B' }] },
+            { repeat: true, count: 2, items: [{ duration: 1, chord: 'C' }] },
+            {               count: 2, items: [{ duration: 1, chord: 'D' }] },
+            {                         items: [{ duration: 1, chord: 'E' }] },
+            {                         items: [{ duration: 1, chord: 'E' }] },
           ]
         },
       ]
@@ -82,27 +28,8 @@ const g2 = {
   ]
 }
 
-const g = new Grid({ grid })
-window.grid = g
-console.log(g)
-window.i = g.iterator()
-const it = Grid.iterator([g1, g2])
-window.it = it
-
-const print = () => {
-  let next
-
-  while(!(next = it.next()).done) {
-    const { data: { duration, changes }, elapsed } = next.value
-    console.log(duration, changes.map(({ value }) => value).join('-'), elapsed)
-  }
-}
-window.print = print
-
-// for (let c of g) {
-//   // console.log(c.chord)
-//   console.log('YIELD', c)
-// }
+const a = doStuff(grid)
+console.log(JSON.stringify(a, null, 4))
 
 const instruments = [
   {

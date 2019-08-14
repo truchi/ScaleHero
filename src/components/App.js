@@ -1,4 +1,10 @@
-import React from 'react'
+import React  from 'react'
 import Guitar from './instrument/Guitar'
+import Player from './player'
 
-export default () => (<Guitar></Guitar>)
+export default () => (
+  <>
+    <Player />
+    <Guitar />
+  </>
+)

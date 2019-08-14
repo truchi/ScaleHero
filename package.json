@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://truchi.github.io/ScaleHero",
   "dependencies": {
+    "flow-typed": "^2.6.1",
     "mongorito": "^3.0.4",
     "node-sass-chokidar": "0.0.3",
     "npm-run-all": "^4.1.5",
@@ -11,7 +12,7 @@
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
     "react-redux": "^6.0.1",
-    "react-scripts": "^2.1.5",
+    "react-scripts": "^2.1.8",
     "redux": "^4.0.1",
     "textures": "^1.2.0"
   },
@@ -23,8 +24,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "flow": "flow",
     "eject": "react-scripts eject",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package; flow-typed install"
   },
   "browserslist": [
     ">0.2%",
@@ -33,6 +35,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "flow-bin": "^0.104.0",
     "gh-pages": "^2.0.1",
     "patch-package": "^6.0.4"
   }
