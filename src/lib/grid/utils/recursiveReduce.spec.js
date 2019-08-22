@@ -1,4 +1,4 @@
-import recursiveReduce from './recursiveReduce'
+import { reduce, update } from './Tree'
 
 const tree = {
   data: 1,
@@ -23,7 +23,7 @@ const tree = {
 const before  = (acc, item) => acc.push('b' + item.data) && acc
 const after   = (acc, item) => acc.push('a' + item.data) && acc
 const get     = item        => item.items
-const reduced = recursiveReduce(before, after, get)([], tree)
+const reduced = reduce(before, after, get)([], tree)
 
 it('traverses tree', () =>
   expect(reduced.join(' '))

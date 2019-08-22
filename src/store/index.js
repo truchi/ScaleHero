@@ -3,15 +3,18 @@ import reducer         from './reducer'
 import Clip            from '../lib/clip'
 import Textures        from '../lib/textures'
 import Timeline        from '../lib/timeline'
-import { doStuff }    from '../lib/grid/index3'
+import { doStuff }     from '../lib/grid/index3'
+import iterator, { recursiveIterator }       from '../lib/grid/utils/RepeatArray'
 // import * as R from 'ramda'
 
 /* SHIT start */
 const bpm = 60
 const grid = {
+  repeat: true,
   count: 2,
   sections: [
     {
+      repeat: true,
       count: 2,
       lines: [
         {
@@ -20,7 +23,20 @@ const grid = {
             { repeat: true, count: 2, items: [{ duration: 1, chord: 'C' }] },
             {               count: 2, items: [{ duration: 1, chord: 'D' }] },
             {                         items: [{ duration: 1, chord: 'E' }] },
-            {                         items: [{ duration: 1, chord: 'E' }] },
+          ]
+        },
+        {
+          bars: [
+            {                         items: [{ duration: 1, chord: 'F' }] },
+          ]
+        },
+      ]
+    },
+    {
+      lines: [
+        {
+          bars: [
+            {                         items: [{ duration: 1, chord: 'G' }] },
           ]
         },
       ]
@@ -29,7 +45,12 @@ const grid = {
 }
 
 const a = doStuff(grid)
-console.log(JSON.stringify(a, null, 4))
+window.grid = a
+// console.log(JSON.stringify(a, null, 4))
+// console.log(a)
+window.i = iterator(a)
+// window.ri = recursiveIterator({ count: 2, groups: [1, { count: 2, groups: ['a', 'b'] }, 3, 4, 5] })
+window.ri = recursiveIterator(a)
 
 const instruments = [
   {
