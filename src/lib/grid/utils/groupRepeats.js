@@ -1,66 +1,86 @@
+// @flow
+import type { Tree        } from '../Tree.types'
+import type { RepeatArray } from './RepeatArray.types'
+import { reduce } from './Tree'
 import {
   adjust,
   append,
   compose as c,
-  concat,
   converge,
   evolve,
-  flip,
   init,
+  isEmpty,
   last,
-  map,
   merge,
   omit,
   path,
-  reduce,
   when,
 } from 'ramda'
 
 const popGroup =
-  ({ count }) =>
+  (count) =>
     converge(
       adjust(-1),
       [
         c(
-          last => evolve({ groups: append(merge(last, { count })) }),
+          last => evolve({ repeat: c(append, merge(last))({ count }) }),
           last
         ),
         init
       ]
     )
 
-const pushItems =
-  ({ items }) =>
+const pushItem =
+  (item) =>
     adjust(
       -1,
-      evolve({
-        groups: flip(concat)( map(merge({ count: 1 }), items || []) )
-      })
+      evolve({ repeat: append(item) })
     )
 
 const pushGroup =
-  item =>
-    append(
-      merge(
-        omit(['repeat', 'items'], item),
-        { count: 1, groups: [] }
+  (index) =>
+    append({ index, count: 1, repeat: [] })
+
+const index =
+  ([section, line, bar, item]) =>
+    ({ section, line, bar, item })
+
+const cleanItem =
+  omit(['repeat', 'count', 'sections', 'lines', 'bars', 'items'])
+
+/**
+ * Transforms a tree marked with repeat and count
+ * to a multidimensionnal array as recursive repeat sections
+ * @kind Tree tree => RepeatArray grouped
+ */
+export default
+  (
+    tree: Tree, // Tree to group by repeat sections
+  ): RepeatArray =>
+    c(
+      path([0, 'repeat']),
+      reduce(
+        // Before
+        //
+        (grouped, item, indexes) =>
+          ((item, { repeat }, index) =>
+            c(
+              when(_ => !isEmpty(item), pushItem(merge({ index }, item))),
+              when(_ => repeat        , pushGroup(index)),
+            )(grouped)
+          )(cleanItem(item), item, index(indexes)),
+
+        // After
+        (grouped, { count }, indexes) =>
+          when(_ => count, popGroup(count))(grouped),
+
+        // Get
+        (item, indexes) =>
+          item[
+            ['sections', 'lines', 'bars', 'items'][indexes.length]
+          ]
       )
+    )(
+      [{ repeat: [] }],
+      tree
     )
-
-const groupRepeats =
-  c(
-    path([0, 'groups']),
-    reduce(
-      (tree, item) =>
-        (({ count, repeat }) =>
-          c(
-            when(_ => count, popGroup(item)),
-            pushItems(item),
-            when(_ => repeat, pushGroup(item))
-          )(tree)
-        )(item),
-      [{ groups: [] }]
-    )
-  )
-
-export default groupRepeats
