@@ -3,31 +3,32 @@ import reducer         from './reducer'
 import Clip            from '../lib/clip'
 import Textures        from '../lib/textures'
 import Timeline        from '../lib/timeline'
-import { init }        from '../lib/grid/index3'
+import { init }        from '../lib/grid'
 import iterator, { recursiveIterator }       from '../lib/grid/utils/RepeatArray'
 // import * as R from 'ramda'
 
 /* SHIT start */
 const bpm = 60
 const grid = {
-  // repeat: true,
-  // count: 2,
+  repeat: true,
+  count: 2,
   sections: [
     {
-      // repeat: true,
-      // count: 2,
+      repeat: true,
+      count: 2,
       lines: [
         {
           bars: [
             // { repeat: true          , items: [{ duration: 1, chord: 'A' }, { duration: 1, chord: 'B' }] },
+            {                         items: [{ duration: 1, chord: 'A' }, { duration: 1, chord: 'B' }] },
             { repeat: true, count: 2, items: [{ duration: 1, chord: 'C' }] },
             // {               count: 2, items: [{ duration: 1, chord: 'D' }] },
-            {                         items: [{ duration: 1, chord: 'E' }] },
+            {                         items: [{ duration: 1, chord: 'D' }] },
           ]
         },
         {
           bars: [
-            {                         items: [{ duration: 1, chord: 'F' }] },
+            // {                         items: [{ duration: 1, chord: 'F' }] },
           ]
         },
       ]
@@ -36,7 +37,7 @@ const grid = {
       lines: [
         {
           bars: [
-            {                         items: [{ duration: 1, chord: 'G' }] },
+            // {                         items: [{ duration: 1, chord: 'G' }] },
           ]
         },
       ]

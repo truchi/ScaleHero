@@ -1,6 +1,3 @@
-// @flow
-import type { Tree        } from '../Tree.types'
-import type { RepeatArray } from './RepeatArray.types'
 import { reduce } from './Tree'
 import {
   adjust,
@@ -17,51 +14,73 @@ import {
   when,
 } from 'ramda'
 
+/**
+ * Pops last arr element into before last's last repeat key,
+ * merged with count
+ * @kind Number count -> Array arr -> Array arr
+ */
 const popGroup =
-  (count) =>
+  count =>
     converge(
-      adjust(-1),
+      adjust(-1), // adjust last
       [
-        c(
+        c(        // with push last(arr) into repeat
           last => evolve({ repeat: c(append, merge(last))({ count }) }),
           last
         ),
-        init
+        init      // of init(arr) with
       ]
     )
 
+/**
+ * Push an item into the arr's last element's repeat key
+ * @kind Item item -> Array arr -> Array arr
+ */
 const pushItem =
-  (item) =>
+  item =>
     adjust(
       -1,
       evolve({ repeat: append(item) })
     )
 
+/**
+ * Append a group with index
+ * @kind Object index -> Array arr -> Array arr
+ */
 const pushGroup =
-  (index) =>
+  index =>
     append({ index, count: 1, repeat: [] })
 
+/**
+ * Make an index object provided an tree item's indexes
+ * @kind Number[] indexes -> Object index
+ */
 const index =
   ([section, line, bar, item]) =>
     ({ section, line, bar, item })
 
+/**
+ * Removes non-data keys on item
+ * @kind Item item -> Item item
+ */
 const cleanItem =
   omit(['repeat', 'count', 'sections', 'lines', 'bars', 'items'])
 
 /**
  * Transforms a tree marked with repeat and count
  * to a multidimensionnal array as recursive repeat sections
- * @kind Tree tree => RepeatArray grouped
+ * @kind Tree tree -> GroupedArray grouped
  */
 export default
   (
-    tree: Tree, // Tree to group by repeat sections
-  ): RepeatArray =>
+    tree, // Tree to group by repeat sections
+  ) =>
     c(
       path([0, 'repeat']),
       reduce(
         // Before
-        //
+        // Make new level when repeating,
+        // add item if it has data
         (grouped, item, indexes) =>
           ((item, { repeat }, index) =>
             c(
@@ -71,6 +90,7 @@ export default
           )(cleanItem(item), item, index(indexes)),
 
         // After
+        // Close repeating
         (grouped, { count }, indexes) =>
           when(_ => count, popGroup(count))(grouped),
 
@@ -81,6 +101,6 @@ export default
           ]
       )
     )(
-      [{ repeat: [] }],
-      tree
+      [{ repeat: [] }], // Accumulator: stack of children
+      tree,             // Tree to group
     )
