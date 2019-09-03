@@ -4,7 +4,8 @@ import Clip            from '../lib/clip'
 import Textures        from '../lib/textures'
 import Timeline        from '../lib/timeline'
 import { init }        from '../lib/grid'
-import iterator, { recursiveIterator }       from '../lib/grid/utils/RepeatArray'
+import iterator        from '../lib/grid/utils/ArrayIterator'
+import groupIterator   from '../lib/grid/utils/GroupIterator'
 // import * as R from 'ramda'
 
 /* SHIT start */
@@ -45,13 +46,14 @@ const grid = {
   ]
 }
 
-const a = init(grid)
+const a     = init(grid)
 window.grid = a
 console.log(JSON.stringify(a, null, 4))
 console.log(a)
-window.i = iterator(a)
-window.ri = recursiveIterator({ count: 2, repeat: [1, { count: 2, repeat: ['a', 'b'] }, 3, 4, 5] })
-window.ri = recursiveIterator(a)
+const i   = iterator({ count: 2, repeat: [1, 2, 3] })
+window.i  = i
+window.ri = groupIterator({ count: 2, repeat: [1, { count: 2, repeat: ['a', 'b'] }, 3, 4, 5] })
+// window.ri = groupIterator(a)
 
 const instruments = [
   {
