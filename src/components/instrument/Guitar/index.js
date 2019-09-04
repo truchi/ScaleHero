@@ -33,7 +33,7 @@ const getLayer  =
 
 export default connect(
   state => {
-    state = { ...state, ...state.instruments[0] } // FIXME hack
+    state = { ...state, ...state.states[0].instruments[0] } // FIXME hack
     const {
       instrument,
       from,

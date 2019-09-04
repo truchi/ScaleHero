@@ -1,30 +1,27 @@
-import group from './utils/group'
-import time  from './utils/time'
+import flatten    from './utils/flatten'
+import time       from './utils/time'
+import merge      from './utils/merge'
 import {
+  assocPath,
   compose as c,
-  merge,
-  nth,
+  map,
   reduce,
+  scan,
 } from 'ramda'
 
-export const init =
-  c(
-    time,                             // attach time related data
-    nth(0),                           // single top most of
-    group,                            // grouped by repeats
-    merge({ repeat: true, count: 1 }) // make sure there is a top most repeat on grid
-  )
-
-window.elapsed = grid => cursor => {
-  const { elapsed, item: { at } } = reduce(
-    ({ elapsed, item: { at, duration, repeat } }, { index = 0, repeats = 1 }) =>
-      ({
-        elapsed: elapsed + (repeats - 1) * duration + at,
-        item   : repeat[index]
+export default
+  (grid, timelines, instruments) =>
+    scan(
+      ({ instruments }, { time, duration, merged: [{ index }, ...events] }) => ({
+        index,
+        time,
+        duration,
+        instruments: reduce(
+          (instruments, { path, value }) => assocPath(path, value, instruments),
+          instruments,
+          events
+        )
       }),
-    { elapsed: 0, item: grid },
-    cursor
-  )
-
-  return elapsed + at
-}
+      { instruments },
+      c(merge, map(c(time, flatten)))([grid, ...timelines])
+    )
