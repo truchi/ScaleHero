@@ -41,6 +41,7 @@ const cleanNilsReduce =
 const reducers = {
   //** Applies actions and clean arrays
   //:: Object state -> Array actions -> Object state
+  index: (state, { index }) => ({ ...state, index }),
   next: curry(uncurryN(2,
     state =>
       compose(
@@ -58,5 +59,5 @@ export default
     // console.log('reducing', type, payload, state) ||
     compose(
       // window.__D('-> state'),
-      defaultTo(identity, reducers[type])
+      defaultTo(identity, reducers[type]),
     )(state, payload)

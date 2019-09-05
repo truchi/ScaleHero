@@ -1,7 +1,7 @@
 import Clip     from '../lib/clip'
 import Textures from '../lib/textures'
 
-export const bpm = 60
+export const bpm = 200
 
 export const grid = {
   repeat: true,

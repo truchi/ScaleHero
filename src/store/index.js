@@ -11,11 +11,12 @@ import {
   masks,
 } from './data'
 import reduce from '../lib/grid'
+import src    from '../assets/backtrack.ogg'
 
-const states = reduce(grid, timelines, instruments)
-console.log(states)
+const states = reduce(bpm, grid, timelines, instruments)
 
 const initial = {
+  src,
   index: 0,
   grid,
   states,
