@@ -4,7 +4,7 @@ import {
   bpm,
   grid,
   timelines,
-  instruments,
+  state,
   palettes,
   scales,
   clipPaths,
@@ -13,14 +13,14 @@ import {
 import reduce from '../lib/grid'
 import src    from '../assets/backtrack.ogg'
 
-const states = reduce(bpm, grid, timelines, instruments)
+const s = reduce(bpm, grid, timelines, state)
 
 const initial = {
   src,
-  index: 0,
   grid,
-  states,
   clipPaths,
+  states: s,
+  state: s[0],
   masks,
   palettes,
   scales,

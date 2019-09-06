@@ -46,7 +46,7 @@ export const timelines = [
   }
 ]
 
-export const instruments = [
+export const state = [
   {
     instrument: 'piano',
     tuning: ['C'],

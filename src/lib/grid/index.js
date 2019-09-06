@@ -10,18 +10,18 @@ import {
 } from 'ramda'
 
 export default
-  (bpm, grid, timelines, instruments) =>
+  (bpm, grid, timelines, state) =>
     scan(
-      ({ instruments }, { time, duration, merged: [{ index }, ...events] }) => ({
+      ({ state }, { time, duration, merged: [{ index }, ...events] }) => ({
         index,
-        time       : 60 * time     / (bpm),
-        duration   : 60 * duration / (bpm),
-        instruments: reduce(
-          (instruments, { path, value }) => assocPath(path, value, instruments),
-          instruments,
+        time    : 60 * time     / (bpm),
+        duration: 60 * duration / (bpm),
+        state  : reduce(
+          (state, { path, value }) => assocPath(path, value, state),
+          state,
           events
         )
       }),
-      { time: 0, duration: 0, instruments },
+      { time: 0, duration: 0, state },
       c(merge, map(c(time, flatten)))([grid, ...timelines])
     )
