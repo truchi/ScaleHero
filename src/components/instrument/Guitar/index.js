@@ -33,14 +33,15 @@ const getLayer  =
 
 export default connect(
   state => {
-    state = { ...state, ...state.states[0].instruments[0] } // FIXME hack
+    const { index, states } = state
+    const s = states[index].instruments[0]
     const {
       instrument,
       from,
       layers,
-    } = state
-    const tuning = getTuning(state)
-    const boxes  = getBoxes (state)
+    } = s
+    const tuning = getTuning(s)
+    const boxes  = getBoxes (s)
 
     return {
       instrument,

@@ -1,5 +1,5 @@
 import React, {
-  createRef,
+  useRef,
   useCallback,
   useEffect,
   useState,
@@ -8,34 +8,31 @@ import { connect } from 'react-redux'
 /* import styles      from './styles.module.scss' */
 
 export default connect(
-  state => {
-    const { src, index, states } = state
-    const { time, duration } = states[index]
-    const next   = time + duration
-    const length = states.length
-
-    return { src, index, next, length }
-  },
+  null,
   {
-    setIndex: index => ({ type: 'index', payload: { index } })
+    setState: (payload) => ({ type: 'state', payload }),
   }
 )(
-  ({ src, index, next, length, setIndex }) => {
-    const $audio                  = createRef()
-    const $volume                 = createRef()
+  ({ src, states, setState }) => {
+    const $audio                  = useRef()
+    const $volume                 = useRef()
+    const [index    , setIndex  ] = useState(0)
     const [isLooping, setLooping] = useState(true)
     const [isPlaying, setPlaying] = useState(false)
     const [volume   , setVolume ] = useState(1)
+    const length                  = states.length
+
+    const set = (index) => ((setIndex(index), setState(states[index].state)))
 
     const loop    = useCallback(() => setLooping(true ))
     const unloop  = useCallback(() => setLooping(false))
     const play    = useCallback(() => (($audio.current.play ()        , setPlaying(true ))))
     const pause   = useCallback(() => (($audio.current.pause()        , setPlaying(false))))
-    const restart = useCallback(() => (($audio.current.currentTime = 0, setIndex(1)      )))
+    const restart = useCallback(() => (($audio.current.currentTime = 0, set(1)           )))
     const stop    = useCallback(() => (($audio.current.pause(),
                                         $audio.current.currentTime = 0,
                                         setPlaying(false),
-                                        setIndex(0)
+                                        set(0)
                                       )))
     const vol     = useCallback(() =>
       ((volume = $volume.current.value) => (($audio.current.volume = volume, setVolume(volume))))())
@@ -45,14 +42,16 @@ export default connect(
       play()
 
       let step, id
-      const audio = $audio.current
+      const { time, duration } = states[index]
+      const next               = time + duration
+      const audio              = $audio.current
 
       id = requestAnimationFrame(
         step = () =>
           audio.currentTime < next
             ? id = requestAnimationFrame(step)
             : index < length - 1
-              ? setIndex(++index)
+              ? set(index + 1)
               : isLooping
                 ? restart()
                 : stop()
@@ -82,7 +81,7 @@ export default connect(
           <button onClick={ loop }>Loop</button>
         )}
         <br />
-        <input type="range" min="0" max="1" step="0.1" value={ volume } onChange={ vol } ref={ $volume }/>
+        <input type="range" min="0" max="1" step="0.01" value={ volume } onChange={ vol } ref={ $volume }/>
       </>
     )
   }
