@@ -17,12 +17,12 @@ const toArray =
   ({ tuning, from, to, layers }) =>
     ((frets = range(from, to + 1)) =>
       map(
-        ({ clips, masks, palette, root, scale }) =>
+        ({ clips, masking, palette, root, scale }) =>
           addIndex(map)(
             (open, string) =>
               map(
                 (fret) =>
-                  Mask.insideAny(string)(from + fret)(masks)
+                  Mask.insideAny(string)(from + fret)(masking)
                     ? ((note = Note.add(fret)(open)) => ({
                         clips,
                         style: palette[Scale.getInterval(root)(note)(scale)]
@@ -46,8 +46,9 @@ export default
           layers: c(
             toArray,
             denormalize(state, {
-              clip   : 'clips',
               tuning : 'tunings',
+              clip   : 'clips',
+              mask   : 'masks',
               palette: 'palettes',
               scale  : 'scales',
             })

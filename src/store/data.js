@@ -62,14 +62,14 @@ export const state = [
       },
       {
         clips  : [0, 1, 2, 3],
-        masks  : [0],
+        masking: [{ mask: 0, offsetI: 0, offsetJ: 0 }],
         palette: 0,
         root   : 'C',
-        scale  : 1,
+        scale  : 2,
       },
       {
         clips  : [4],
-        masks  : [0],
+        // masks  : [0],
         palette: 0,
         root   : 'C',
         scale  : 0,

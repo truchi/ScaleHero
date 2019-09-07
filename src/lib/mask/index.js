@@ -16,7 +16,7 @@ import {
 
 //--
 //   A pair is an Array Number
-//   A mask is an Array Array Pair
+//   A mask is an Array Array Pair, with
 //
 //   Specifically, it is a collection of [lower, upper] pair list
 //
@@ -64,7 +64,8 @@ const insidePairs =
 const inside =
   i =>
     j =>
-      compose(insidePairs(j), defaultTo([]), prop(i))
+      ({ mask, offsetI = 0, offsetJ = 0 }) =>
+        compose(insidePairs(j - offsetJ), defaultTo([]), prop(i - offsetI))(mask)
 
 //** Returns wether j is in any masks's ith pair list
 //:: Number i -> Number j -> Array masks -> Boolean inside
