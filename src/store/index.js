@@ -10,10 +10,10 @@ import {
   clipPaths,
   masks,
 } from './data'
-import reduce from '../lib/grid'
-import src    from '../assets/backtrack.ogg'
+import getStates from '../lib/grid'
+import src       from '../assets/backtrack.ogg'
 
-const s = reduce(bpm, grid, timelines, state)
+const states = getStates(bpm, grid, timelines, state)
 
 const initial = {
   src,
