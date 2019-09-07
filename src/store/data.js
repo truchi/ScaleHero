@@ -48,12 +48,12 @@ export const timelines = [
 
 export const state = [
   {
-    // type: 'guitar',
-    // tuning: 1,
-    type: 'piano',
-    tuning: 0,
+    type: 'guitar',
+    tuning: 1,
+    // type: 'piano',
+    // tuning: 0,
     from  : 0,
-    to    : 24,
+    to    : 12,
     layers: [
       {
         palette: 1,

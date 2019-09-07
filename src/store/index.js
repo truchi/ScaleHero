@@ -1,19 +1,23 @@
 import { createStore } from 'redux'
 import reducer         from './reducer'
 import {
-  bpm,
-  grid,
-  timelines,
-  state,
+  // bpm,
+  // grid,
+  // timelines,
+  // state,
   tunings,
   palettes,
   scales,
   clips,
-  masks,
+  // masks,
 } from './data'
+import {
+  itWorks,
+} from './itworks'
 import getStates from '../lib/grid'
 import src       from '../assets/backtrack.ogg'
 
+const { bpm, grid, timelines, state, masks } = itWorks()
 const states = getStates(bpm, grid, timelines, state)
 
 const initial = {
