@@ -4,19 +4,19 @@ self.__precacheManifest = [
     "url": "/ScaleHero/static/js/runtime~main.3a7a7a10.js"
   },
   {
-    "revision": "99511b4906360e97b889",
-    "url": "/ScaleHero/static/js/main.e3d8cb71.chunk.js"
+    "revision": "427ca338a1c086208c65",
+    "url": "/ScaleHero/static/js/main.f7756a92.chunk.js"
   },
   {
     "revision": "7f94e4d662e993e28514",
     "url": "/ScaleHero/static/js/2.85b13c0f.chunk.js"
   },
   {
-    "revision": "99511b4906360e97b889",
+    "revision": "427ca338a1c086208c65",
     "url": "/ScaleHero/static/css/main.502d1a79.chunk.css"
   },
   {
-    "revision": "30ecc215da15b9689dc2eae798c6ce39",
+    "revision": "4bedc8891defa6ae3d05e05c91d0a2c0",
     "url": "/ScaleHero/index.html"
   }
 ];
