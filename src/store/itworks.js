@@ -40,8 +40,6 @@ export const itWorks = () => {
       ],
     }],
     grid: {
-      repeat: true,
-      count: 2,
       sections: [
         {
           lines: [
@@ -56,8 +54,6 @@ export const itWorks = () => {
     },
     timelines: [
       {
-        repeat: true,
-        count: 2,
         sections: [
           {
             lines: [
