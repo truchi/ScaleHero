@@ -5,8 +5,10 @@ import {
   assocPath,
   compose as c,
   map,
+  prop,
   reduce,
   scan,
+  unnest,
 } from 'ramda'
 
 export default
@@ -16,10 +18,10 @@ export default
         index,
         time    : 60 * time     / (bpm),
         duration: 60 * duration / (bpm),
-        state  : reduce(
+        state   : reduce(
           (state, { path, value }) => assocPath(path, value, state),
           state,
-          events
+          c(unnest, map(prop('events')))(events)
         )
       }),
       { time: 0, duration: 0, state },

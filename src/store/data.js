@@ -36,8 +36,8 @@ export const timelines = [
         lines: [
           {
             bars: [
-              { items: [{ duration: 1, path: [0, 'layers', 1, 'root'], value: 'D' }] },
-              { items: [{ duration: 1, path: [0, 'layers', 1, 'root'], value: 'E' }] },
+              { items: [{ duration: 1, events: [{ path: [0, 'layers', 1, 'root'], value: 'D' }] }] },
+              { items: [{ duration: 1, events: [{ path: [0, 'layers', 1, 'root'], value: 'E' }] }] },
             ]
           },
         ]
