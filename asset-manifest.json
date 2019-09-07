@@ -1,13 +1,13 @@
 {
-  "main.css": "/ScaleHero/static/css/main.beffb29e.chunk.css",
-  "main.js": "/ScaleHero/static/js/main.f6c2b098.chunk.js",
-  "main.js.map": "/ScaleHero/static/js/main.f6c2b098.chunk.js.map",
-  "runtime~main.js": "/ScaleHero/static/js/runtime~main.c666e8fa.js",
-  "runtime~main.js.map": "/ScaleHero/static/js/runtime~main.c666e8fa.js.map",
-  "static/js/2.89f314f9.chunk.js": "/ScaleHero/static/js/2.89f314f9.chunk.js",
-  "static/js/2.89f314f9.chunk.js.map": "/ScaleHero/static/js/2.89f314f9.chunk.js.map",
+  "main.css": "/ScaleHero/static/css/main.502d1a79.chunk.css",
+  "main.js": "/ScaleHero/static/js/main.e3d8cb71.chunk.js",
+  "main.js.map": "/ScaleHero/static/js/main.e3d8cb71.chunk.js.map",
+  "runtime~main.js": "/ScaleHero/static/js/runtime~main.3a7a7a10.js",
+  "runtime~main.js.map": "/ScaleHero/static/js/runtime~main.3a7a7a10.js.map",
+  "static/js/2.85b13c0f.chunk.js": "/ScaleHero/static/js/2.85b13c0f.chunk.js",
+  "static/js/2.85b13c0f.chunk.js.map": "/ScaleHero/static/js/2.85b13c0f.chunk.js.map",
   "index.html": "/ScaleHero/index.html",
-  "precache-manifest.c646566a4f40f213aa85a43d4113048b.js": "/ScaleHero/precache-manifest.c646566a4f40f213aa85a43d4113048b.js",
+  "precache-manifest.3a7a6d7d004cd01c705603f5293f56d4.js": "/ScaleHero/precache-manifest.3a7a6d7d004cd01c705603f5293f56d4.js",
   "service-worker.js": "/ScaleHero/service-worker.js",
-  "static/css/main.beffb29e.chunk.css.map": "/ScaleHero/static/css/main.beffb29e.chunk.css.map"
+  "static/css/main.502d1a79.chunk.css.map": "/ScaleHero/static/css/main.502d1a79.chunk.css.map"
 }
