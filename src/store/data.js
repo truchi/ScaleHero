@@ -1,7 +1,12 @@
 import Clip     from '../lib/clip'
 import Textures from '../lib/textures'
+// import src      from '../assets/backtrack.ogg'
+
+const src = 'http://www.universal-soundbank.com/sounds/7306.mp3'
 
 export const bpm = 200
+
+export { src }
 
 export const grid = {
   repeat: true,

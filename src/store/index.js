@@ -5,6 +5,7 @@ import {
   // grid,
   // timelines,
   // state,
+  src,
   tunings,
   palettes,
   scales,
@@ -15,7 +16,6 @@ import {
   itWorks,
 } from './itworks'
 import getStates from '../lib/grid'
-import src       from '../assets/backtrack.ogg'
 
 const { bpm, grid, timelines, state, masks } = itWorks()
 const states = getStates(bpm, grid, timelines, state)
