@@ -48,31 +48,31 @@ export const timelines = [
 
 export const state = [
   {
-    instrument: 'piano',
-    tuning: ['C'],
-    // instrument: 'guitar',
-    // tuning: ['E', 'A', 'D', 'G', 'B', 'E'],
+    // type: 'guitar',
+    // tuning: 1,
+    type: 'piano',
+    tuning: 0,
     from  : 0,
     to    : 24,
     layers: [
       {
         palette: 1,
-        root: 'C',
-        scale: 2,
+        root   : 'C',
+        scale  : 2,
       },
       {
-        clipPaths: [0, 1, 2, 3],
-        masks: [0],
+        clips  : [0, 1, 2, 3],
+        masks  : [0],
         palette: 0,
-        root: 'C',
-        scale: 1,
+        root   : 'C',
+        scale  : 1,
       },
       {
-        clipPaths: [4],
-        masks: [0],
+        clips  : [4],
+        masks  : [0],
         palette: 0,
-        root: 'C',
-        scale: 0,
+        root   : 'C',
+        scale  : 0,
       },
     ],
   },
@@ -81,6 +81,11 @@ export const state = [
 const intervals = [
   '1', 'b2', '2', '#2', 'b3', '3', 'b4', '4',
   '#4', 'b5', '5', '#5', 'b6', '6', 'bb7', 'b7', '7'
+]
+
+export const tunings = [
+  ['C'],
+  ['E', 'A', 'D', 'G', 'B', 'E'],
 ]
 
 export const palettes = [
@@ -116,7 +121,7 @@ export const scales = [
   ['1', 'b2', '2', 'b3', '3', '4', '#4', '5', 'b6', '6', 'b7', '7'],
 ]
 
-export const clipPaths = [
+export const clips = [
   Clip.topLeft    (.5),
   Clip.topRight   (.5),
   Clip.bottomLeft (.5),

@@ -5,9 +5,10 @@ import {
   grid,
   timelines,
   state,
+  tunings,
   palettes,
   scales,
-  clipPaths,
+  clips,
   masks,
 } from './data'
 import getStates from '../lib/grid'
@@ -18,9 +19,10 @@ const states = getStates(bpm, grid, timelines, state)
 const initial = {
   src,
   grid,
-  clipPaths,
-  states: s,
-  state: s[0],
+  states,
+  state: states[0].state,
+  tunings,
+  clips,
   masks,
   palettes,
   scales,

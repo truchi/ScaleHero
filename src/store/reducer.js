@@ -1,11 +1,11 @@
 import { cleanNilsRecurs } from '../lib/utils'
 import {
   __,
-  defaultTo,
-  identity,
   assocPath,
   compose,
   curry,
+  defaultTo,
+  identity,
   lensPath,
   over,
   reduce,
@@ -41,7 +41,7 @@ const cleanNilsReduce =
 const reducers = {
   //** Applies actions and clean arrays
   //:: Object state -> Array actions -> Object state
-  index: (state, { index }) => ({ ...state, index }),
+  state: (s, state) => ({ ...s, state }),
   next: curry(uncurryN(2,
     state =>
       compose(
@@ -59,5 +59,6 @@ export default
     // console.log('reducing', type, payload, state) ||
     compose(
       // window.__D('-> state'),
+      // _ => console.log('reduced', _) || _,
       defaultTo(identity, reducers[type]),
     )(state, payload)
