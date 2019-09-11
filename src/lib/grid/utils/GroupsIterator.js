@@ -53,10 +53,7 @@ const slice =
 
 export default
   (groups) => {
-    let elapsed = 0
-
-    const iterators = map(GroupIterator)(groups)
-    let   nexts     = map(c(call, prop('next')))(iterators)
+    let it, iterators, nexts, elapsed
 
     const getValue = when(_ => !!_, c(omit(['duration']), prop('value')))
     const getNext  = i => when(_ => !_, iterators[i].next)
@@ -66,6 +63,13 @@ export default
         append(getValue  (value), values),
         append(getNext(i)(next ), nexts ),
       ]
+
+    const reset = () => ((
+      iterators = map(GroupIterator)(groups),
+      nexts     = map(c(call, prop('next')))(iterators),
+      elapsed   = 0,
+      it
+    ))
 
     const next = () =>
       ((values, duration = minDuration(nexts), time = elapsed) =>
@@ -79,12 +83,15 @@ export default
         ))
       )()
 
-    return {
+    reset()
+
+    return (it = {
+      reset,
       next: () => {
         const isDone = c(all(equals(true)), map(prop('done')))(nexts)
 
         return isDone ? { done: true }
                       : next()
       }
-    }
+    })
   }
