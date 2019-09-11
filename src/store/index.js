@@ -1,30 +1,34 @@
 import { createStore } from 'redux'
 import reducer         from './reducer'
 import {
-  // bpm,
-  // grid,
-  // timelines,
-  // state,
+  bpm,
+  grid,
+  timelines,
+  state,
+  masks,
+
   src,
   tunings,
   palettes,
   scales,
   clips,
-  // masks,
 } from './data'
 import {
-  itWorks,
+  // itWorks,
 } from './itworks'
-import getStates from '../lib/grid'
+import it from '../lib/grid'
 
-const { bpm, grid, timelines, state, masks } = itWorks()
-const states = getStates(bpm, grid, timelines, state)
+// const { bpm, grid, timelines, state, masks } = itWorks()
+const iterator = it(grid, timelines)
+window.it = iterator
 
 const initial = {
+  bpm,
   src,
+  iterator,
   grid,
-  states,
-  state: states[0].state,
+  state,
+  initialState: state,
   tunings,
   clips,
   masks,

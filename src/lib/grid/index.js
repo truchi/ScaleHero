@@ -1,16 +1,13 @@
-import flatten    from './utils/flatten'
-import time       from './utils/time'
-import merge      from './utils/merge'
-import reduce     from './utils/reduce'
 import {
   compose as c,
   map,
 } from 'ramda'
+import group    from './utils/group'
+import iterator from './utils/GroupsIterator'
 
 export default
-  (bpm, grid, timelines, state) =>
+  (grid, timelines) =>
     c(
-      reduce(bpm, state),
-      merge,
-      map(c(time, flatten))
+      iterator,
+      map(group)
     )([grid, ...timelines])
