@@ -1,88 +1,58 @@
 import React, {
-  useRef,
   useCallback,
-  useEffect,
   useState,
+  cloneElement,
+  useRef,
+  useEffect,
 } from 'react'
-import { connect } from 'react-redux'
-/* import styles      from './styles.module.scss' */
 
-export default connect(
-  null,
-  {
-    setState: (payload) => ({ type: 'state', payload }),
-  }
-)(
-  ({ src, states, setState }) => {
-    const $audio                  = useRef()
-    const $volume                 = useRef()
-    const [index    , setIndex  ] = useState(0)
-    const [isLooping, setLooping] = useState(true)
-    const [isPlaying, setPlaying] = useState(false)
-    const [volume   , setVolume ] = useState(1)
-    const length                  = states.length
+const useForceUpdate = () => (([bool, update] = useState()) => () => update(!bool))()
 
-    const set = (index) => ((setIndex(index), setState(states[index].state)))
+export default ({ audio, bpm, iterator, onNext, onEnd }) => {
+  const $audio          = useRef()
+  const [play, setPlay] = useState(false)
+  const forceUpdate     = useForceUpdate()
 
-    const loop    = useCallback(() => setLooping(true ))
-    const unloop  = useCallback(() => setLooping(false))
-    const play    = useCallback(() => (($audio.current.play ()        , setPlaying(true ))))
-    const pause   = useCallback(() => (($audio.current.pause()        , setPlaying(false))))
-    const restart = useCallback(() => (($audio.current.currentTime = 0, set(1)           )))
-    const stop    = useCallback(() => (($audio.current.pause(),
-                                        $audio.current.currentTime = 0,
-                                        setPlaying(false),
-                                        set(0)
-                                      )))
-    const vol     = useCallback(() =>
-      ((volume = $volume.current.value) => (($audio.current.volume = volume, setVolume(volume))))())
+  const onPlay    = useCallback(() => setPlay(true))
+  const onPause   = useCallback(() => setPlay(false))
+  const onRestart = useCallback(() => ((iterator.reset(), forceUpdate())))
+  const onStop    = useCallback(() => ((iterator.reset(), onEnd(), setPlay(false))))
 
-    useEffect(() => {
-      if (!isPlaying) return
-      play()
+  const next = () =>
+    (({ value, done } = iterator.next()) =>
+      done
+        ? { done: true }
+        : {
+          value,
+          time: value.time * 60 / bpm
+        }
+    )()
 
-      let step, id
-      const { time, duration } = states[index]
-      const next               = time + duration
-      const audio              = $audio.current
+  const step = ({ done, value, time }) => () =>
+    (({ currentTime } = $audio.current) =>
+      currentTime < time
+        ? raf({ done, value, time })
+        : (( raf(next()), onNext(value) ))
+    )()
 
-      id = requestAnimationFrame(
-        step = () =>
-          audio.currentTime < next
-            ? id = requestAnimationFrame(step)
-            : index < length - 1
-              ? set(index + 1)
-              : isLooping
-                ? restart()
-                : stop()
-      )
+  let id
+  const raf = (_next) => _next.done || (id = requestAnimationFrame(step(_next)))
 
-      return () => cancelAnimationFrame(id)
-    })
+  useEffect(() => ((
+    play && raf(next()),
+    () => cancelAnimationFrame(id)
+  )))
 
-    return (
-      <>
-        <audio src={ src } ref={ $audio } />
-        { isPlaying ? (
-          <button onClick={ pause }>Pause</button>
-        ) : (
-          <button onClick={ play }>Play</button>
-        )}
-        { index !== 0 && (
-          <>
-            <button onClick={ stop }>Stop</button>
-            <button onClick={ restart }>Restart</button>
-          </>
-        )}
-        <br />
-        { isLooping ? (
-          <button onClick={ unloop }>Unloop</button>
-        ) : (
-          <button onClick={ loop }>Loop</button>
-        )}
-        <br />
-        <input type="range" min="0" max="1" step="0.01" value={ volume } onChange={ vol } ref={ $volume }/>
-      </>
-    )
-  }
-)
+  return (
+    <>
+      { cloneElement(audio, {
+        $audio,
+        play,
+        onPlay,
+        onPause,
+        onRestart,
+        onStop,
+      }) }
+    </>
+  )
+}

@@ -1,15 +1,34 @@
-import React       from 'react'
-import Player      from './Player'
+import React, {
+} from 'react'
+import { connect }    from 'react-redux'
+import Player         from './Player'
+import Audio          from './Audio'
 import InstrumentList from './InstrumentList'
-/* import Instrument  from './Instrument' */
-import store  from '../store'
 
-const state = store.getState()
+export default connect(
+  state => state,
+  {
+    onNext: (payload) => ({ type: 'nextState', payload }),
+    onEnd : ()        => ({ type: 'initState' }),
+  }
+)(
+  ({ src, bpm, iterator, onNext, onEnd }) => {
+    onNext = (v) => console.log('NEXT', v)
+    onEnd  = () => console.log('END')
 
-export default () => (
-  <>
-    <Player src={ state.src } states={ state.states } />
-    {/* <Instrument /> */}
-    <InstrumentList />
-  </>
+    const playerProps = {
+      audio: (<Audio src={ src } />),
+      bpm,
+      iterator,
+      onNext,
+      onEnd,
+    }
+
+    return (
+      <>
+        <Player { ...playerProps } />
+        <InstrumentList />
+      </>
+    )
+  }
 )
