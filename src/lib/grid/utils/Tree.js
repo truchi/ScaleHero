@@ -15,7 +15,7 @@ import {
  * applying at each level a callback before and after the reducer,
  * traversing top to bottom, left to right
  * @kind Reducer before, Reducer after, Getter get ->
- *         Accumulator acc, Tree tree, ?number[] indexes ->
+ *         Accumulator acc, Tree tree, ?number[] index ->
  *           Accumulator acc
  */
 export const reduce: (Reducer, Reducer, Getter) => Reducer =
@@ -25,9 +25,9 @@ export const reduce: (Reducer, Reducer, Getter) => Reducer =
     get   : Getter,  // A function getting the children
   ): Reducer =>
     (
-      acc    : Accumulator,   // The initial (or current) accumulator
-      tree   : Tree,          // The initial (or current) tree to reduce
-      indexes: ?number[] = [] // The initial (or current) indexes
+      acc  : Accumulator,   // The initial (or current) accumulator
+      tree : Tree,          // The initial (or current) tree to reduce
+      index: ?number[] = [] // The initial (or current) index
     ): Accumulator =>
       ((
         children: Tree[],      // tree's children
@@ -38,14 +38,14 @@ export const reduce: (Reducer, Reducer, Getter) => Reducer =
           acc: Accumulator // accumulator after reduce
         ): Accumulator =>
           // Apply after function
-          after(acc, tree, indexes)
+          after(acc, tree, index)
         )(
           children
             // reduce trees (recursively)
             ? addIndex(r)(
               (acc, tree, i) =>
-                // Append current index to indexes
-                reducer(acc, tree, append(i, indexes)),
+                // Append current index to index
+                reducer(acc, tree, append(i, index)),
               acc,
               children
             )
@@ -53,9 +53,9 @@ export const reduce: (Reducer, Reducer, Getter) => Reducer =
             : acc
         )
       )(
-        get(tree, indexes),         // retrieving children
-        before(acc, tree, indexes), // applying before on
-        reduce(before, after, get)  // initialyzing reducer
+        get(tree, index),          // retrieving children
+        before(acc, tree, index),  // applying before on
+        reduce(before, after, get) // initialyzing reducer
       )
 
 export default {
