@@ -102,6 +102,6 @@ export default
       )
     )(
       [{ repeat: [] }],                        // Accumulator: stack of children
-      merge(tree, { repeat: true, count: 1 }), // Tree to group
+      merge({ repeat: true, count: 1 }, tree), // Tree to group
                                                // (making sure there is a top level repeat)
     )
