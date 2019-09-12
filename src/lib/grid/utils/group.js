@@ -52,14 +52,6 @@ const pushGroup =
     append({ index, count: 1, repeat: [] })
 
 /**
- * Make an index object provided an tree item's indexes
- * @kind Number[] indexes -> Object index
- */
-const index =
-  ([section, line, bar, item]) =>
-    ({ section, line, bar, item })
-
-/**
  * Removes non-data keys on item
  * @kind Item item -> Item item
  */
@@ -81,23 +73,23 @@ export default
         // Before
         // Make new level when repeating,
         // add item if it has data
-        (grouped, item, indexes) =>
-          ((item, { repeat }, index) =>
+        (grouped, item, index) =>
+          ((item, { repeat }) =>
             c(
               when(_ => !isEmpty(item), pushItem(merge({ index }, item))),
               when(_ => repeat        , pushGroup(index)),
             )(grouped)
-          )(cleanItem(item), item, index(indexes)),
+          )(cleanItem(item), item),
 
         // After
         // Close repeating
-        (grouped, { count }, indexes) =>
+        (grouped, { count }) =>
           when(_ => count, popGroup(count))(grouped),
 
         // Get
-        (item, indexes) =>
+        (item, index) =>
           item[
-            ['sections', 'lines', 'bars', 'items'][indexes.length]
+            ['sections', 'lines', 'bars', 'items'][index.length]
           ]
       )
     )(

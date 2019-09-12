@@ -17,7 +17,7 @@ const pairs = {
       }]
     },
     // Expected
-    [{ index: { section: 0, line: 0, bar: 0, item: 0 }, duration: 1, chord: 'A' }]
+    [{ index: [0, 0, 0, 0], duration: 1, chord: 'A' }]
   ],
   "repeats across bars, lines and sections": [
     // Grid with repeats across sections and lines
@@ -41,20 +41,20 @@ const pairs = {
     // Expected
     [
       {
-        index: { section: 0, line: 0, bar: 0, item: undefined },
+        index: [0, 0, 0],
         count: 2,
         repeat: [
-          { index: { section: 0, line: 0, bar: 0, item: 0 }, duration: 1, chord: 'A' },
-          { index: { section: 0, line: 1, bar: 0, item: 0 }, duration: 1, chord: 'B' }
+          { index: [0, 0, 0, 0], duration: 1, chord: 'A' },
+          { index: [0, 1, 0, 0], duration: 1, chord: 'B' }
         ]
       },
       {
         index: { section: 0, line: 2, bar: 0, item: undefined },
         count: 2,
         repeat: [
-          { index: { section: 0, line: 2, bar: 0, item: 0 }, duration: 1, chord: 'C' },
-          { index: { section: 1, line: 0, bar: 0, item: 0 }, duration: 1, chord: 'D' },
-          { index: { section: 1, line: 1, bar: 0, item: 0 }, duration: 1, chord: 'E' }
+          { index: [0, 2, 0, 0], duration: 1, chord: 'C' },
+          { index: [1, 0, 0, 0], duration: 1, chord: 'D' },
+          { index: [1, 1, 0, 0], duration: 1, chord: 'E' }
         ]
       }
     ]
@@ -75,17 +75,17 @@ const pairs = {
     // Expected
     [
       {
-        index: { section: undefined, line: undefined, bar: undefined, item: undefined },
+        index: [],
         count: 2,
         repeat: [
           {
-            index: { section: 0, line: undefined, bar: undefined, item: undefined },
+            index: [0],
             count: 2,
             repeat: [
               {
-                index: { section: 0, line: 0, bar: 0, item: undefined },
+                index: [0, 0, 0],
                 count: 2,
-                repeat: [{ index: { section: 0, line: 0, bar: 0, item: 0 }, duration: 1, chord: 'A' }]
+                repeat: [{ index: [0, 0, 0, 0], duration: 1, chord: 'A' }]
               }
             ]
           }
