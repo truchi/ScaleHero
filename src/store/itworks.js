@@ -16,7 +16,7 @@ export const itWorks = () => {
 
   return {
     bpm: 400,
-    state: [{
+    instruments: [{
       type: 'guitar',
       tuning: 1,
       from  : 0,

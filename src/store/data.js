@@ -71,7 +71,7 @@ export const timelines = [
   },
 ]
 
-export const state = [
+export const instruments = [
   {
     type: 'guitar',
     tuning: 1,

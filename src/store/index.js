@@ -4,7 +4,7 @@ import {
   bpm,
   grid,
   timelines,
-  state,
+  instruments,
   masks,
 
   src,
@@ -18,19 +18,19 @@ import {
 } from './itworks'
 import it from '../lib/grid'
 
-// const { bpm, grid, timelines, state, masks } = itWorks()
+// const { bpm, grid, timelines, instruments, masks } = itWorks()
 const iterator = it(grid, timelines)
 window.it = iterator
 
 const initial = {
   bpm,
   src,
+  grid,
   iterator,
   next: iterator.next(),
-  grid,
-  state,
-  initialState: state,
   index: null,
+  initialInstruments: instruments,
+  instruments,
   tunings,
   clips,
   masks,

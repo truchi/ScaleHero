@@ -4,19 +4,15 @@ import Instrument  from '../Instrument'
 import toArray from './toArray'
 // import styles from './styles.module.scss'
 import {
-  compose as c,
+  evolve,
   map,
-  objOf,
-  prop,
 } from 'ramda'
 
 export default connect(
   (state) =>
-    c(
-      objOf('instruments'),
-      map(toArray(state)),
-      prop('state'),
-    )(state)
+    evolve({
+      instruments: map(toArray(state))
+    })(state)
 )(
   ({ instruments }) => (
     <>
