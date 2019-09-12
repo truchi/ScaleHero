@@ -24,7 +24,7 @@ export default ({
   const [_play, setPlay] = useState(play)
   const [_loop, setLoop] = useState(loop)
   const [_volume, setVolume] = useState(volume)
-  const [_stopped, setStopped] = useState(!play)
+  const [_stopped, setStopped] = useState(!play) // To force rerender when restart
 
   const __play    =  ()       => (( $audio.current.play()           ))
   const __pause   =  ()       => (( $audio.current.pause()          ))
