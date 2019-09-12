@@ -1,11 +1,11 @@
 import { createStore } from 'redux'
 import reducer         from './reducer'
 import {
-  bpm,
-  grid,
-  timelines,
-  instruments,
-  masks,
+  // bpm,
+  // grid,
+  // timelines,
+  // instruments,
+  // masks,
 
   src,
   tunings,
@@ -14,11 +14,11 @@ import {
   clips,
 } from './data'
 import {
-  // itWorks,
+  itWorks,
 } from './itworks'
 import it from '../lib/grid'
 
-// const { bpm, grid, timelines, instruments, masks } = itWorks()
+const { bpm, grid, timelines, instruments, masks } = itWorks()
 const iterator = it(grid, timelines)
 window.it = iterator
 

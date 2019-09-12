@@ -5,14 +5,21 @@ import {
   compose as c,
   curry,
   defaultTo,
+  evolve,
+  filter,
+  flip,
   identity,
   lensPath,
   map,
+  merge,
   over,
-  propOr,
+  path,
+  prop,
   reduce,
+  tail,
   uncurryN,
   unnest,
+  when,
 } from 'ramda'
 
 //--
@@ -35,6 +42,16 @@ const cleanNilsReduce =
       over(lensPath(path), cleanNilsRecurs, state)
   )
 
+const getEvents = c(
+  unnest,
+  filter(_ => _),
+  map(prop('events')),
+  tail,
+  prop('values'),
+)
+
+const getIndex = path([0, 'index'])
+
 //--
 //   Reducers
 //--
@@ -42,34 +59,39 @@ const cleanNilsReduce =
 //** Reducers keyed by action type
 //:: Object String actionType Function reducer
 const reducers = {
-  initState: (state) => console.log(state.initialState[0].layers[0]) || ({
-    ...state,
-    index: null,
-    state: state.initialState,
-  }),
-  reduceState: (state, { values: [grid, ...timelines] }) => {
-    const index = propOr({}, 'index')(grid)
-    const events = c(unnest, map(propOr([], 'events')))(timelines || [])
-
-    return {
-      ...state,
-      index,
-      state: reduce(
-        (state, { path, value }) => assocPath(path, value, state),
-        state.state,
-        events
-      )
-    }
-  },
-  //** Applies actions and clean arrays
-  //:: Object state -> Array actions -> Object state
-  next: curry(uncurryN(2,
-    state =>
-      c(
-        cleanNilsReduce(__, [['tuning'], ['layers']]),
-        assocPathReduce(state)
-      )
-  )),
+  next: (state) =>
+    (({ iterator, next: { value, done }, instruments } = state) =>
+      done
+        ? state
+        : ({
+          ...state,
+          next : iterator.next(),
+          index: getIndex(value),
+          instruments: assocPathReduce(instruments, getEvents(value)),
+        })
+    )(),
+  init: (state) =>
+    (({ iterator, initialInstruments } = state) =>
+      ({
+        ...state,
+        next       : iterator.reset().next(),
+        index      : null,
+        instruments: initialInstruments,
+      })
+    )(),
+  reset: (state) =>
+    (({ next, init } = reducers) =>
+      c(next, init)(state)
+    )(),
+  // //** Applies actions and clean arrays
+  // //:: Object state -> Array actions -> Object state
+  // next: curry(uncurryN(2,
+  //   state =>
+  //     c(
+  //       cleanNilsReduce(__, [['tuning'], ['layers']]),
+  //       assocPathReduce(state)
+  //     )
+  // )),
 }
 
 //** Reduces state with action

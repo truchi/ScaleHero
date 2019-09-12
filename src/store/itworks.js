@@ -25,7 +25,7 @@ export const itWorks = () => {
         {
           palette: 1,
           root   : 'C',
-          scale  : 2,
+          scale  : 0,
         },
         ...str(0).map(
           ([c, j]) =>
@@ -34,7 +34,7 @@ export const itWorks = () => {
               masking: [{ mask: c, offsetJ: j }],
               palette: 0,
               root   : 'C',
-              scale  : 2,
+              scale  : 0,
             })
         )
       ],
@@ -54,6 +54,8 @@ export const itWorks = () => {
     },
     timelines: [
       {
+        repeat: true,
+        count: Infinity,
         sections: [
           {
             lines: [

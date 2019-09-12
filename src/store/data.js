@@ -6,7 +6,7 @@ const src = 'http://www.universal-soundbank.com/sounds/7306.mp3' // brice
 // const src = 'http://www.universal-soundbank.com/sounds/1935.mp3' // bip ~1s
 // const src = 'http://www.universal-soundbank.com/sounds/988.mp3' // miaou ~2s
 
-export const bpm = 120
+export const bpm = 60
 
 export { src }
 
@@ -38,13 +38,13 @@ export const timelines = [
     count: 2,
     sections: [
       {
-        repeat: true,
-        count: 2,
         lines: [
           {
             bars: [
-              { items: [{ duration: 1, events: [{ path: [0, 'lol'], value: 'D' }] }] },
-              { items: [{ duration: 1, events: [{ path: [0, 'lol'], value: 'E' }] }] },
+              { items: [{ duration: 1, events: [
+                { path: [0, 'layers', 1, 'scale'], value: 1 },
+                { path: [0, 'layers', 2, 'scale'], value: 2 },
+              ] }] },
             ]
           },
         ]
@@ -61,8 +61,26 @@ export const timelines = [
         lines: [
           {
             bars: [
-              { items: [{ duration: 1, events: [{ path: [0, 'lol'], value: 'D2' }] }] },
-              { items: [{ duration: 1, events: [{ path: [0, 'lol'], value: 'E2' }] }] },
+              { items: [{ duration: 1, events: [{ path: [0, 'layers', 1, 'root'], value: 'D' }] }] },
+              { items: [{ duration: 1, events: [{ path: [0, 'layers', 1, 'root'], value: 'E' }] }] },
+            ]
+          },
+        ]
+      },
+    ]
+  },
+  {
+    repeat: true,
+    count: 2,
+    sections: [
+      {
+        repeat: true,
+        count: 2,
+        lines: [
+          {
+            bars: [
+              { items: [{ duration: 1, events: [{ path: [0, 'layers', 2, 'root'], value: 'D' }] }] },
+              { items: [{ duration: 1, events: [{ path: [0, 'layers', 2, 'root'], value: 'E' }] }] },
             ]
           },
         ]
@@ -83,14 +101,14 @@ export const instruments = [
       {
         palette: 1,
         root   : 'C',
-        scale  : 2,
+        scale  : 0,
       },
       {
         clips  : [0, 1, 2, 3],
         masking: [{ mask: 0, offsetI: 0, offsetJ: 0 }],
         palette: 0,
         root   : 'C',
-        scale  : 2,
+        scale  : 0,
       },
       {
         clips  : [4],
@@ -141,9 +159,9 @@ export const palettes = [
 ]
 
 export const scales = [
+  ['1', 'b2', '2', 'b3', '3', '4', '#4', '5', 'b6', '6', 'b7', '7'],
   ['1', '2', '3', '4', '5', '6', '7'],
   ['1', '2', 'b3', '4', '5', 'b6', 'b7'],
-  ['1', 'b2', '2', 'b3', '3', '4', '#4', '5', 'b6', '6', 'b7', '7'],
 ]
 
 export const clips = [

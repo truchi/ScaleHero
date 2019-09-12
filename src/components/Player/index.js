@@ -1,58 +1,58 @@
 import React, {
   useCallback,
   useState,
-  cloneElement,
   useRef,
   useEffect,
 } from 'react'
+import { connect } from 'react-redux'
+import Audio       from './Audio'
 
-const useForceUpdate = () => (([bool, update] = useState()) => () => update(!bool))()
+export default connect(
+  state => {
+    const { bpm, next: { value, done } } = state
+    const time = done ? null : value.time * 60 / bpm
 
-export default ({ audio, bpm, iterator, onNext, onEnd }) => {
-  const $audio          = useRef()
-  const [play, setPlay] = useState(false)
-  const forceUpdate     = useForceUpdate()
+    return { ...state, time }
+  },
+  {
+    onTime   : () => ({ type: 'next'  }),
+    onRestart: () => ({ type: 'reset' }),
+    onStop   : () => ({ type: 'init'  }),
+  }
+)(
+  ({ src, time, onTime, onRestart, onStop: _onStop }) => {
+    const $audio          = useRef()
+    const [play, setPlay] = useState(false)
 
-  const onPlay    = useCallback(() => setPlay(true))
-  const onPause   = useCallback(() => setPlay(false))
-  const onRestart = useCallback(() => ((iterator.reset(), forceUpdate())))
-  const onStop    = useCallback(() => ((iterator.reset(), onEnd(), setPlay(false))))
+    const onPlay    = useCallback(() => setPlay(true))
+    const onPause   = useCallback(() => setPlay(false))
+    const onStop    = useCallback(() => ((setPlay(false), _onStop())))
 
-  const next = () =>
-    (({ value, done } = iterator.next()) =>
-      done
-        ? { done: true }
-        : {
-          value,
-          time: value.time * 60 / bpm
-        }
-    )()
+    let id
+    const raf = () => id = requestAnimationFrame(
+      () => $audio.current.currentTime < time
+        ? raf()
+        : onTime(time)
+    )
 
-  const step = ({ done, value, time }) => () =>
-    (({ currentTime } = $audio.current) =>
-      currentTime < time
-        ? raf({ done, value, time })
-        : (( raf(next()), onNext(value) ))
-    )()
+    useEffect(() => ((
+      time = parseFloat(time),
+      play && !isNaN(time) && raf(),
+      () => cancelAnimationFrame(id)
+    )))
 
-  let id
-  const raf = (_next) => _next.done || (id = requestAnimationFrame(step(_next)))
-
-  useEffect(() => ((
-    play && raf(next()),
-    () => cancelAnimationFrame(id)
-  )))
-
-  return (
-    <>
-      { cloneElement(audio, {
-        $audio,
-        play,
-        onPlay,
-        onPause,
-        onRestart,
-        onStop,
-      }) }
-    </>
-  )
-}
+    return (
+      <>
+        <Audio { ...{
+          $audio,
+          src,
+          play,
+          onPlay,
+          onPause,
+          onRestart,
+          onStop,
+        } } />
+      </>
+    )
+  }
+)
