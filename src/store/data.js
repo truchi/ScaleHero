@@ -2,9 +2,11 @@ import Clip     from '../lib/clip'
 import Textures from '../lib/textures'
 // import src      from '../assets/backtrack.ogg'
 
-const src = 'http://www.universal-soundbank.com/sounds/7306.mp3'
+const src = 'http://www.universal-soundbank.com/sounds/7306.mp3' // brice
+// const src = 'http://www.universal-soundbank.com/sounds/1935.mp3' // bip ~1s
+// const src = 'http://www.universal-soundbank.com/sounds/988.mp3' // miaou ~2s
 
-export const bpm = 200
+export const bpm = 120
 
 export { src }
 
@@ -19,8 +21,8 @@ export const grid = {
         {
           bars: [
             // { repeat: true          , items: [{ duration: 1, chord: 'A' }, { duration: 1, chord: 'B' }] },
-            // {                         items: [{ duration: 1, chord: 'A' }, { duration: 3, chord: 'B' }] },
-            { repeat: true, count: 2, items: [{ duration: 1, chord: 'C' }] },
+            { items: [{ duration: 1, chord: 'A' }, { duration: 1, chord: 'B' }] },
+            // { repeat: true, count: 2, items: [{ duration: 1, chord: 'C' }] },
             // {               count: 2, items: [{ duration: 1, chord: 'D' }] },
             // {                         items: [{ duration: 1, chord: 'D' }] },
           ]
@@ -41,14 +43,32 @@ export const timelines = [
         lines: [
           {
             bars: [
-              { items: [{ duration: 1, events: [{ path: [0, 'layers', 1, 'root'], value: 'D' }] }] },
-              { items: [{ duration: 1, events: [{ path: [0, 'layers', 1, 'root'], value: 'E' }] }] },
+              { items: [{ duration: 1, events: [{ path: [0, 'lol'], value: 'D' }] }] },
+              { items: [{ duration: 1, events: [{ path: [0, 'lol'], value: 'E' }] }] },
             ]
           },
         ]
       },
     ]
-  }
+  },
+  {
+    repeat: true,
+    count: 2,
+    sections: [
+      {
+        repeat: true,
+        count: 2,
+        lines: [
+          {
+            bars: [
+              { items: [{ duration: 1, events: [{ path: [0, 'lol'], value: 'D2' }] }] },
+              { items: [{ duration: 1, events: [{ path: [0, 'lol'], value: 'E2' }] }] },
+            ]
+          },
+        ]
+      },
+    ]
+  },
 ]
 
 export const state = [
