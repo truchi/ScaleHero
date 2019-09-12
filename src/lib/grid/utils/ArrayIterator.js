@@ -5,7 +5,15 @@
  * @kind RepeatableArray ra -> Iterator iterator
  */
 export default ({ count = 1, repeat = [] }) => {
-  let   iterator
+  /**
+   * Cursor
+   * @kind { index: Number, count: Number }
+   */
+  const cursor = {
+    index: 0,
+    count: 1,
+  }
+
   const bounds = {
     index: repeat.length,
     count
@@ -19,33 +27,10 @@ export default ({ count = 1, repeat = [] }) => {
   const moveStart   = () => ((start(), moveForward()))                           // Loops, return current value and forwards
 
   /**
-   * Cursor
-   * @kind { index: Number, count: Number }
-   */
-  const cursor = {
-    index: 0,
-    count: 1,
-  }
-
-  /**
    * Iterator
    * @kind Object
    */
-  return (iterator = {
-    /**
-     * Returns cursor
-     * @kind () => Cursor cursor
-     */
-    cursor: () => Object.assign({}, cursor),
-    /**
-     * Moves cursor to ith item, cth repeat
-     * @kind Number i, Number c -> Iterator iterator
-     */
-    goto: ({ index = cursor.index, count = cursor.count } = {}) => ((
-      cursor.index = Math.min(index, bounds.index),
-      cursor.count = Math.min(count, bounds.count),
-      iterator
-    )),
+  return ({
     /**
      * Returns current value in array,
      * and move cursor to next value
