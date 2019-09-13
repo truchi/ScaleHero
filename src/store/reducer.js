@@ -14,6 +14,7 @@ import {
   merge,
   over,
   path,
+  pathOr,
   prop,
   reduce,
   tail,
@@ -50,7 +51,7 @@ const getEvents = c(
   prop('values'),
 )
 
-const getIndex = path([0, 'index'])
+const getIndex = pathOr(null, ['values', 0, 'index'])
 
 //--
 //   Reducers
