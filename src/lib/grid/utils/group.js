@@ -20,12 +20,12 @@ import {
  * @kind Number count -> Array arr -> Array arr
  */
 const popGroup =
-  count =>
+  (endIndex, count) =>
     converge(
       adjust(-1), // adjust last
       [
         c(        // with push last(arr) into repeat
-          last => evolve({ repeat: c(append, merge(last))({ count }) }),
+          last => evolve({ repeat: c(append, merge(last))({ endIndex, count }) }),
           last
         ),
         init      // of init(arr) with
@@ -48,8 +48,8 @@ const pushItem =
  * @kind Object index -> Array arr -> Array arr
  */
 const pushGroup =
-  index =>
-    append({ index, count: 1, repeat: [] })
+  startIndex =>
+    append({ startIndex, count: 1, repeat: [] })
 
 /**
  * Removes non-data keys on item
@@ -83,8 +83,8 @@ export default
 
         // After
         // Close repeating
-        (grouped, { count }) =>
-          when(_ => count, popGroup(count))(grouped),
+        (grouped, { count }, index) =>
+          when(_ => count, popGroup(index, count))(grouped),
 
         // Get
         (item, index) =>
