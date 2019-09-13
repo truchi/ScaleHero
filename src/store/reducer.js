@@ -1,26 +1,18 @@
-import { cleanNilsRecurs } from '../lib/utils'
+// import { cleanNilsRecurs } from '../lib/utils'
 import {
-  __,
   assocPath,
   compose as c,
-  curry,
   defaultTo,
-  evolve,
   filter,
-  flip,
   identity,
-  lensPath,
+  // lensPath,
   map,
-  merge,
-  over,
-  path,
+  // over,
   pathOr,
   prop,
   reduce,
   tail,
-  uncurryN,
   unnest,
-  when,
 } from 'ramda'
 
 //--
@@ -37,11 +29,11 @@ const assocPathReduce =
 
 //** Returns state with paths (recursively) clean of nils
 //:: Object state -> Array paths -> Object state
-const cleanNilsReduce =
-  reduce(
-    (state, path) =>
-      over(lensPath(path), cleanNilsRecurs, state)
-  )
+// const cleanNilsReduce =
+//   reduce(
+//     (state, path) =>
+//       over(lensPath(path), cleanNilsRecurs, state)
+//   )
 
 const getEvents = c(
   unnest,
