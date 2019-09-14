@@ -6,10 +6,8 @@ import {
   converge,
   evolve,
   init,
-  isEmpty,
   last,
   merge,
-  omit,
   path,
   when,
 } from 'ramda'
@@ -52,18 +50,15 @@ const pushGroup =
     append({ startIndex, count: 1, repeat: [] })
 
 /**
- * Removes non-data keys on item
- * @kind Item item -> Item item
- */
-const cleanItem =
-  omit(['repeat', 'count', 'sections', 'lines', 'bars', 'items'])
-
-/**
  * Transforms a tree marked with repeat and count
  * to a multidimensionnal array as recursive repeat sections
  * @kind Tree tree -> GroupedArray grouped
  */
 export default
+  (
+    get, // (item, index) -> [items]: returns item's children
+    is,  // (item, index) -> Boolean: returns true if item has to be pushed in group
+  ) =>
   (
     tree, // Tree to group by repeat sections
   ) =>
@@ -74,12 +69,10 @@ export default
         // Make new level when repeating,
         // add item if it has data
         (grouped, item, index) =>
-          ((item, { repeat }) =>
-            c(
-              when(_ => !isEmpty(item), pushItem(merge({ index }, item))),
-              when(_ => repeat        , pushGroup(index)),
-            )(grouped)
-          )(cleanItem(item), item),
+          c(
+            when(_ => is(item, index), pushItem(merge({ index }, item))),
+            when(_ => item.repeat    , pushGroup(index)),
+          )(grouped),
 
         // After
         // Close repeating
@@ -87,10 +80,7 @@ export default
           when(_ => count, popGroup(index, count))(grouped),
 
         // Get
-        (item, index) =>
-          item[
-            ['sections', 'lines', 'bars', 'items'][index.length]
-          ]
+        get,
       )
     )(
       [{ repeat: [] }],                        // Accumulator: stack of children

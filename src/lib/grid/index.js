@@ -5,9 +5,12 @@ import {
 import group    from './utils/group'
 import iterator from './utils/GroupsIterator'
 
+const getItem = (item, index) => item[['sections', 'lines', 'bars', 'items'][index.length]]
+const isItem  = (item, index) => index.length === 4
+
 export default
   (grid, timelines) =>
     c(
       iterator,
-      map(group)
+      map(group(getItem, isItem))
     )([grid, ...timelines])
