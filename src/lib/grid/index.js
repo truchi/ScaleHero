@@ -1,62 +1,13 @@
-import {
-  assocPath,
-  compose as c,
-  cond,
-  equals,
-  evolve,
-  juxt,
-  lt,
-  map,
-  min,
-  pathOr,
-  prop,
-  reduce,
-} from 'ramda'
-import group    from './utils/group'
-import groupIterator from './utils/GroupIterator'
-import mergeIterator from './utils/MergeIterator'
+import _group         from './utils/group'
+import groupIterator  from './utils/GroupIterator'
+import groupsIterator from './utils/GroupsIterator'
 
 const getItem = (item, index) => item[['sections', 'lines', 'bars', 'items'][index.length]]
 const isItem  = (item, index) => index.length === 4
 
-const isDone      = c(equals(true), prop('done'))
-const getDuration = pathOr(Infinity, ['value', 'duration'])
-const minDuration = c(reduce(min, Infinity), map(getDuration))
-const longerThan  = at => c(lt(at), getDuration)
+export const group = _group(getItem, isItem)
 
-const _slice =
-  at =>
-    juxt([
-      assocPath(['value', 'duration'], at),
-      evolve({ value: { duration: d => d - at } })
-    ])
-
-const slice =
-  at =>
-    cond([
-      [isDone        , _ => []   ],
-      [longerThan(at), _slice(at)],
-      [_ => true     , _ => [_]  ],
-    ])
-
-const sliceNexts =
-  (nexts, { time, end }) =>
-    ((values, duration = minDuration(nexts)) =>
-      [map(slice(duration))(nexts), { time: end, end: end + duration }])()
-
-export default
-  (grid, timelines) =>
-    c(
-      _ => {
-        window.i = _
-
-        return _
-      },
-      mergeIterator(sliceNexts, { time: 0, end: 0 }),
-      map(
-        c(
-          groupIterator,
-          group(getItem, isItem)
-        )
-      )
-    )([grid, ...timelines])
+export {
+  groupIterator,
+  groupsIterator,
+}

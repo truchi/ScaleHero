@@ -16,10 +16,11 @@ import {
 import {
   itWorks,
 } from './itworks'
-import it from '../lib/grid'
+import { group, groupsIterator } from '../lib/grid'
 
 const { bpm, grid, timelines, instruments, masks } = itWorks()
-const iterator = it(grid, timelines)
+const groups   = [grid, ...timelines].map(group)
+const iterator = groupsIterator(groups)
 window.it = iterator
 
 const initial = {
