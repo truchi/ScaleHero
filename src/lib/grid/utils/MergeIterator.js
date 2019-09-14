@@ -39,16 +39,11 @@ export default
           { value: { values, ...accumulator } }
         )))()
 
-      const reset = () => ((
-        iterators = map(c(call, prop('reset')))(iterators),
-        nexts     = map(c(call, prop('next' )))(iterators),
-        iterator
-      ))
-
-      reset()
-
       return (iterator = {
-        reset,
+        reset: () => ((
+          iterators = map(c(call, prop('reset')))(iterators),
+          iterator
+        )),
         cursor: () => map(c(call, prop('cursor')))(iterators),
         next: () => {
           nexts = update(nexts)
