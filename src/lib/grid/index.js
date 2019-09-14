@@ -39,13 +39,13 @@ const slice =
     ])
 
 const sliceNexts =
-  (nexts, { time }) =>
+  (nexts, { time, end }) =>
     ((values, duration = minDuration(nexts)) =>
-      [map(slice(duration))(nexts), { time: time + duration }])()
+      [map(slice(duration))(nexts), { time: end, end: end + duration }])()
 
 export default
   (grid, timelines) =>
     c(
-      iterator(sliceNexts, { time: 0 }),
       map(group(getItem, isItem))
+      iterator(sliceNexts, { time: 0, end: 0 }),
     )([grid, ...timelines])
