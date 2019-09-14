@@ -3,45 +3,19 @@ import {
   addIndex,
   all,
   append,
-  assocPath,
   call,
   clone,
   compose as c,
-  cond,
   equals,
-  evolve,
-  juxt,
-  lt,
   map,
-  min,
-  pathOr,
   prop,
   reduce,
   when,
 } from 'ramda'
 
-const isDone      = c(equals(true), prop('done'))
-const getDuration = pathOr(Infinity, ['value', 'duration'])
-const minDuration = c(reduce(min, Infinity), map(getDuration))
-const longerThan  = at => c(lt(at), getDuration)
-
-const _slice =
-  at =>
-    juxt([
-      assocPath(['value', 'duration'], at),
-      evolve({ value: { duration: d => d - at } })
-    ])
-
-const slice =
-  at =>
-    cond([
-      [isDone        , _ => []   ],
-      [longerThan(at), _slice(at)],
-      [_ => true     , _ => [_]  ],
-    ])
-
 export default
-  (groups, accumulator) => {
+  (slice, accumulator) =>
+  (groups) => {
     let it, iterators, nexts
     accumulator = clone(accumulator)
 
@@ -65,9 +39,6 @@ export default
       it
     ))
 
-    const sliceNexts = (nexts, acc) =>
-      ((values, duration = minDuration(nexts)) => [map(slice(duration))(nexts), acc + 1])()
-
     reset()
 
     return (it = {
@@ -76,7 +47,7 @@ export default
         const isDone = c(all(equals(true)), map(prop('done')))(nexts)
 
         return isDone ? { done: true }
-                      : c(update, sliceNexts)(nexts, accumulator)
+                      : c(update, slice)(nexts, accumulator)
       }
     })
   }
