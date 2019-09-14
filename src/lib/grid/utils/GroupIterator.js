@@ -42,10 +42,16 @@ export default ({ count = 1, repeat = [] }) => {
      */
     cursor: () => clone(cursor),
     /**
+     * Resets iterator
+     * @kind () -> Iterator iterator
+     */
+    reset: () => ((iterator.goto(), iterator)),
+    /**
      * Moves cursor
      * @kind Cursor cursor -> Iterator iterator
      */
     goto: (cursor = [])=> ((
+      // Redo corresponding stack
       stack = c(
         prop('stack'),
         reduce(
@@ -64,7 +70,9 @@ export default ({ count = 1, repeat = [] }) => {
           { stack: [], current: { count, repeat } }
         )
       )(cursor.length ? cursor : [{}]),
+      // Refresh cursor
       getCursor(),
+      // Return iterator
       iterator
     )),
     /**
