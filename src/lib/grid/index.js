@@ -13,7 +13,8 @@ import {
   reduce,
 } from 'ramda'
 import group    from './utils/group'
-import iterator from './utils/MergeIterator'
+import groupIterator from './utils/GroupIterator'
+import mergeIterator from './utils/MergeIterator'
 
 const getItem = (item, index) => item[['sections', 'lines', 'bars', 'items'][index.length]]
 const isItem  = (item, index) => index.length === 4
@@ -46,6 +47,16 @@ const sliceNexts =
 export default
   (grid, timelines) =>
     c(
-      map(group(getItem, isItem))
-      iterator(sliceNexts, { time: 0, end: 0 }),
+      _ => {
+        window.i = _
+
+        return _
+      },
+      mergeIterator(sliceNexts, { time: 0, end: 0 }),
+      map(
+        c(
+          groupIterator,
+          group(getItem, isItem)
+        )
+      )
     )([grid, ...timelines])

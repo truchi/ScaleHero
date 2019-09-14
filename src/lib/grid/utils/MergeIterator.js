@@ -1,4 +1,3 @@
-import GroupIterator from './GroupIterator'
 import {
   addIndex,
   all,
@@ -15,8 +14,8 @@ import {
 
 export default
   (slice, accumulator) =>
-    (groups) => {
-      let it, iterators, nexts
+    (iterators) => {
+      let iterator, nexts
       accumulator = clone(accumulator)
 
       const update = ([sliced, acc]) =>
@@ -34,14 +33,14 @@ export default
         )))()
 
       const reset = () => ((
-        iterators = map(GroupIterator)(groups),
-        nexts     = map(c(call, prop('next')))(iterators),
-        it
+        iterators = map(c(call, prop('reset')))(iterators),
+        nexts     = map(c(call, prop('next' )))(iterators),
+        iterator
       ))
 
       reset()
 
-      return (it = {
+      return (iterator = {
         reset,
         next: () => {
           const isDone = c(all(equals(true)), map(prop('done')))(nexts)
