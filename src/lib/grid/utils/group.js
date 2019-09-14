@@ -59,31 +59,31 @@ export default
     get, // (item, index) -> [items]: returns item's children
     is,  // (item, index) -> Boolean: returns true if item has to be pushed in group
   ) =>
-  (
-    tree, // Tree to group by repeat sections
-  ) =>
-    c(
-      path([0, 'repeat', 0]),
-      reduce(
-        // Before
-        // Make new level when repeating,
-        // add item if it has data
-        (grouped, item, index) =>
-          c(
-            when(_ => is(item, index), pushItem(merge({ index }, item))),
-            when(_ => item.repeat    , pushGroup(index)),
-          )(grouped),
+    (
+      tree, // Tree to group by repeat sections
+    ) =>
+      c(
+        path([0, 'repeat', 0]),
+        reduce(
+          // Before
+          // Make new level when repeating,
+          // add item if it has data
+          (grouped, item, index) =>
+            c(
+              when(_ => is(item, index), pushItem(merge({ index }, item))),
+              when(_ => item.repeat    , pushGroup(index)),
+            )(grouped),
 
-        // After
-        // Close repeating
-        (grouped, { count }, index) =>
-          when(_ => count, popGroup(index, count))(grouped),
+          // After
+          // Close repeating
+          (grouped, { count }, index) =>
+            when(_ => count, popGroup(index, count))(grouped),
 
-        // Get
-        get,
+          // Get
+          get,
+        )
+      )(
+        [{ repeat: [] }],                        // Accumulator: stack of children
+        merge({ repeat: true, count: 1 }, tree), // Tree to group
+                                                // (making sure there is a top level repeat)
       )
-    )(
-      [{ repeat: [] }],                        // Accumulator: stack of children
-      merge({ repeat: true, count: 1 }, tree), // Tree to group
-                                               // (making sure there is a top level repeat)
-    )
