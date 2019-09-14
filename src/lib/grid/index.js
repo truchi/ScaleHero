@@ -13,7 +13,7 @@ import {
   reduce,
 } from 'ramda'
 import group    from './utils/group'
-import iterator from './utils/GroupsIterator'
+import iterator from './utils/MergeIterator'
 
 const getItem = (item, index) => item[['sections', 'lines', 'bars', 'items'][index.length]]
 const isItem  = (item, index) => index.length === 4
