@@ -12,7 +12,7 @@ export const group = _group(
   (item, index) => index.length === 4
 )
 
-export const index =
+export const getIndex =
   (grid, current = group(grid)) =>
     c(
       ({ current: { index }, repeats }) => ({ index, repeats }),
