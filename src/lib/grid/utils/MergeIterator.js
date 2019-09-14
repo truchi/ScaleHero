@@ -12,25 +12,31 @@ import {
   when,
 } from 'ramda'
 
+// Ideas:
+// goto(cursor, fn): with fn cleaning the nexts buffer
+// (would allow state serialization)
+// (remove accumulator)
+
 export default
   (slice, accumulator) =>
     (iterators) => {
       let iterator, nexts
       accumulator = clone(accumulator)
 
-      const update = ([sliced, acc]) =>
+      const update = addIndex(map)((next, i) => when(_ =>  !_, iterators[i].next)(next))
+
+      const set = ([sliced, acc]) =>
         ((values, cursors) => ((
-          cursors = map(c(call, prop('cursor')))(iterators),
-          [values, nexts] = addIndex(reduce)(
-            ([values, nexts], [value, next], i) => [
-              append(when(_ => !!_, prop('value')    )(value), values),
-              append(when(_ =>  !_, iterators[i].next)(next ), nexts ),
+          [values, nexts] = reduce(
+            ([values, nexts], [value, next]) => [
+              append(when(_ => !!_, prop('value'))(value), values),
+              append(next, nexts),
             ],
             [[], []],
             sliced
           ),
           accumulator = acc,
-          { value: { values, cursors, ...accumulator } }
+          { value: { values, ...accumulator } }
         )))()
 
       const reset = () => ((
@@ -43,11 +49,13 @@ export default
 
       return (iterator = {
         reset,
+        cursor: () => map(c(call, prop('cursor')))(iterators),
         next: () => {
+          nexts = update(nexts)
           const isDone = c(all(equals(true)), map(prop('done')))(nexts)
 
           return isDone ? { done: true }
-                        : c(update, slice)(nexts, accumulator)
+                        : c(set, slice)(nexts, accumulator)
         }
       })
     }
