@@ -5,42 +5,31 @@ import {
   append,
   assocPath,
   call,
+  clone,
   compose as c,
   cond,
   equals,
   evolve,
-  identity,
   juxt,
   lt,
   map,
   min,
-  omit,
   pathOr,
   prop,
   reduce,
-  unapply,
   when,
 } from 'ramda'
 
-const minAll  = reduce(min, Infinity)
-const list    = unapply(identity)
-const reduceI = addIndex(reduce)
-const minus   = a => b => b - a
-
 const isDone      = c(equals(true), prop('done'))
 const getDuration = pathOr(Infinity, ['value', 'duration'])
-const minDuration = c(minAll, map(getDuration))
+const minDuration = c(reduce(min, Infinity), map(getDuration))
 const longerThan  = at => c(lt(at), getDuration)
 
 const _slice =
   at =>
     juxt([
       assocPath(['value', 'duration'], at),
-      evolve({
-        value: {
-          duration: minus(at)
-        }
-      })
+      evolve({ value: { duration: d => d - at } })
     ])
 
 const slice =
@@ -48,40 +37,36 @@ const slice =
     cond([
       [isDone        , _ => []   ],
       [longerThan(at), _slice(at)],
-      [_ => true     , list      ],
+      [_ => true     , _ => [_]  ],
     ])
 
 export default
-  (groups) => {
-    let it, iterators, nexts, elapsed
+  (groups, accumulator) => {
+    let it, iterators, nexts
+    accumulator = clone(accumulator)
 
-    const getValue = when(_ => !!_, c(omit(['duration']), prop('value')))
-    const getNext  = i => when(_ => !_, iterators[i].next)
-
-    const reduceSliced =
-      ([values, nexts], [value, next], i) => [
-        append(getValue  (value), values),
-        append(getNext(i)(next ), nexts ),
-      ]
+    const update = ([sliced, acc]) =>
+      ((values) => ((
+        [values, nexts] = addIndex(reduce)(
+          ([values, nexts], [value, next], i) => [
+            append(when(_ => !!_, prop('value')    )(value), values),
+            append(when(_ =>  !_, iterators[i].next)(next ), nexts ),
+          ],
+          [[], []],
+          sliced
+        ),
+        accumulator = acc,
+        { value: { values, ...accumulator } }
+      )))()
 
     const reset = () => ((
       iterators = map(GroupIterator)(groups),
       nexts     = map(c(call, prop('next')))(iterators),
-      elapsed   = 0,
       it
     ))
 
-    const next = () =>
-      ((values, duration = minDuration(nexts), time = elapsed) =>
-        ((
-          [values, nexts] = c(
-            reduceI(reduceSliced, [[], []]),
-            map(slice(duration))
-          )(nexts),
-          elapsed += duration,
-          { value: { values, time, duration } }
-        ))
-      )()
+    const sliceNexts = (nexts, acc) =>
+      ((values, duration = minDuration(nexts)) => [map(slice(duration))(nexts), acc + 1])()
 
     reset()
 
@@ -91,7 +76,7 @@ export default
         const isDone = c(all(equals(true)), map(prop('done')))(nexts)
 
         return isDone ? { done: true }
-                      : next()
+                      : c(update, sliceNexts)(nexts, accumulator)
       }
     })
   }
