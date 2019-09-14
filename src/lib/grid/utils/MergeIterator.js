@@ -19,7 +19,8 @@ export default
       accumulator = clone(accumulator)
 
       const update = ([sliced, acc]) =>
-        ((values) => ((
+        ((values, cursors) => ((
+          cursors = map(c(call, prop('cursor')))(iterators),
           [values, nexts] = addIndex(reduce)(
             ([values, nexts], [value, next], i) => [
               append(when(_ => !!_, prop('value')    )(value), values),
@@ -29,7 +30,7 @@ export default
             sliced
           ),
           accumulator = acc,
-          { value: { values, ...accumulator } }
+          { value: { values, cursors, ...accumulator } }
         )))()
 
       const reset = () => ((
