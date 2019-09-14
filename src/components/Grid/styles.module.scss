@@ -1,0 +1,82 @@
+.grid {
+  display: block;
+  width: 70%;
+  margin: auto;
+  padding: 1%;
+
+  background: white;
+  color: black;
+}
+
+.section {
+}
+
+.line {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.5% 0;
+  padding: 0.5% 0;
+}
+
+.bar {
+  position: relative;
+  width: 100%;
+  padding: 0 1%;
+  border-left: 1px solid black;
+
+  &:last-child {
+    border-right: 1px solid black;
+  }
+
+  &[start]::before,
+  &[end  ]::after {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  &[start]::before {
+    display: block;
+    content: ':';
+    margin: auto;
+    left: 2%;
+  }
+
+  &[end]::after {
+    display: block;
+    content: ':';
+    margin: auto;
+    right: 2%;
+  }
+}
+
+.items {
+  display: flex;
+}
+
+.item {
+  padding: 0 2%;
+}
+
+.chord {
+  display: block;
+}
+
+.duration {
+  display: block;
+
+  &[duration] {
+    background-repeat: no-repeat;
+    width: 12px;
+    height: 12px;
+    background-size: 12px;
+    background-position: center center;
+  }
+
+  &[duration="4"] { background-size: 8px }
+
+  &[duration="0.5"] { background-image: url('/assets/svg/duration/0.5.svg') }
+  &[duration="1"  ] { background-image: url('/assets/svg/duration/1.svg'  ) }
+  &[duration="2"  ] { background-image: url('/assets/svg/duration/2.svg'  ) }
+  &[duration="4"  ] { background-image: url('/assets/svg/duration/4.svg'  ) }
+}
