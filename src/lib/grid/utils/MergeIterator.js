@@ -20,7 +20,8 @@ import {
 export default
   (slice, accumulator) =>
     (iterators) => {
-      let iterator, nexts
+      let iterator
+      let nexts = []
       accumulator = clone(accumulator)
 
       const update = addIndex(map)((next, i) => when(_ =>  !_, iterators[i].next)(next))
