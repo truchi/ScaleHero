@@ -6,7 +6,7 @@ const src = 'http://www.universal-soundbank.com/sounds/7306.mp3' // brice
 // const src = 'http://www.universal-soundbank.com/sounds/1935.mp3' // bip ~1s
 // const src = 'http://www.universal-soundbank.com/sounds/988.mp3' // miaou ~2s
 
-export const bpm = 60
+export const bpm = 180
 
 export { src }
 
@@ -15,6 +15,9 @@ export const grid = {
   count: 2,
   sections: [
     {
+      name: 'Section 1 baby',
+      repeat: true,
+      count: 2,
       lines: [
         {
           bars: [
@@ -41,6 +44,7 @@ export const grid = {
       ]
     },
     {
+      // name: 'Section 2 yeah',
       lines: [
         {
           bars: [
@@ -64,7 +68,7 @@ export const grid = {
 export const timelines = [
   {
     repeat: true,
-    count: 2,
+    count: Infinity,
     sections: [
       {
         lines: [
@@ -82,7 +86,7 @@ export const timelines = [
   },
   {
     repeat: true,
-    count: 2,
+    count: Infinity,
     sections: [
       {
         repeat: true,
@@ -100,7 +104,7 @@ export const timelines = [
   },
   {
     repeat: true,
-    count: 2,
+    count: Infinity,
     sections: [
       {
         repeat: true,
