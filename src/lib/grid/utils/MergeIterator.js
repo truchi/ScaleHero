@@ -21,10 +21,10 @@ export default
   (slice, accumulator) =>
     (iterators) => {
       let iterator
-      let nexts = []
+      let nexts = Array(iterators.length)
       accumulator = clone(accumulator)
 
-      const update = addIndex(map)((next, i) => when(_ =>  !_, iterators[i].next)(next))
+      const update = addIndex(map)((next, i) => when(_ => !_, iterators[i].next, next))
 
       const set = ([sliced, acc]) =>
         ((values, cursors) => ((
