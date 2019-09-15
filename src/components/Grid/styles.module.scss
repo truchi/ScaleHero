@@ -6,6 +6,18 @@
 
   background: white;
   color: black;
+
+  [highlight] {
+    background-color: var(--color);
+    box-shadow: var(--color) 0px 0px 5px 2px;
+  }
+
+  $color: yellow;
+  @each $type, $alpha in (section: .9, line: 1, bar: .7, item: 1) {
+    .#{ $type }[highlight] {
+      --color: transparentize($color, $alpha);
+    }
+  }
 }
 
 .section {
@@ -56,6 +68,16 @@
 
 .item {
   padding: 0 2%;
+
+  &::after {
+    content: '';
+    display: block;
+    border-bottom: 1px solid transparent;
+  }
+
+  &[highlight]::after {
+    border-bottom-color: black;
+  }
 }
 
 .chord {
