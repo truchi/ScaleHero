@@ -1,14 +1,12 @@
 // import { cleanNilsRecurs } from '../lib/utils'
+import { getIndex } from '../lib/grid'
 import {
   assocPath,
   compose as c,
   defaultTo,
   filter,
   identity,
-  // lensPath,
   map,
-  // over,
-  pathOr,
   prop,
   reduce,
   tail,
@@ -27,14 +25,6 @@ const assocPathReduce =
       assocPath(path, value, state)
   )
 
-//** Returns state with paths (recursively) clean of nils
-//:: Object state -> Array paths -> Object state
-// const cleanNilsReduce =
-//   reduce(
-//     (state, path) =>
-//       over(lensPath(path), cleanNilsRecurs, state)
-//   )
-
 const getEvents = c(
   unnest,
   filter(_ => _),
@@ -43,8 +33,6 @@ const getEvents = c(
   prop('values'),
 )
 
-const getIndex = pathOr(null, ['values', 0, 'index'])
-
 //--
 //   Reducers
 //--
@@ -52,39 +40,25 @@ const getIndex = pathOr(null, ['values', 0, 'index'])
 //** Reducers keyed by action type
 //:: Object String actionType Function reducer
 const reducers = {
-  next: (state) =>
-    (({ iterator, next: { value, done }, instruments } = state) =>
-      done
-        ? state
-        : ({
-          ...state,
-          next : iterator.next(),
-          index: getIndex(value),
-          instruments: assocPathReduce(instruments, getEvents(value)),
-        })
-    )(),
-  init: (state) =>
-    (({ iterator, initialInstruments } = state) =>
-      ({
-        ...state,
-        next       : iterator.reset().next(),
-        index      : null,
-        instruments: initialInstruments,
-      })
-    )(),
+  next: (state) => ((
+    { grid, gridGroup, iterator, next: { value, done }, instruments: instrs } = state,
+    cursor      = iterator.cursor()[0],
+    index       = getIndex(grid, gridGroup)(cursor),
+    next        = iterator.next(),
+    instruments = assocPathReduce(instrs, getEvents(value)),
+  ) =>
+    done ? state : ({ ...state, index, next, instruments }))(),
+  init: (state) => ((
+    { grid, gridGroup, iterator, initialInstruments } = state,
+    cursor      = iterator.reset().cursor()[0],
+    index       = getIndex(grid, gridGroup)(cursor),
+    next        = iterator.next(),
+    instruments = initialInstruments,
+  ) =>
+    ({ ...state, next, index, instruments }))(),
   reset: (state) =>
     (({ next, init } = reducers) =>
-      c(next, init)(state)
-    )(),
-  // //** Applies actions and clean arrays
-  // //:: Object state -> Array actions -> Object state
-  // next: curry(uncurryN(2,
-  //   state =>
-  //     c(
-  //       cleanNilsReduce(__, [['tuning'], ['layers']]),
-  //       assocPathReduce(state)
-  //     )
-  // )),
+      c(next, init)(state))(),
 }
 
 //** Reduces state with action
