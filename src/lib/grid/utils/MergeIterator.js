@@ -18,11 +18,11 @@ import {
 // (remove accumulator)
 
 export default
-  (slice, accumulator) =>
+  (slice, initialAccumulator) =>
     (iterators) => {
       let iterator
       let nexts = Array(iterators.length)
-      accumulator = clone(accumulator)
+      let accumulator = clone(initialAccumulator)
 
       const update = addIndex(map)((next, i) => when(_ => !_, iterators[i].next, next))
 
@@ -42,7 +42,8 @@ export default
 
       return (iterator = {
         reset: () => ((
-          iterators = map(c(call, prop('reset')))(iterators),
+          iterators   = map(c(call, prop('reset')))(iterators),
+          accumulator = clone(initialAccumulator),
           iterator
         )),
         cursor: () => map(c(call, prop('cursor')))(iterators),
