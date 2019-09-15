@@ -21,6 +21,20 @@
 }
 
 .section {
+  border-radius: 5px;
+  border: 1px solid #000;
+  margin: 1% 0;
+  padding: 1%;
+
+  name {
+    margin-right: 1%;
+    font-style: italic;
+  }
+
+  repeat {
+    font-style: italic;
+    float: right;
+  }
 }
 
 .line {
@@ -75,6 +89,7 @@
     top: -35%;
     right: 2%;
     font-size: 80%;
+    font-style: italic;
   }
 }
 
