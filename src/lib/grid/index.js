@@ -15,7 +15,7 @@ export const group = _group(
 export const getIndex =
   (grid, current = group(grid)) =>
     c(
-      ({ current: { index }, repeats }) => ({ index, repeats }),
+      ({ current: { index = [] } = {}, repeats }) => ({ index, repeats }),
       reduce(
         ({ current: { startIndex, endIndex, repeat }, repeats }, { index, count }) => ({
           current: repeat[index],
