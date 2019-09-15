@@ -128,8 +128,7 @@
 
   &[duration="4"] { background-size: 8px }
 
-  &[duration="0.5"] { background-image: url('/assets/svg/duration/0.5.svg') }
-  &[duration="1"  ] { background-image: url('/assets/svg/duration/1.svg'  ) }
-  &[duration="2"  ] { background-image: url('/assets/svg/duration/2.svg'  ) }
-  &[duration="4"  ] { background-image: url('/assets/svg/duration/4.svg'  ) }
+  @each $duration in (0.5, 1, 2, 4) {
+    &[duration="#{ $duration }"] { background-image: url('./svg/#{ $duration }.svg') }
+  }
 }
