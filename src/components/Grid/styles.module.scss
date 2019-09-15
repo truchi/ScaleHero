@@ -13,7 +13,7 @@
   }
 
   $color: yellow;
-  @each $type, $alpha in (section: .9, line: 1, bar: .7, item: 1) {
+  @each $type, $alpha in (section: .9, line: 1, bar: .7, chord: 1) {
     .#{ $type }[highlight] {
       --color: transparentize($color, $alpha);
     }
@@ -62,11 +62,11 @@
   }
 }
 
-.items {
+.chords {
   display: flex;
 }
 
-.item {
+.chord {
   padding: 0 2%;
 
   &::after {
@@ -80,7 +80,7 @@
   }
 }
 
-.chord {
+.name {
   display: block;
 }
 

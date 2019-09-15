@@ -37,19 +37,19 @@ export default connect(
                   highlight={ highlight(index, [s, l, b]) }
                 >
 
-                  <items className={ styles.items }>
+                  <chords className={ styles.chords }>
                     { items.map(({ chord, duration }, i) => (
-                      <item
-                        className={ styles.item }
+                      <chord
+                        className={ styles.chord }
                         style={{ flexGrow: duration }}
                         key={ i }
                         highlight={ highlight(index, [s, l, b, i]) }
                       >
-                        <chord className={ styles.chord }>{ chord }</chord>
+                        <name className={ styles.name }>{ chord }</name>
                         <duration className={ styles.duration } duration={ duration }></duration>
-                      </item>
+                      </chord>
                     )) }
-                  </items>
+                  </chords>
 
                   <repeat></repeat>
                 </bar>
