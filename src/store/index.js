@@ -1,11 +1,11 @@
 import { createStore } from 'redux'
 import reducer         from './reducer'
 import {
-  // bpm,
-  // grid,
-  // timelines,
-  // instruments,
-  // masks,
+  bpm,
+  grid,
+  timelines,
+  instruments,
+  masks,
 
   src,
   tunings,
@@ -16,11 +16,14 @@ import {
 import {
   itWorks,
 } from './itworks'
-import { group, groupsIterator } from '../lib/grid'
+import { getIndex, group, groupsIterator } from '../lib/grid'
 
-const { bpm, grid, timelines, instruments, masks } = itWorks()
+// const { bpm, grid, timelines, instruments, masks } = itWorks()
 const groups   = [grid, ...timelines].map(group)
 const iterator = groupsIterator(groups)
+const index    = getIndex(grid, groups[0])(iterator.cursor()[0])
+const next     = iterator.next()
+
 window.it = iterator
 
 const initial = {
@@ -28,8 +31,8 @@ const initial = {
   src,
   grid,
   iterator,
-  next: iterator.next(),
-  index: null,
+  next,
+  index,
   initialInstruments: instruments,
   instruments,
   tunings,

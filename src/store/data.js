@@ -15,16 +15,45 @@ export const grid = {
   count: 2,
   sections: [
     {
-      repeat: true,
-      count: 2,
       lines: [
         {
           bars: [
-            // { repeat: true          , items: [{ duration: 1, chord: 'A' }, { duration: 1, chord: 'B' }] },
-            { items: [{ duration: 1, chord: 'A' }, { duration: 1, chord: 'B' }] },
-            // { repeat: true, count: 2, items: [{ duration: 1, chord: 'C' }] },
-            // {               count: 2, items: [{ duration: 1, chord: 'D' }] },
-            // {                         items: [{ duration: 1, chord: 'D' }] },
+            { repeat: true, items: [
+              { duration: 4, chord: 'A' },
+              { duration: 1, chord: 'B' },
+              { duration: 2, chord: 'B' },
+              { duration: 2, chord: 'B' },
+            ] },
+            {                         items: [{ duration: 1, chord: 'D' }] },
+            {                         items: [{ duration: 1, chord: 'D' }] },
+            { repeat: true, count: 2, items: [{ duration: 1, chord: 'C' }] },
+            { repeat: true, count: 2, items: [{ duration: 1, chord: 'C' }] },
+            {               count: 2, items: [{ duration: 1, chord: 'D' }] },
+          ]
+        },
+        {
+          bars: [
+            { repeat: true          , items: [{ duration: 1, chord: 'A' }, { duration: 0.5, chord: 'B' }] },
+            { repeat: true, count: 2, items: [{ duration: 1, chord: 'C' }] },
+            {               count: 2, items: [{ duration: 0.5, chord: 'D' }] },
+          ]
+        },
+      ]
+    },
+    {
+      lines: [
+        {
+          bars: [
+            { repeat: true          , items: [{ duration: 1, chord: 'A' }, { duration: 1, chord: 'B' }] },
+            { repeat: true, count: 2, items: [{ duration: 1, chord: 'C' }] },
+            {               count: 2, items: [{ duration: 1, chord: 'D' }] },
+          ]
+        },
+        {
+          bars: [
+            { repeat: true          , items: [{ duration: 1, chord: 'A' }, { duration: 1, chord: 'B' }] },
+            { repeat: true, count: 2, items: [{ duration: 1, chord: 'C' }, { duration: 0.5, chord: 'C' }] },
+            {               count: 2, items: [{ duration: 1, chord: 'D' }] },
           ]
         },
       ]

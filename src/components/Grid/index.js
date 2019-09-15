@@ -51,7 +51,7 @@ export default connect(
                     )) }
                   </chords>
 
-                  <repeat></repeat>
+                  <repeat>{ count > 1 && `x${ count }` }</repeat>
                 </bar>
               )) }
 

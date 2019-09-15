@@ -26,8 +26,8 @@
 .line {
   display: flex;
   justify-content: space-between;
-  margin: 0.5% 0;
-  padding: 0.5% 0;
+  margin-top: .5%;
+  padding: .5% 0;
 }
 
 .bar {
@@ -38,6 +38,15 @@
 
   &:last-child {
     border-right: 1px solid black;
+
+    &[end] {
+      border-right: 3px double black;
+    }
+  }
+
+  &[start],
+  &[end] + & {
+    border-left: 3px double black;
   }
 
   &[start]::before,
@@ -59,6 +68,13 @@
     content: ':';
     margin: auto;
     right: 2%;
+  }
+
+  repeat {
+    position: absolute;
+    top: -35%;
+    right: 2%;
+    font-size: 80%;
   }
 }
 
